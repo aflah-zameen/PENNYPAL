@@ -1,0 +1,67 @@
+<div class="flex flex-col gap-6 w-full max-w-7xl mx-auto p-4">
+    <!-- Card Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <app-summary-card
+            content="$3,456,789.00" 
+            [growth]="true" 
+            growthText="vs last month" 
+            header="Total Balance"
+            size="large"
+            class="w-full"
+        ></app-summary-card>
+        <div class="grid grid-cols-2 gap-4">
+            <app-summary-card 
+                content="$3,456,789.00" 
+                [growth]="true" 
+                growthText="vs last month" 
+                header="Total Balance"
+                size="small"
+                class="w-full"
+            ></app-summary-card>
+            <app-summary-card 
+                content="$3,456,789.00" 
+                [growth]="true" 
+                growthText="vs last month" 
+                header="Total Balance"
+                size="small"
+                class="w-full"
+            ></app-summary-card>
+            <app-summary-card 
+                content="$3,456,789.00" 
+                [growth]="true" 
+                growthText="vs last month" 
+                header="Total Balance"
+                size="small"
+                class="w-full"
+            ></app-summary-card>
+            <app-summary-card 
+                content="$3,456,789.00" 
+                [growth]="true" 
+                growthText="vs last month" 
+                header="Total Balance"
+                size="small"
+                class="w-full"
+            ></app-summary-card>
+        </div>
+    </div>
+    <!-- Feature Buttons Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 p-5 -mt-18">
+            <app-feature-button buttonText="Send Money" [icon]="SendMoneyIcon" class="w-full"></app-feature-button>
+            <app-feature-button buttonText="Add Income" [icon]="AddIncomeIcon" class="w-full"></app-feature-button>
+            <app-feature-button buttonText="Add Expense" [icon]="AddExpenseIcon" class="w-full"></app-feature-button>
+            <app-feature-button buttonText="Request Money" [icon]="RequestMoney" class="w-full"></app-feature-button>
+            <app-feature-button buttonText="Refer & Earn" [icon]="ReferAndEarn" class="w-full"></app-feature-button>
+        </div>
+        <div class="w-full ">
+            <app-today-expense-card></app-today-expense-card>
+        </div>
+    </div>
+
+    <!-- Recent Transactions Section -->
+
+    <div class="w-full">
+        <app-recent-transaction-card></app-recent-transaction-card>
+    </div>
+
+</div>

@@ -1,0 +1,13 @@
+   <button
+      [type]="type"
+      (click)="onClick.emit()"
+      [disabled]="disabled"
+      [ngClass]="{
+        'text-gray-500 bg-gray-200 cursor-not-allowed':disabled,
+        'text-white bg-indigo-700 cursor-pointer' : !disabled
+      }"
+      class="gap-2.5 w-full p-2.5 text-2xl font-semibold tracking-tighter 
+      text-center whitespace-nowrap  rounded-2xl  transition-colors "
+    >
+      {{ text }}
+    </button>

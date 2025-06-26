@@ -1,0 +1,16 @@
+<div class="grid grid-cols-7 gap-4  px-5 text-gray-800 items-center text-sm sm:text-base">
+  <div class="truncate">{{ userData.id }}</div>
+  <div class="truncate">{{ userData.name }}</div>
+  <div class="truncate whitespace-nowrap overflow-hidden">{{ userData.email }}</div>
+  <div>{{ userData.active ? 'active' : 'inactive' }}</div>
+  <div>{{ userData.verified ? 'verified' : 'not verified' }}</div>
+  <div class="truncate">{{ userData.phone }}</div>
+  <div class="scale-[0.60]">
+    <app-action-button
+      class="text-sm"
+      [text]="userData.active ? 'BLOCK' : 'UNBLOCK'"
+      [variant]="userData.active ? 'danger' : 'primary'"
+      [onClick]="handleBlockUser"
+    />
+  </div>
+</div>

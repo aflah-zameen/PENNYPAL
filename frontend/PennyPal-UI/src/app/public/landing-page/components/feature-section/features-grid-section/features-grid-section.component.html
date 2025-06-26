@@ -1,0 +1,8 @@
+ <section class="grid grid-cols-2 gap-14 max-md:grid-cols-1 max-md:gap-8">
+      <app-feature-card-section
+        *ngFor="let feature of features"
+        [imageUrl]="feature.imageUrl"
+        [title]="feature.title"
+        [description]="feature.description"
+      ></app-feature-card-section>
+    </section>

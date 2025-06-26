@@ -1,0 +1,19 @@
+<div class="flex gap-5 justify-center mb-5 max-md:gap-4 max-sm:gap-2.5">
+  <div class="flex gap-2 justify-center">
+    @for (item of otp; let i = $index; track $index ) {
+    <input
+        #otpInput
+        type="text"
+        inputmode="numeric"
+        maxlength="1"
+        pattern="[0-9]*"
+        class="w-12 h-12 text-center text-xl border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="otp[i]"
+        (input)="onInput($event, i)"
+        (keydown)="onKeyDown($event, i)"
+        (paste)="onPaste($event)"
+      />
+    }
+    </div>
+
+    </div>

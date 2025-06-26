@@ -1,0 +1,83 @@
+      <section class="flex flex-col items-center px-11 py-8 w-full bg-white rounded-3xl border border-solid border-black border-opacity-30  max-md:px-5 max-md:max-w-full">
+        <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" class="w-full">
+          <h1 class="text-3xl tracking-tighter text-center text-indigo-700 max-md:text-4xl">
+            Create Account
+          </h1>
+
+          <div class="self-stretch mt-8 max-md:max-w-full">
+            <div class="flex gap-5 max-md:flex-col">
+              <div class="w-[50%] max-md:ml-0 max-md:w-full">
+                <app-input-field
+                  label="Your name"
+                  placeholder="First and last name"
+                  [required]="true"
+                  [control]="getFormControl('name')"
+                />
+              </div>
+
+              <div class="ml-5 w-[50%] max-md:ml-0 max-md:w-full">
+                <app-input-field
+                  label="Email"
+                  placeholder="Email"
+                  type="email"
+                  [required]="true"
+                  [control]="getFormControl('email')"
+                />
+              </div>
+            </div>
+                     <app-phone-field
+                  [required]="true"
+                  [control]="getFormControl('phone')"
+                />
+          </div>
+
+          <div class="flex flex-wrap gap-10 mt-5">
+            <div class="flex-1">
+              <app-input-field
+                label="Password"
+                placeholder="At least 8 characters"
+                type="password"
+                [required]="true"
+                [control]="getFormControl('password')"
+              />
+            </div>
+
+            <div class="flex-1">
+              <app-input-field
+                label="Confirm Password"
+                placeholder="Confirm password"
+                type="password"
+                [required]="true"
+                [control]="getFormControl('confirmPassword')"
+              />
+            </div>
+          </div>
+
+          <p class="mt-10 text-lg tracking-tighter text-center text-black">
+            By continuing, you agree to PennyPal
+            <a
+              href="#"
+              class="underline text-blue-600"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Conditions of Use
+            </a>
+            and Privacy Notice.
+          </p>
+
+          <div class="flex justify-center mt-6">
+            <div class="w-[358px] max-w-full">
+              <app-action-button
+                text="Register"
+                type="submit"
+              />
+            </div>
+          </div>
+
+          <p class=" text-lg tracking-tighter text-center text-black ">
+            Already have an account?
+            <button type="button" class="text-[#2200FF] cursor-pointer" routerLink="/login">Sign in</button>
+          </p>
+        </form>
+      </section>

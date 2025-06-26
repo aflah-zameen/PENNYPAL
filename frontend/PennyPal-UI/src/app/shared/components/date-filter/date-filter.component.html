@@ -1,0 +1,23 @@
+<div class="flex items-center gap-4">
+  <mat-form-field appearance="outline">
+    <mat-label>Joined After</mat-label>
+    <input
+      matInput
+      [matDatepicker]="pickerAfter"
+      (dateChange)="onChange('joinedAfter', $event.value)"
+    />
+    <mat-datepicker-toggle matSuffix [for]="pickerAfter" />
+    <mat-datepicker #pickerAfter />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Joined Before</mat-label>
+    <input
+      matInput
+      [matDatepicker]="pickerBefore"
+      (dateChange)="onChange('joinedBefore', $event.value)"
+    />
+    <mat-datepicker-toggle matSuffix [for]="pickerBefore" />
+    <mat-datepicker #pickerBefore />
+  </mat-form-field>
+</div>

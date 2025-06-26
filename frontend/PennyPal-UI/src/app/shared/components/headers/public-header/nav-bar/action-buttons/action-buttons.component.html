@@ -1,0 +1,25 @@
+<div class="flex gap-4 items-center relative">
+      <div class="max-sm:hidden">
+        <button
+          class="h-9 text-base font-bold tracking-wide text-blue-700 capitalize  rounded-lg border border-white w-[133px] cursor-pointer"
+          (click)="toggleDropdown()"
+        >
+          Get Started
+        </button>
+      </div>
+      <button class="flex items-center justify-center sm:hidden">
+        <i class="ti ti-menu-2 text-2xl" aria-label="Toggle menu"></i>
+      </button>
+
+      <!-- DropDown Menu -->
+      <div *ngIf="isDropdownOpen" class="dropDown absolute top-[80%] right-5 bg-blue-700 shadow-lg rounded-lg mt-2 w-[160px] p-2 z-10">
+        <ul>
+          <li class="py-2 px-4 hover:bg-blue-800  cursor-pointer border-b border-white" routerLink="/login">
+            <p class="text-white font-semibold">Login</p>
+          </li>
+          <li class="py-2 px-4 hover:bg-blue-800  cursor-pointer" routerLink="/signup">
+            <p class="text-white font-semibold">Sign Up</p>
+          </li>
+        </ul>
+      </div>
+</div>

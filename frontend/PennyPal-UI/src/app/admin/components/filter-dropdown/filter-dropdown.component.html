@@ -1,0 +1,13 @@
+<div
+  class="flex items-center gap-2 p-2.5 rounded border border-neutral-500 h-[30px] min-w-[120px] max-sm:hidden h-[55px]"
+>
+  <label class="text-base text-neutral-500">{{ label }}</label>
+  <select
+    class="h-full px-1 bg-transparent focus:outline-none text-sm"
+    [value]="selected || ''"
+    (change)="onSelectChange($event)"
+  >
+    <option value="" disabled selected>Select {{ label }}</option>
+    <option *ngFor="let opt of options" [value]="opt">{{ opt }}</option>
+  </select>
+</div>

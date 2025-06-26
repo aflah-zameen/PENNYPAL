@@ -1,0 +1,53 @@
+<div
+  class="flex flex-col px-11 py-8 w-full bg-white rounded-3xl border border-solid border-black border-opacity-30  max-md:px-5 max-md:max-w-full"
+>
+  <h1 class="mb-7.5 text-4xl tracking-tighter text-indigo-700 max-sm:text-4xl mt-4">
+    OTP Verification
+  </h1>
+  <p
+    class="mb-9 text-2xl tracking-tighter text-center text-black max-sm:mb-6 max-sm:text-lg"
+    >
+    Enter the OTP send to {{email}}
+   </p>
+   <app-otp-input-field
+    (otpChange)="onOtpChange($event)"
+   />
+
+   <div
+          class="flex justify-between gap-9 items-center px-16 py-0 mb-24 max-md:px-10 max-md:py-0 max-sm:flex-col max-sm:gap-2.5 max-sm:items-start max-sm:px-5 max-sm:py-0 max-sm:mb-16"
+        >
+          <app-timer
+            [expiresAt$]="expiresAt$"
+            (expire)="onTimerExpire()"
+          ></app-timer>
+
+          <p class="text-lg tracking-tighter text-neutral-500">
+            Don't receive code?
+            <button
+              (click)="resendCode()"
+              [disabled]="resendDisableFlag.asObservable() | async"
+              class="cursor-pointer hover:underline focus:outline-none"
+              aria-label="Resend verification code"
+              [ngClass]="{
+                'text-grey': resendDisableFlag.asObservable() | async,
+                'text-indigo-700': !(resendDisableFlag.asObservable() | async) 
+              }"
+            >
+              Re-send
+            </button>
+          </p>
+    </div>
+
+
+     <div class="flex justify-between w-full mt-5">
+        <button class="text-black text-lg px-4 py-2  hover:text-blue-700 hover:text-xl" >back</button>
+        <app-action-button 
+        text="submit"
+        type="submit"
+        [disabled]="!((isOtpComplete|async)??false) || !((resendDisableFlag|async)??true)"
+        (onClick)="submitOtp()"
+         />
+    </div>
+
+
+</div>

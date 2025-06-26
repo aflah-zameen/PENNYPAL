@@ -1,0 +1,50 @@
+<div class="mt-5  flex flex-col">
+  <main class="flex-1 mx-auto w-full max-w-[1079px] bg-white border border-neutral-500 p-5">
+    <!-- Title -->
+    <header class="text-3xl font-bold tracking-wider text-black mb-8">
+      <h1>User Management</h1>
+    </header>
+
+    <!-- Filters -->
+    <section class="flex flex-wrap items-center gap-4 mb-6">
+      <app-search-bar 
+      placeholder="Search Users" 
+      (searchChange)="onSearchChange($event)"
+      />
+      <div class="flex gap-4 flex-wrap">
+        <app-filter-dropdown 
+        label="Role"
+        [options]="['ADMIN','USER','SUPER_ADMIN']"
+        filterKey = "role"
+        (filterChange)="updatePartialFilter($event)"
+         />
+        <app-filter-dropdown 
+        label="Status"
+        [options]="['ACTIVE','INACTIVE']"
+        filterKey = "status"
+        (filterChange)="updatePartialFilter($event)"
+         />
+        <app-date-filter
+        (filterChange)="updatePartialFilter($event)"
+        >
+        </app-date-filter>
+      </div>
+    </section>
+
+    <!-- Table -->
+    <section>
+      <app-user-table [users]="users"></app-user-table>
+      <p *ngIf="!users?.length" class="mt-4 text-neutral-600">No users found.</p>
+    </section>
+  </main>
+
+  <!-- Bottom Pagination -->
+    <footer class="mx-auto mb-5">
+    <app-pagination
+      *ngIf="totalPages > 1"
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      (pageChanged)="onPageChange($event)"
+    ></app-pagination>
+  </footer>
+</div>

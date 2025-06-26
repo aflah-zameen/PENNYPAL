@@ -1,0 +1,28 @@
+<section
+  [ngClass]="{
+    'max-w-[340px] p-12 text-xl rounded-[35px]': size === 'large',
+    'max-w-[240px] p-6 text-base rounded-2xl': size === 'small'
+  }"
+  class="flex overflow-hidden flex-col items-start border-2 border-white border-solid shadow-[1px_4px_4px_rgba(145,129,243,0.41)]"
+>
+  <h2 [ngClass]="size === 'large' ? 'text-xl' : 'text-base'" class="font-medium tracking-wide">{{ header }}</h2>
+
+  <h3
+    [ngClass]="size === 'large' ? 'text-3xl' : 'text-xl'"
+    class="mt-1 tracking-wider text-blue-700"
+  >
+    {{ content }}
+  </h3>
+
+  <p class="mt-2 ml-3">
+    <span
+      [ngClass]="{
+        'text-[#4CAF50]': growth,
+        'text-[#F44336]': !growth
+      }"
+    >
+      {{ growth ? '+' + performance + '%' : '-' + performance + '%' }}
+    </span>
+    {{ growthText }}
+  </p>
+</section>

@@ -1,0 +1,19 @@
+<div class="flex h-screen w-screen ">
+  <!-- Sidebar -->
+  <div class=" flex-shrink-0">
+    <app-side-navbar></app-side-navbar>
+  </div>
+
+  <!-- Main area -->
+  <div class="flex flex-col flex-grow">
+    <!-- Top header -->
+    <div class=" z-10">
+      <app-top-header></app-top-header>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-grow px-10">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

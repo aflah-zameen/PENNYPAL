@@ -1,0 +1,9 @@
+<header class="flex justify-between items-center px-5 h-[70px] shadow-md max-md:px-4 max-sm:px-3">
+  <app-user-greeting [name]="userInfo.name" />
+
+  <div class="flex gap-8 items-center max-md:gap-5 max-sm:gap-4">
+    <app-balance-display [balance]="userInfo.balance" />
+    <app-notification-icon [count]="userInfo.notificationCount" />
+    <app-user-profile-icon />
+  </div>
+</header>

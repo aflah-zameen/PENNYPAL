@@ -1,0 +1,28 @@
+<section
+      class="flex overflow-hidden flex-col items-start px-6 pt-6 pb-20 rounded-2xl border border-solid border-neutral-500 border-opacity-70 max-w-[474px]"
+    >
+      <app-expense-header />
+
+      <div class="flex flex-col gap-2.5 mt-7 ml-8">
+        <app-expense-item
+          category="Food"
+          [spent]="10"
+          [budget]="250"
+        />
+        <app-expense-item
+          category="Grocery"
+          [spent]="15"
+          [budget]="150"
+        />
+        <app-expense-item
+          category="Petrol"
+          [spent]="0"
+          [budget]="10"
+        />
+        <app-expense-item
+          category="others"
+          [spent]="20"
+          [budget]="100"
+        />
+      </div>
+    </section>

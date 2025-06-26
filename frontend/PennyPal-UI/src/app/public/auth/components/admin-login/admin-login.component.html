@@ -1,0 +1,32 @@
+
+<div
+  class="flex flex-col px-11 py-8 w-100 bg-white rounded-3xl border border-solid border-black border-opacity-30  max-md:px-5 max-md:max-w-full "
+>
+  <h1 class="mb-3.5 text-3xl tracking-tighter text-indigo-700 max-sm:text-4xl">
+    Admin Sign in
+  </h1>
+
+  <form [formGroup]="loginForm">
+    <app-input-field
+      label="Email"
+      type="text"
+      [required]="true"
+      placeholder="Enter your email or phone number"
+      [control]="getFormControl('email')"
+    />
+
+    <app-input-field
+      label="Password"
+      type="password"
+      [required]="true"
+      placeholder="Enter your password"
+      [control]="getFormControl('password')"
+    />
+
+    <br />
+    <app-action-button
+      text="Sign in"
+      (onClick)="onSignIn()"
+    />
+  </form>
+</div>

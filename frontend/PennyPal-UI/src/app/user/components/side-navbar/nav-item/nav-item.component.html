@@ -1,0 +1,24 @@
+<div
+      class="flex overflow-hidden items-start px-9 py-2.5"
+      [class.bg-blue-500]="isActive"
+      [class.bg-opacity-10]="isActive"
+      [class.text-white]="isActive"
+      [class.rounded-lg]="true"
+      [class.whitespace-nowrap]="true"
+    >
+      <img
+        *ngIf="icon"
+        [src]="icon"
+        class="object-contain shrink-0"
+        [class.w-3.5]="isActive"
+        [class.w-5]="!isActive && icon !== 'https://cdn.builder.io/api/v1/image/assets/TEMP/68af2921647fb1fc3abe0b888a88da08dbd6a284?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9'"
+        [class.w-[18px]]="icon === 'https://cdn.builder.io/api/v1/image/assets/TEMP/68af2921647fb1fc3abe0b888a88da08dbd6a284?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9'"
+        [class.w-[19px]]="icon === 'https://cdn.builder.io/api/v1/image/assets/TEMP/80ec4cb3abf49ec088f6ad5d60fd2b65abc03877?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9'"
+        [class.w-[21px]]="icon === 'https://cdn.builder.io/api/v1/image/assets/TEMP/66a5af1ed6e31af246b8c1e2d6cdf2921bccb240?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9' || icon === 'https://cdn.builder.io/api/v1/image/assets/TEMP/8b6b9633c6aa6c7dc4ca8d1023f672b826e0c3d2?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9' || icon === 'https://cdn.builder.io/api/v1/image/assets/TEMP/e9a7c62c8232861376328b44cb081633a4d884b6?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9' || icon === 'https://cdn.builder.io/api/v1/image/assets/TEMP/609ddf0bacdd43d0722bcd3894e3a4cde4157987?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9' || icon === 'https://cdn.builder.io/api/v1/image/assets/TEMP/9dc7071acefb4b7c5138ffceb1900b660f249223?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9'"
+        [class.aspect-[0.87]]="isActive"
+        [class.aspect-square]="!isActive && icon !== 'https://cdn.builder.io/api/v1/image/assets/TEMP/68af2921647fb1fc3abe0b888a88da08dbd6a284?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9'"
+        [class.aspect-[1.06]]="icon === 'https://cdn.builder.io/api/v1/image/assets/TEMP/68af2921647fb1fc3abe0b888a88da08dbd6a284?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9'"
+        [class.self-start]="true"
+      />
+      <div class="basis-auto">{{ label }}</div>
+    </div>
