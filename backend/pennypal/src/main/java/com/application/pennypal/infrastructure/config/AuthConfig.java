@@ -54,8 +54,9 @@ public class AuthConfig {
 
     @Bean
     public CreateUser createUser(UserRepositoryPort userRepositoryPort, EncodePasswordPort encodePasswordPort,
-                                 ValidateEmailUniqueness validateEmailUniqueness){
-        return new CreateUserService(userRepositoryPort,encodePasswordPort,validateEmailUniqueness);
+                                 ValidateEmailUniqueness validateEmailUniqueness,
+                                 S3SystemPort s3SystemPort){
+        return new CreateUserService(userRepositoryPort,encodePasswordPort,validateEmailUniqueness,s3SystemPort);
     }
 
     @Bean

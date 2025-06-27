@@ -1,6 +1,7 @@
 package com.application.pennypal.application.service;
 
 import com.application.pennypal.application.port.EncodePasswordPort;
+import com.application.pennypal.application.port.S3SystemPort;
 import com.application.pennypal.application.usecases.user.CreateUser;
 import com.application.pennypal.domain.user.entity.User;
 import com.application.pennypal.application.port.UserRepositoryPort;
@@ -11,26 +12,31 @@ import com.application.pennypal.shared.exception.InvalidRoleException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.Set;
 
 public class CreateUserService implements CreateUser {
     private final UserRepositoryPort userRepository;
     private final EncodePasswordPort encodePasswordPort;
     private final ValidateEmailUniqueness validateEmailUniqueness;
+    private final S3SystemPort systemPort;
 
     public CreateUserService(UserRepositoryPort userRepositoryPort,
                       EncodePasswordPort encodePasswordPort,
-                             ValidateEmailUniqueness validateEmailUniqueness){
+                             ValidateEmailUniqueness validateEmailUniqueness,
+                             S3SystemPort  systemPort){
         this.userRepository =userRepositoryPort;
         this.encodePasswordPort = encodePasswordPort;
         this.validateEmailUniqueness = validateEmailUniqueness;
+        this.systemPort =systemPort;
     }
 
 
     @Override
     @Transactional
-    public User execute(String name,String email,String password,String phone,String role) {
+    public User execute(String name, String email, String password, String phone, String role, MultipartFile profileImageFile) {
         Set<Roles> roles = switch (role) {
             case "SUPER_ADMIN" -> Set.of(Roles.SUPER_ADMIN, Roles.ADMIN);
             case "ADMIN" -> Set.of(Roles.ADMIN);
@@ -39,7 +45,8 @@ public class CreateUserService implements CreateUser {
         };
         PasswordValidator.validate(password);
         String encodedPassword = encodePasswordPort.encode(password);
-        User user= new User(name,email,encodedPassword,phone,roles);
+        String profileURL = systemPort.uploadFile(profileImageFile);
+        User user= new User(name,email,encodedPassword,phone,roles,profileURL);
         validateEmailUniqueness.validate(email);
         return userRepository.save(user);
     }

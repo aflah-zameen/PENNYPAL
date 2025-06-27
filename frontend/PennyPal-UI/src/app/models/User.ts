@@ -10,4 +10,5 @@ export interface User{
     updatedAt : Date
     active : boolean,
     verified : boolean
+    profileURL : string
 }

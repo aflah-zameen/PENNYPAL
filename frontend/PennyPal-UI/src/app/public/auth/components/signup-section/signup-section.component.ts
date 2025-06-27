@@ -8,11 +8,12 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import {ToastrService} from 'ngx-toastr'
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ProfileUploadComponent } from "../../../../shared/components/profile-upload/profile-upload.component";
 
 @Component({
   selector: 'app-signup-section',
   imports: [ReactiveFormsModule, FormsModule, ActionButtonComponent,
-     InputFieldComponent, PhoneFieldComponent, RouterModule],
+     InputFieldComponent, PhoneFieldComponent, RouterModule,ProfileUploadComponent],
   templateUrl: './signup-section.component.html',
   styleUrl: './signup-section.component.css'
 })
@@ -34,7 +35,8 @@ export class SignupSectionComponent {
         Validators.minLength(8),
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)
       ]],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
+      profilePicture: [null, Validators.required] 
     }, {
       validators: this.passwordMatchValidator
     });
@@ -42,7 +44,11 @@ export class SignupSectionComponent {
 
   getFormControl(name: string): FormControl {
   return this.accountForm.get(name) as FormControl;
-  }
+}   
+
+onProfileSelected(file: File) {
+  this.accountForm.patchValue({ profilePicture: file });
+   }
 
 
   passwordMatchValidator(form: FormGroup) {
@@ -71,31 +77,38 @@ export class SignupSectionComponent {
 }
 
   onSubmit() {
-    if (this.accountForm.invalid) {
-      this.toastr.error('Please fill out the form correctly', 'Form Error')
-      return;
-    }
-    const signupData : SignupRequest = this.accountForm.value;
-    this.authService.signup(signupData).subscribe({
-      next : (response : any) => {
-        this.toastr.success(response.message || 'Registration completed', 'Success',{timeOut:1000});
-        this.spinner.show();
-        this.authService.sentOtp(signupData.email).subscribe({
-          next : (expiresAt) =>{
-            this.spinner.hide();
-            this.authService.otpTimerSubject.next(expiresAt);
-            this.toastr.success(response.message || "OTP send successfully. Please verify the OTP.");
-            this.router.navigate(['/otp-section'],{ queryParams: { email: signupData.email,
-              context : 'register'} })
-          },
-          error : (err)=>{
-            this.toastr.error(err.message || "Something causing error for sending OTP");
-          }
-        })
-      },
-      error: (err) =>{
-        this.toastr.error(err.message || 'Signup failed. Please try again.', 'Error');
-      }
-    });
+  if (this.accountForm.invalid) {
+    this.toastr.error('Please fill out the form.', 'Form Error');
+    return;
   }
+
+  const signupRequest = this.accountForm.value;
+
+  this.spinner.show();
+  this.authService.signup(signupRequest).subscribe({
+    next: (response: any) => {
+      this.toastr.success(response.message || 'Registration completed', 'Success');
+      this.authService.sentOtp(signupRequest.email).subscribe({
+        next: (expiresAt) => {
+          this.spinner.hide();
+          this.authService.otpTimerSubject.next(expiresAt);
+          this.toastr.success("OTP sent successfully. Please verify.");
+          this.router.navigate(['/otp-section'], {
+            queryParams: { email: signupRequest.email, context: 'register' }
+          });
+        },
+        error: (err) => {
+          this.spinner.hide();
+          this.toastr.error(err.message || "Error sending OTP");
+        }
+      });
+    },
+    error: (err) => {
+      this.spinner.hide();
+      this.toastr.error(err.message || 'Signup failed. Please try again.');
+    }
+  });
+}
+
+
 }

@@ -19,6 +19,6 @@ public class GetUserService implements GetUser {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         return new UserDomainDTO(user.getId(),user.getName(),user.getEmail(),user.getRoles(),
                 user.getPhone(), user.isActive(), user.isVerified(),
-                user.getCreatedAt(),user.getUpdatedAt());
+                user.getCreatedAt(),user.getUpdatedAt(),user.getProfileURL());
     }
 }

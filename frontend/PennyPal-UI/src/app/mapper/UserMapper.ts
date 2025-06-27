@@ -19,7 +19,8 @@ export class UserMapper{
                   createdAt : user.createdAt,
                   updatedAt : user.updatedAt,
                   verified : user.verified,
-                  active : user.active
-                };
+                  active : user.active,
+                  profileURL : user.profileURL
+                  };
     }
 } 

@@ -19,11 +19,11 @@ public class SuperAdminController {
     SuperAdminController(AuthService authService){
         this.authService = authService;
     }
-    @PostMapping("/register")
-    public ResponseEntity<ApiResponse<String>> registerAdmin(@Valid @RequestBody AdminRegisterRequest request){
-        authService.registerAdmin(request);
-        return ResponseEntity.ok(new RegisterResponse(true, "Admin Registered Successfully"));
-    }
+//    @PostMapping("/register")
+//    public ResponseEntity<ApiResponse<String>> registerAdmin(@Valid @RequestBody AdminRegisterRequest request){
+//        authService.registerAdmin(request);
+//        return ResponseEntity.ok(new RegisterResponse(true, "Admin Registered Successfully"));
+//    }
 
 //    @GetMapping("/fetch-filtered-user")
 //    public ResponseEntity<PagedResult<User>> fetchFilteredUsers(){

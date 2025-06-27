@@ -8,4 +8,5 @@ export interface UserResponse{
     updatedAt : Date,
     verified : boolean,
     active : boolean
+    profileURL:string
 }

@@ -1,9 +1,16 @@
       <section class="flex flex-col items-center px-11 py-8 w-full bg-white rounded-3xl border border-solid border-black border-opacity-30  max-md:px-5 max-md:max-w-full">
-        <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" class="w-full">
-          <h1 class="text-3xl tracking-tighter text-center text-indigo-700 max-md:text-4xl">
-            Create Account
-          </h1>
+        <form [formGroup]="accountForm" class="w-full">
+          <div class="flex justify-between items-center w-full mb-6">
+            <h1 class="text-3xl tracking-tighter text-indigo-700 max-md:text-2xl">
+              Create Account
+            </h1>
 
+            <app-profile-upload 
+            (fileSelected)="onProfileSelected($event)"
+             [control] = "getFormControl('profilePicture')"
+            >
+            </app-profile-upload>
+          </div>
           <div class="self-stretch mt-8 max-md:max-w-full">
             <div class="flex gap-5 max-md:flex-col">
               <div class="w-[50%] max-md:ml-0 max-md:w-full">
@@ -71,6 +78,7 @@
               <app-action-button
                 text="Register"
                 type="submit"
+                (onClick)="onSubmit()"
               />
             </div>
           </div>

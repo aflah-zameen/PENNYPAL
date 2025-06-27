@@ -26,8 +26,9 @@ public class User{
      private boolean active;
      private Instant createdAt;
      private Instant updatedAt;
+     private String profileURL;
 
-    public User(Long id, String name, String email, String password, String phone, Set<Roles> roles, boolean active,boolean verified,Instant createdAt,Instant updatedAt) {
+    public User(Long id, String name, String email, String password, String phone, Set<Roles> roles, boolean active,boolean verified,Instant createdAt,Instant updatedAt,String profileURL) {
         validate(name,email,password,phone,roles);
         this.id = id;
         this.name = name;
@@ -39,9 +40,10 @@ public class User{
         this.verified = verified;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.profileURL = profileURL;
     }
 
-    public User(String name, String email, String encodedPassword, String phone, Set<Roles> roles) {
+    public User(String name, String email, String encodedPassword, String phone, Set<Roles> roles,String profileURL) {
         validate(name, email, encodedPassword, phone, roles);
         this.id = null;
         this.name = name;
@@ -53,6 +55,7 @@ public class User{
         this.verified = false;
         this.createdAt = Instant.now();
         this.updatedAt = null;
+        this.profileURL = profileURL;
     }
 
     public User activate(){

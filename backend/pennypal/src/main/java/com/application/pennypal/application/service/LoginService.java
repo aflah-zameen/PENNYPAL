@@ -39,7 +39,7 @@ public class LoginService implements LoginUser {
         String accessToken =  tokenServicePort.generateAccessToken(user);
         String refreshToken = refreshTokenServicePort.generateRefreshToken(user.getId(),ipAddress);
         UserDomainDTO userDomainDTO = new UserDomainDTO(user.getId(), user.getName(),user.getEmail(),user.getRoles(),
-                user.getPhone(), user.isActive(),user.isVerified(),user.getCreatedAt(),user.getUpdatedAt());
+                user.getPhone(), user.isActive(),user.isVerified(),user.getCreatedAt(),user.getUpdatedAt(),user.getProfileURL());
         return new LoginResponseDTO(userDomainDTO,accessToken,refreshToken);
     }
 }

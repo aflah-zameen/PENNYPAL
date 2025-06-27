@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -56,10 +57,12 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request, HttpServletRequest httpServletRequest,HttpServletResponse response) {
-
+    public ResponseEntity<RegisterResponse> register(@Valid @ModelAttribute RegisterRequest request, BindingResult result) {
+            if(result.hasErrors()){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RegisterResponse(false,"Given arguments are not valid."));
+            }
             createUser.execute(request.getName(),request.getEmail(),request.getPassword(),
-                    request.getPhone(),"USER");
+                    request.getPhone(),"USER",request.getProfilePicture());
             return ResponseEntity.ok(new RegisterResponse(true, "User Registered Successfully."));
     }
 

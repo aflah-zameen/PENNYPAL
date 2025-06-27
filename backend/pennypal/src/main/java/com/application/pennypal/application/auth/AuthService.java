@@ -89,29 +89,29 @@ public class AuthService {
 //        otpService.generateAndSendOtp(user.getEmail());
 //    }
 
-    @Transactional
-    public void registerAdmin(AdminRegisterRequest request){
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateEmailException("Email already exists: " + request.getEmail());
-        }
-        Set<Roles> roles = switch (request.getRole()) {
-            case "SUPER_ADMIN" -> Set.of(Roles.SUPER_ADMIN, Roles.ADMIN);
-            case "ADMIN" -> Set.of(Roles.ADMIN);
-            case "USER" -> Set.of(Roles.USER);
-            default -> throw new InvalidRoleException("Invalid role: " + request.getRole());
-        };
-
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        User user = new User(
-                request.getName(),
-                request.getEmail(),
-                encodedPassword,
-                request.getPhone(),
-                roles
-        );
-     userRepository.save(user);
-
-    }
+//    @Transactional
+//    public void registerAdmin(AdminRegisterRequest request){
+//        if (userRepository.existsByEmail(request.getEmail())) {
+//            throw new DuplicateEmailException("Email already exists: " + request.getEmail());
+//        }
+//        Set<Roles> roles = switch (request.getRole()) {
+//            case "SUPER_ADMIN" -> Set.of(Roles.SUPER_ADMIN, Roles.ADMIN);
+//            case "ADMIN" -> Set.of(Roles.ADMIN);
+//            case "USER" -> Set.of(Roles.USER);
+//            default -> throw new InvalidRoleException("Invalid role: " + request.getRole());
+//        };
+//
+//        String encodedPassword = passwordEncoder.encode(request.getPassword());
+//        User user = new User(
+//                request.getName(),
+//                request.getEmail(),
+//                encodedPassword,
+//                request.getPhone(),
+//                roles
+//        );
+//     userRepository.save(user);
+//
+//    }
 
     @Transactional
     public void verifyUser(String email,String otp){

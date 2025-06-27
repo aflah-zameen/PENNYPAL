@@ -214,7 +214,14 @@ export class AuthService{
 
   //register user
   signup(signupData : SignupRequest):Observable<string>{
-    return this.https.post<ApiResponse<null>>(`${this.apiURL}/signup`,signupData)
+    const formData = new FormData();
+    formData.append('name',signupData.name);
+    formData.append('email',signupData.email);
+    formData.append('phone',signupData.phone+"");
+    formData.append('password',signupData.password);
+    formData.append('profilePicture',signupData.profilePicture);
+    // formData.append('profilePicture',signupData.profilePicture)
+    return this.https.post<ApiResponse<null>>(`${this.apiURL}/signup`,formData)
     .pipe(
       map(res => res.message),
       catchError((this.handleError))

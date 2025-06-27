@@ -10,6 +10,7 @@ import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, switchMap, filter, take } from 'rxjs/operators';
 import { AuthService } from '../public/auth/services/auth.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<any>(null);
@@ -20,10 +21,15 @@ export const authInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<any>> => {
   const authService = inject(AuthService);
   const router = inject(Router);
+  const toastr = inject(ToastrService);
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {      
       if (error.status === 401 && !req.url.includes('/auth/refresh-token') && !req.url.includes('/auth/login')) {
         return handle401Error(req, next, authService,router);
+      }
+      if((error.status === 400 || error.status === 403) && (req.url.includes('/auth'))){
+        router.navigate(['/login']);
+        toastr.error(error.error.message,"ERROR",{timeOut:2000})
       }
       return throwError(() => error);
     })

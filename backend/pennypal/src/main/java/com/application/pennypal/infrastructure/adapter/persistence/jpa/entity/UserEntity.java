@@ -46,4 +46,7 @@ public class UserEntity {
 
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    @Column()
+    private String profileURL;
 }

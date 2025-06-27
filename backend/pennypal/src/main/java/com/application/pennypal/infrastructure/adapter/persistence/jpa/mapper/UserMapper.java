@@ -19,6 +19,7 @@ public interface UserMapper {
     @Mapping(target = "active", source = "active")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
+    @Mapping(target = "profileURL",source = "profileURL")
     User toDomain(UserEntity userEntity);
 
     UserDto toDto(User user);

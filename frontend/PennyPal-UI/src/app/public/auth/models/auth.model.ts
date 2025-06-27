@@ -7,6 +7,7 @@ export interface SignupRequest {
   email: string;
   password: string;
   role: string;
+  profilePicture : File
 }
 
 export interface SignupResponse {
