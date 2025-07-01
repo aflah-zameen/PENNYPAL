@@ -1,0 +1,19 @@
+<article class="flex relative items-start h-[27px] w-[550px] max-md:w-full max-sm:flex-col max-sm:gap-2 max-sm:p-3 max-sm:h-auto max-sm:rounded-lg max-sm:border max-sm:border-solid max-sm:bg-neutral-50 max-sm:border-zinc-100">
+      <div class="absolute top-0 left-0 text-base tracking-wide text-black max-sm:static max-sm:text-sm">
+        {{ getFormattedContent() }}
+      </div>
+      <div class="absolute top-0 text-base tracking-wide text-black left-[132px] max-sm:static max-sm:text-sm">
+        {{ incomes.source }}
+      </div>
+      <div class="flex absolute top-0 flex-col items-start h-[27px] left-[338px] w-[104px] max-md:left-60 max-sm:static max-sm:w-auto">
+        <time class="text-xs tracking-wide text-black max-sm:text-xs">
+          {{ incomes.income_date}}
+        </time>
+        <!-- <time class="text-xs tracking-wide text-neutral-500 max-sm:text-xs">
+          {{ transaction.time }}
+        </time> -->
+      </div>
+      <div class="absolute top-0 right-0 text-base tracking-wide text-black max-sm:static max-sm:text-sm">
+        {{ incomes.status }}
+      </div>
+    </article>

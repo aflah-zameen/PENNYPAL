@@ -179,14 +179,14 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    public ResponseEntity<ApiResponse<UserDto>> getUser(String accessToken) throws JwtException,IllegalArgumentException{
-//        String email = jwtUtil.getUsernameFromToken(accessToken);
-//        User user = userRepository.findByEmail(email)
-//                .orElseThrow(() -> new IllegalArgumentException("User is not registered"));
-//        UserDto userDto = userMapper.toDto(user);
-//        return ResponseEntity.ok(new ApiResponse<>(true,userDto,"User detail fetched successfully"));
-        return null;
-    }
+//    public ResponseEntity<ApiResponse<UserDto>> getUser(String accessToken) throws JwtException,IllegalArgumentException{
+////        String email = jwtUtil.getUsernameFromToken(accessToken);
+////        User user = userRepository.findByEmail(email)
+////                .orElseThrow(() -> new IllegalArgumentException("User is not registered"));
+////        UserDto userDto = userMapper.toDto(user);
+////        return ResponseEntity.ok(new ApiResponse<>(true,userDto,"User detail fetched successfully"));
+//        return null;
+//    }
 
     @Transactional
     public void deleteRefreshToken(String token){

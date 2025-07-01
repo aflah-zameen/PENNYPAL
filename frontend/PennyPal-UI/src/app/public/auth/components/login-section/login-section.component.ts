@@ -75,7 +75,7 @@ export class LoginSectionComponent {
       next : (res) =>{
         this.spinner.hide();
         this.toastr.success("Logged in successfully.","SUCCESS",{timeOut:1000});
-        this.router.navigate(['/home']);
+        this.router.navigate(['/user']);
       },
       error : (err)=>{
         this.spinner.hide();

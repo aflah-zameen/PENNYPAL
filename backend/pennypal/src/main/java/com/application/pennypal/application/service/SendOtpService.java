@@ -15,9 +15,9 @@ public class SendOtpService implements SendOtp {
     private final OtpServicePort otpServicePort;
     @Override
     public LocalDateTime send(String email){
-        if(!userRepositoryPort.existsByEmail(email)){
-            throw new UserNotFoundException("User not found");
-        }
+//        if(!userRepositoryPort.existsByEmail(email)){
+//            throw new UserNotFoundException("User not found");
+//        }
         return otpServicePort.generateOtpAndSend(email);
     }
 

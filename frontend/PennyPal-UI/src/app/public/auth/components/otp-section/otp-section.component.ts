@@ -99,8 +99,11 @@ export class OtpSectionComponent implements OnInit{
         if(this.context === 'register'){
           this.router.navigate(['/login']);
         }
+        else if(this.context === 'EmailProfileUpdate'){
+          this.router.navigate(['/user/user-profile']);
+        }
         else if(this.context === 'forget-password'){
-          this.router.navigate(['/set-new-password'],{queryParams :{email : this.email}})
+          this.router.navigate(['/set-new-password'],{queryParams :{email : this.email}});
         }
       },
       error: (err) => {

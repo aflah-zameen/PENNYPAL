@@ -7,5 +7,5 @@ import { Component,Input } from '@angular/core';
   styleUrl: './user-greeting.component.css'
 })
 export class UserGreetingComponent {
-  @Input() name: string = '';
+  @Input() name: string|null = null;
 }

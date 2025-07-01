@@ -266,7 +266,7 @@ export class AuthService{
 
   //verify-otp
   verifyOtp(email : string , otp : string, context : string):Observable<string>{
-    return this.https.post<ApiResponse<null>>(`${this.apiURL}/verify-otp`,{email : email,otp : otp,context : context})
+    return this.https.post<ApiResponse<null>>(`${this.apiURL}/verify-otp`,{email : email,otp : otp,context : context},{withCredentials:true})
     .pipe(
       map(res => res.message),
       catchError(this.handleError)
@@ -286,6 +286,24 @@ export class AuthService{
   clearUser(){
     this.userSubject.next(null);
   }
+
+  //update-user
+  updateUser(user : User | null){
+    if(user){
+      this.userSubject.next(user);
+    }
+  }
+
+  //check-email uniqueness
+
+  checkEmailAvailability(email : string):Observable<boolean>{
+    return this.https.get<ApiResponse<boolean>>(`${this.apiURL}/check-email`,{params :{email : email}})
+    .pipe(
+      map((res) => res.data),
+      // catchError(this.handleError)
+    );
+  }
+
 
   //Initial authentication checking
 

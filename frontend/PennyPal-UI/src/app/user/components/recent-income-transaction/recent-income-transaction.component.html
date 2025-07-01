@@ -1,0 +1,10 @@
+<section class="box-border relative min-h-90 bg-white rounded-2xl border border-solid border-black border-opacity-40 w-[700px] max-md:mx-auto max-md:my-0 max-md:w-full max-md:max-w-[800px] max-sm:w-full max-sm:h-auto max-sm:rounded-xl max-sm:min-h-64">
+      <app-transaction-header />
+      <app-transaction-table />
+      <div class="flex flex-col gap-3 px-11 py-0 mt-5 max-md:px-8 max-md:py-0 max-sm:gap-4 max-sm:px-4 max-sm:py-0">
+        <app-transaction-item
+          *ngFor="let transaction of transactions"
+          [incomes]="transaction"
+        />
+      </div>
+    </section>

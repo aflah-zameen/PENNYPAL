@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../../public/auth/services/auth.service';
@@ -7,21 +7,31 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { Title } from '@angular/platform-browser';
+import { User } from '../../../../models/User';
+import { Observable } from 'rxjs';
+import { ProfileDropdownComponent } from "../../../../shared/components/profile-dropdown/profile-dropdown.component";
 
 @Component({
   selector: 'app-user-profile-icon',
-  imports: [CommonModule],
+  imports: [CommonModule, ProfileDropdownComponent],
   templateUrl: './user-profile-icon.component.html',
   styleUrl: './user-profile-icon.component.css'
 })
 export class UserProfileIconComponent {
+  @Input() profileURL : string|null = null;
   isDropdownOpen :boolean = false;
+  dropdownItems = [
+  { label: 'Profile', action: () => this.router.navigate(['/user/user-profile']) },
+    { label: 'Settings', action: () => this.router.navigate(['/user/setting']) },
+  { label: 'Logout', action: () => this.logoutUser() },
+  ];
 
   constructor(private toastr : ToastrService,private router : Router,
     private authService : AuthService,
     private spinner : NgxSpinnerService,
-    private dialog : MatDialog
-  ){}
+    private dialog : MatDialog,
+  ){
+  }
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }

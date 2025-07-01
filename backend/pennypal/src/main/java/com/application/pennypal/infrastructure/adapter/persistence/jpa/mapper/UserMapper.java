@@ -2,7 +2,6 @@ package com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper;
 
 import com.application.pennypal.domain.user.entity.User;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.UserEntity;
-import com.application.pennypal.interfaces.rest.dtos.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -22,5 +21,4 @@ public interface UserMapper {
     @Mapping(target = "profileURL",source = "profileURL")
     User toDomain(UserEntity userEntity);
 
-    UserDto toDto(User user);
 }

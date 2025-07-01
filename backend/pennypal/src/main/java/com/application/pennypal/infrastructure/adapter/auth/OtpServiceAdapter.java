@@ -64,7 +64,9 @@ public class OtpServiceAdapter implements OtpServicePort {
         OtpEntity otpEntity = optionalOtp.get();
         otpEntity.setUsed(true);
         otpRepository.save(otpEntity);
-        User user = userRepositoryPort.findByEmail(email)
+        if(context.equals("EmailProfileUpdate")){
+            return;
+        }        User user = userRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         if(context.equals("register")){
             user = user.verify();

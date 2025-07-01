@@ -3,6 +3,7 @@ package com.application.pennypal.interfaces.rest;
 import com.application.pennypal.application.auth.AuthService;
 import com.application.pennypal.application.dto.LoginResponseDTO;
 import com.application.pennypal.application.port.TokenServicePort;
+import com.application.pennypal.application.service.ValidateEmailUniqueness;
 import com.application.pennypal.application.usecases.user.*;
 import com.application.pennypal.domain.user.entity.User;
 import com.application.pennypal.domain.user.valueObject.TokenPairDTO;
@@ -37,6 +38,7 @@ public class AuthController {
     private final GetUser getUser;
     private final UpdatePassword updatePassword;
     private final LogoutUser logoutUser;
+    private final ValidateEmailUniqueness validateEmailUniqueness;
 
     AuthController(LoginUser loginUser,
                    RefreshAccessToken refreshAccessToken,
@@ -45,7 +47,8 @@ public class AuthController {
                    VerifyOtp verifyOtp,
                    GetUser getUser,
                    UpdatePassword updatePassword,
-                   LogoutUser logoutUser){
+                   LogoutUser logoutUser,
+                   ValidateEmailUniqueness validateEmailUniqueness){
     this.loginUser = loginUser;
     this.refreshAccessToken = refreshAccessToken;
     this.createUser = createUser;
@@ -54,6 +57,7 @@ public class AuthController {
     this.getUser  = getUser;
     this.updatePassword = updatePassword;
     this.logoutUser = logoutUser;
+    this.validateEmailUniqueness = validateEmailUniqueness;
     }
 
     @PostMapping("/signup")
@@ -73,7 +77,7 @@ public class AuthController {
         return ResponseEntity.ok(new OtpResponse(true,otpDTO,"OTP sent successfully"));
     }
     @PostMapping("/verify-otp")
-    public ResponseEntity<ApiResponse<OtpDTO>> verifyOtp(@Valid @RequestBody OtpRequest otpRequest){
+    public ResponseEntity<ApiResponse<OtpDTO>> verifyOtp(@Valid @RequestBody OtpRequest otpRequest,HttpServletRequest request,HttpServletResponse response){
         verifyOtp.verify(otpRequest.getEmail(),otpRequest.getOtp(),otpRequest.getContext());
         return ResponseEntity.ok(
                 new OtpResponse(true,null,"OTP Verified successfully")
@@ -161,6 +165,16 @@ public class AuthController {
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseEntity.ok().body(new ApiResponse<>(true,null,"Logout successfully"));
+    }
+
+    @GetMapping("/check-email")
+    public ResponseEntity<ApiResponse<Boolean>> checkEmailUniqueness(@RequestParam(name = "email") String email){
+        try{
+            validateEmailUniqueness.validate(email);
+            return ResponseEntity.ok(new ApiResponse<>(true,true,"Email is available"));
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse<>(false,false,"Email Already Exist"));
+        }
     }
 
 
