@@ -1,4 +1,14 @@
-<section class="flex flex-col gap-0.5">
-  <h1 class="text-base font-medium text-indigo-700">Hey, {{ name }} 🙂</h1>
-  <p class="text-sm text-indigo-500">We care for your money</p>
-</section>
+<section class="flex flex-col gap-1">
+      <h1 class="text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent max-md:text-base">
+        Hey, {{ name || 'Guest' }} 
+        <span class="inline-block animate-bounce">👋</span>
+      </h1>
+      <p class="text-sm text-gray-600 font-medium max-sm:hidden">
+        <span class="inline-flex items-center space-x-1">
+          <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span>We care for your money</span>
+        </span>
+      </p>
+    </section>

@@ -1,13 +1,16 @@
-<div
-  class="flex items-center gap-2 p-2.5 rounded border border-neutral-500 h-[30px] min-w-[120px] max-sm:hidden h-[55px]"
->
-  <label class="text-base text-neutral-500">{{ label }}</label>
-  <select
-    class="h-full px-1 bg-transparent focus:outline-none text-sm"
-    [value]="selected || ''"
-    (change)="onSelectChange($event)"
-  >
-    <option value="" disabled selected>Select {{ label }}</option>
-    <option *ngFor="let opt of options" [value]="opt">{{ opt }}</option>
-  </select>
-</div>
+<div class="relative">
+      <div class="flex items-center gap-2 px-3 py-2.5 border border-gray-200 rounded-lg bg-white hover:border-gray-300 transition-colors duration-200 min-w-[140px]">
+        <svg class="h-4 w-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"></path>
+        </svg>
+        <label class="text-sm text-gray-600 font-medium">{{ label }}</label>
+        <select
+          class="flex-1 bg-transparent focus:outline-none text-sm text-gray-700 cursor-pointer"
+          [value]="selected || ''"
+          (change)="onSelectChange($event)"
+        >
+          <option value="" disabled>Select {{ label }}</option>
+          <option *ngFor="let opt of options" [value]="opt">{{ opt }}</option>
+        </select>
+      </div>
+    </div>

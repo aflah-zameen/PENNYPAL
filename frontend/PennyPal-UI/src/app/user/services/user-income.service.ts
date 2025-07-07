@@ -5,11 +5,20 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { ApiResponse } from "../../models/ApiResponse";
 import { AddIncomeModel } from "../models/add-income.model";
 import { Injectable } from "@angular/core";
+import { RecurringIncomeComponent } from "../pages/income-management/recurring-income/recurring-income.component";
+import { RecurringIncomesModel } from "../models/recurring-income.model";
 
 @Injectable({
     providedIn : 'root'
 })
 export class UserIncomeService{
+
+  getRecurringIncomes(): Observable<RecurringIncomesModel> {
+    return this.https.get<ApiResponse<RecurringIncomesModel>>(`${this.apiURL}/get-recurring-incomes-data`, { withCredentials: true }).pipe(
+      map((response) => response.data),
+      catchError(this.handleError)
+    );
+  }
     private apiURL = `${environment.apiBaseUrl}/api/user`
     private incomeSubject = new BehaviorSubject<IncomeModel[]|null>(null) 
     private incomeAddedSubject = new Subject<void>();
@@ -19,7 +28,7 @@ export class UserIncomeService{
 
     constructor(private https : HttpClient){}
 
-    addIncome(income : AddIncomeModel):Observable<IncomeModel>{
+    addIncome(income : IncomeModel):Observable<IncomeModel>{
         return this.https.post<ApiResponse<IncomeModel>>(`${this.apiURL}/add-income`,income,{withCredentials:true}).pipe(
             map(res => res.data),
             tap(()=>{
@@ -44,7 +53,25 @@ export class UserIncomeService{
       );
     }
 
+    getRecentIncomes(size : number): Observable<IncomeModel[]> {
+      return this.https.get<ApiResponse<IncomeModel[]>>(`${this.apiURL}/recent-incomes`, { withCredentials: true,params:{size : size} }).pipe(
+        map((response) => response.data),      
+      );
+    }
 
+    toggleRecurringIncome(incomeId: number): Observable<IncomeModel> {
+      return this.https.patch<ApiResponse<IncomeModel>>(`${this.apiURL}/toggle-recurring-income/${incomeId}`, {}, { withCredentials: true }).pipe(
+        map((response) => response.data),
+        catchError(this.handleError)
+      );
+    }
+
+    deleteRecurringIncome(incomeId: number): Observable<void> {
+      return this.https.delete<ApiResponse<void>>(`${this.apiURL}/delete-recurring-income/${incomeId}`, { withCredentials: true }).pipe(
+        map((response) => response.data),
+        catchError(this.handleError)
+      );
+    }
 
     //handle all erros from the client or server
   private handleError(error : HttpErrorResponse):Observable<never>{

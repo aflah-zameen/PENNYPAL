@@ -1,7 +1,7 @@
 package com.application.pennypal.infrastructure.config;
 
 import com.application.pennypal.application.port.FetchFilteredUsersPort;
-import com.application.pennypal.application.service.FetchUsersService;
+import com.application.pennypal.application.service.user.FetchUsersService;
 import com.application.pennypal.application.usecases.admin.FetchUsers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

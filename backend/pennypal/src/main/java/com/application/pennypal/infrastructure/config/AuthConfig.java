@@ -1,22 +1,15 @@
 package com.application.pennypal.infrastructure.config;
 
 import com.application.pennypal.application.port.*;
-import com.application.pennypal.application.service.*;
+import com.application.pennypal.application.service.auth.*;
+import com.application.pennypal.application.service.user.CreateUserService;
+import com.application.pennypal.application.service.user.GetUserService;
 import com.application.pennypal.application.usecases.user.*;
-import com.application.pennypal.infrastructure.adapter.auth.EncodePasswordAdapter;
-import com.application.pennypal.infrastructure.adapter.auth.JwtTokenServiceAdapter;
-import com.application.pennypal.infrastructure.adapter.auth.SpringUserAuthenticationAdapter;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.RefreshToken.RefreshTokenRepository;
-import com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper.UserMapper;
-import com.application.pennypal.infrastructure.adapter.persistence.jpa.user.JpaUserRepositoryPort;
-import com.application.pennypal.infrastructure.adapter.persistence.jpa.user.SpringDataUserRepository;
 import com.application.pennypal.infrastructure.security.jwt.JwtProperties;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.util.Assert;
 
 import javax.crypto.SecretKey;

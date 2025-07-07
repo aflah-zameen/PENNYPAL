@@ -1,14 +1,32 @@
-<nav class="w-64 bg-white border-r border-stone-300 shadow-md flex flex-col p-4 text-base text-black h-full">
-  <!-- Header -->
-  <app-side-navbar-header [title]="navigationTitle" />
+<nav class="w-64 bg-white border-r border-gray-200 shadow-sm flex flex-col h-full">
+      
+      <!-- Header -->
+      <app-side-navbar-header [title]="navigationTitle" />
 
-  <!-- Menu Items -->
-  <ul class="mt-8 space-y-2">
-    <app-side-navbar-item
-      *ngFor="let item of menuItems; trackBy: trackByText"
-      [text]="item.text"
-      [allowWrap]="item.allowWrap || false"
-      [hasCustomPadding]="item.hasCustomPadding || false"
-    />
-  </ul>
-</nav>
+      <!-- Menu Items -->
+      <div class="flex-1 px-3 py-4 overflow-y-auto">
+        <ul class="space-y-1">
+          <app-side-navbar-item
+            *ngFor="let item of menuItems; trackBy: trackByRoute"
+            [item]="item"
+            (itemClick)="onItemClick($event)"
+          />
+        </ul>
+      </div>
+
+      <!-- User Profile Section -->
+      <app-user-profile 
+        *ngIf="currentUser"
+        [user]="currentUser"
+        (logout)="userLogout()"
+        (profileClick)="onProfileClick()"
+        (settingsClick)="onSettingsClick()"
+      />
+    </nav>
+
+    <!-- Logout Confirmation Modal -->
+    <!-- <app-logout-confirmation
+      [isOpen]="isLogoutModalOpen"
+      (confirm)="confirmLogout()"
+      (cancel)="cancelLogout()"
+    /> -->

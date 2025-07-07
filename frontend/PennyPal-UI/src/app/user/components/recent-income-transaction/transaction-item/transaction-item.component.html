@@ -1,19 +1,50 @@
-<article class="flex relative items-start h-[27px] w-[550px] max-md:w-full max-sm:flex-col max-sm:gap-2 max-sm:p-3 max-sm:h-auto max-sm:rounded-lg max-sm:border max-sm:border-solid max-sm:bg-neutral-50 max-sm:border-zinc-100">
-      <div class="absolute top-0 left-0 text-base tracking-wide text-black max-sm:static max-sm:text-sm">
-        {{ getFormattedContent() }}
+<article class="group relative bg-white rounded-lg border border-gray-100 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-300 px-4 py-2 text-sm overflow-hidden max-sm:hidden">
+  <div class="flex items-center gap-4">
+    
+    <!-- Amount -->
+    <div class="w-20 flex items-center">
+      <div class="font-semibold text-green-600">{{ getFormattedContent() }}</div>
+    </div>
+
+    <!-- Source -->
+    <div class="w-32 flex items-center">
+      <div class="flex items-center space-x-2">
+        <!-- <div class="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs" [ngClass]="getCategoryBgClass()">
+          <svg class="w-4 h-4" [ngClass]="getCategoryIconClass()" fill="currentColor" viewBox="0 0 20 20">
+            <path *ngIf="getCategoryType() === 'salary'" d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9z"></path>
+            <path *ngIf="getCategoryType() === 'freelance'" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path *ngIf="getCategoryType() === 'other'" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4z"></path>
+          </svg>
+        </div> -->
+        <span class="text-gray-800 font-medium truncate">{{ incomes.source?.name }}</span>
       </div>
-      <div class="absolute top-0 text-base tracking-wide text-black left-[132px] max-sm:static max-sm:text-sm">
-        {{ incomes.source }}
-      </div>
-      <div class="flex absolute top-0 flex-col items-start h-[27px] left-[338px] w-[104px] max-md:left-60 max-sm:static max-sm:w-auto">
-        <time class="text-xs tracking-wide text-black max-sm:text-xs">
-          {{ incomes.income_date}}
-        </time>
-        <!-- <time class="text-xs tracking-wide text-neutral-500 max-sm:text-xs">
-          {{ transaction.time }}
-        </time> -->
-      </div>
-      <div class="absolute top-0 right-0 text-base tracking-wide text-black max-sm:static max-sm:text-sm">
-        {{ incomes.status }}
-      </div>
-    </article>
+    </div>
+
+    <!-- Date -->
+    <div class="w-28 flex flex-col justify-center">
+      <span class="text-gray-800">{{ formatDate(incomes.income_date) }}</span>
+      <span class="text-[11px] text-gray-500">{{ formatDayOfWeek(incomes.income_date) }}</span>
+    </div>
+
+    <!-- Status -->
+    <div class="w-24 flex items-center space-x-2">
+      <div [ngClass]="incomes.status === 'CONFIRMED' ? 'w-2 h-2 bg-green-400 rounded-full animate-pulse' : 'w-2 h-2 bg-orange-400 rounded-full animate-pulse'"></div>
+      <span [ngClass]="incomes.status === 'CONFIRMED' ? 'text-green-600 font-medium' : 'text-orange-400 font-medium'">{{ incomes.status }}</span>
+    </div>
+
+    <!-- Hover Actions -->
+    <div class="ml-auto flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <button class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md" title="View">
+        <svg class="w-4 h-4" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S3.732 16.057 2.458 12z"></path>
+        </svg>
+      </button>
+      <button class="p-1.5 text-gray-500 hover:bg-gray-100 rounded-md" title="More">
+        <svg class="w-4 h-4" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v.01M12 12v.01M12 18v.01"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</article>

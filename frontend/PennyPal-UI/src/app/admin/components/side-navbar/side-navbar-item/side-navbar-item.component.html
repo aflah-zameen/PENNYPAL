@@ -1,8 +1,48 @@
-<li
-  class="px-6 py-3 w-full border border-neutral-300 rounded cursor-pointer hover:bg-neutral-100 transition"
-  [class.whitespace-nowrap]="!allowWrap"
-  [class.pt-3]="hasCustomPadding"
-  [class.pb-4]="hasCustomPadding"
->
-  <span [innerHTML]="formattedText"></span>
+<li class="relative">
+  <!-- Navigation Item -->
+  <button
+    (click)="onItemClick()"
+    class="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 group"
+    [ngClass]="getItemClasses()"
+  >
+    <div class="flex items-center space-x-3">
+      <!-- Icon -->
+      <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-200" [ngClass]="getIconClasses()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path *ngIf="item.icon === 'dashboard'" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z M8 21l4-7 4 7M3 7l5-5 5 5"></path>
+        <path *ngIf="item.icon === 'users'" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        <!-- ... add other icon paths as needed -->
+      </svg>
+
+      <!-- Label -->
+      <span class="flex-1 truncate">{{ item.text }}</span>
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <!-- Badge -->
+      <span *ngIf="item.badge" class="px-2 py-0.5 rounded-full text-xs font-medium" [ngClass]="getBadgeClasses()">
+        {{ item.badge }}
+      </span>
+
+      <!-- Expand Arrow -->
+      <svg *ngIf="item.subItems?.length" class="w-4 h-4 transition-transform duration-200" [class.rotate-90]="isExpanded" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </div>
+  </button>
+
+  <!-- Sub Items -->
+  <div *ngIf="item.subItems?.length && isExpanded" class="mt-1 ml-8 space-y-1 animate-in slide-in-from-top-2 duration-200">
+    <button
+      *ngFor="let subItem of item.subItems"
+      (click)="onSubItemClick(subItem)"
+      class="w-full flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-all duration-200"
+      [ngClass]="getSubItemClasses(subItem)"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path *ngIf="subItem.icon === 'document-report'" d="M9 17v-2m3 2v-4m3 4v-6..." />
+        <!-- ... add additional subItem icons here -->
+      </svg>
+      <span class="truncate">{{ subItem.text }}</span>
+    </button>
+  </div>
 </li>

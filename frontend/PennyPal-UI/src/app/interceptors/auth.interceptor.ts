@@ -23,7 +23,14 @@ export const authInterceptor: HttpInterceptorFn = (
   const router = inject(Router);
   const toastr = inject(ToastrService);
   return next(req).pipe(
-    catchError((error: HttpErrorResponse) => {      
+    catchError((error: HttpErrorResponse) => {
+
+      if (error.status === 0) {
+  // Show a toast or modal
+        toastr.show('Unable to connect to server. Please check your internet or try again later.');
+        return throwError(() => new Error('Network error'));
+        }
+      
       if (error.status === 401 && !req.url.includes('/auth/refresh-token') && !req.url.includes('/auth/login')) {
         return handle401Error(req, next, authService,router);
       }

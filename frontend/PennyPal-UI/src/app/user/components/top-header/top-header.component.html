@@ -1,11 +1,26 @@
-<header class="sticky top-0 z-10 bg-white px-5 h-[70px] shadow-md flex items-center justify-between"> 
-  <app-user-greeting [name]="(user$ | async)?.name || null" />
+ <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-lg shadow-blue-500/5 transition-all duration-300">
+      <!-- Gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-50/50 via-white to-purple-50/50"></div>
+      
+      <!-- Content -->
+      <div class="relative px-8 h-[80px] flex items-center justify-between max-w-7xl mx-auto max-md:px-6 max-sm:px-4">
+        <!-- Left Section - User Greeting -->
+        <div class="flex items-center space-x-4">
+          <!-- Logo/Brand Icon -->
+          <div class="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 max-sm:hidden">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"></path>
+            </svg>
+          </div>
+          
+          <app-user-greeting [name]="(user$ | async)?.name || null" />
+        </div>
 
-  <div class="flex gap-8 items-center max-md:gap-5 max-sm:gap-4">
-    <app-balance-display [balance]="userInfo.balance" />
-    <app-notification-icon [count]="userInfo.notificationCount" />
-    <app-user-profile-icon
-      [profileURL]="(user$ | async)?.profileURL || null"
-    />
-  </div>
-</header>
+        <!-- Right Section - Actions -->
+        <div class="flex items-center space-x-6 max-md:space-x-4 max-sm:space-x-3">
+          <app-balance-display [balance]="userInfo.balance" />
+          <app-notification-icon [count]="userInfo.notificationCount" />
+          <app-user-profile-icon [profileURL]="(user$ | async)?.profileURL || null" />
+        </div>
+      </div>
+    </header>

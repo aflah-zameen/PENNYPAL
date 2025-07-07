@@ -4,6 +4,7 @@ import { User } from "../../models/User";
 import { environment } from "../../../environments/environment";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { ApiResponse } from "../../models/ApiResponse";
+import { UserCategoryResponse } from "../models/user-category.model";
 
 @Injectable({
     providedIn : 'root'
@@ -33,6 +34,14 @@ export class UserService{
         map((res) => res.data)
     ,
     catchError(this.handleError));
+  }
+
+  getCategories():Observable<UserCategoryResponse[]>{
+    return this.https.get<ApiResponse<UserCategoryResponse[]>>(`${this.apiURL}/get-categories`,{withCredentials:true})
+    .pipe(
+      map((res) => res.data),
+      catchError(this.handleError)
+    );
   }
 
 

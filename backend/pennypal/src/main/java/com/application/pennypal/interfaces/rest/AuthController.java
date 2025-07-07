@@ -1,25 +1,19 @@
 package com.application.pennypal.interfaces.rest;
 
-import com.application.pennypal.application.auth.AuthService;
 import com.application.pennypal.application.dto.LoginResponseDTO;
-import com.application.pennypal.application.port.TokenServicePort;
-import com.application.pennypal.application.service.ValidateEmailUniqueness;
+import com.application.pennypal.application.service.auth.ValidateEmailUniqueness;
 import com.application.pennypal.application.usecases.user.*;
-import com.application.pennypal.domain.user.entity.User;
 import com.application.pennypal.domain.user.valueObject.TokenPairDTO;
 import com.application.pennypal.domain.user.valueObject.UserDomainDTO;
-import com.application.pennypal.infrastructure.adapter.persistence.jpa.RefreshToken.RefreshTokenRepository;
 import com.application.pennypal.interfaces.rest.dtos.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.hibernate.sql.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;

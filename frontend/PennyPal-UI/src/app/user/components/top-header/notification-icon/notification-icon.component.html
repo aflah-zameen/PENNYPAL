@@ -1,9 +1,23 @@
-<div class="relative">
-  <svg viewBox="0 0 37 38" width="37" height="38" class="notification-icon">
-    <circle cx="29.5" cy="7.5" r="7.5" fill="#2200FF" />
-    <text x="27" y="11" font-size="8" fill="white" font-weight="500">{{ count }}</text>
-    <g mask="url(#mask0_288_680)">
-        <path d="M5.33337 31.3334V28.6667H8.00004V19.3334C8.00004 17.4889 8.5556 15.85 9.66671 14.4167C10.7778 12.9834 12.2223 12.0445 14 11.6V10.6667C14 10.1111 14.1945 9.63891 14.5834 9.25002C14.9723 8.86113 15.4445 8.66669 16 8.66669C16.5556 8.66669 17.0278 8.86113 17.4167 9.25002C17.8056 9.63891 18 10.1111 18 10.6667V11.6C19.7778 12.0445 21.2223 12.9834 22.3334 14.4167C23.4445 15.85 24 17.4889 24 19.3334V28.6667H26.6667V31.3334H5.33337ZM16 35.3334C15.2667 35.3334 14.6389 35.0722 14.1167 34.55C13.5945 34.0278 13.3334 33.4 13.3334 32.6667H18.6667C18.6667 33.4 18.4056 34.0278 17.8834 34.55C17.3612 35.0722 16.7334 35.3334 16 35.3334ZM10.6667 28.6667H21.3334V19.3334C21.3334 17.8667 20.8112 16.6111 19.7667 15.5667C18.7223 14.5222 17.4667 14 16 14C14.5334 14 13.2778 14.5222 12.2334 15.5667C11.1889 16.6111 10.6667 17.8667 10.6667 19.3334V28.6667Z" fill="#1C1B1F"/>
-      </g>
-  </svg>
-</div>
+ <div class="relative group cursor-pointer">
+      <!-- Notification Button -->
+      <button class="relative p-3 rounded-xl bg-gradient-to-br from-gray-50 to-blue-50 border border-gray-200 hover:border-blue-300 transition-all duration-300 hover:shadow-lg hover:scale-105">
+        <!-- Bell Icon -->
+        <svg class="w-6 h-6 text-gray-600 group-hover:text-blue-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+        </svg>
+        
+        <!-- Notification Badge -->
+        <div *ngIf="count > 0" class="absolute -top-1 -right-1 min-w-[20px] h-5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate-pulse">
+          <span>{{ count > 99 ? '99+' : count }}</span>
+        </div>
+        
+        <!-- Pulse animation for new notifications -->
+        <div *ngIf="count > 0" class="absolute -top-1 -right-1 w-5 h-5 bg-red-400 rounded-full animate-ping opacity-75"></div>
+      </button>
+      
+      <!-- Hover tooltip -->
+      <div class="absolute top-full right-0 mt-2 px-3 py-1 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+        {{ count > 0 ? count + ' new notifications' : 'No new notifications' }}
+        <div class="absolute bottom-full right-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
+      </div>
+    </div>

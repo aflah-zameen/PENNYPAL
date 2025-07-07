@@ -1,0 +1,29 @@
+<div 
+      *ngIf="isOpen"
+      class="fixed inset-0 z-50 overflow-y-auto"
+      (click)="onBackdropClick($event)"
+    >
+      <!-- Backdrop -->
+      <div class="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm transition-opacity duration-300"></div>
+      
+      <!-- Modal Container -->
+      <div class="flex min-h-full items-center justify-center p-4">
+        <div 
+          class="relative bg-white rounded-3xl shadow-2xl transform transition-all duration-300 scale-100 w-full max-w-2xl border border-gray-100"
+          (click)="$event.stopPropagation()"
+        >
+          <!-- Close Button -->
+          <button
+            (click)="onClose()"
+            class="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200 z-10"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+
+          <!-- Content -->
+          <ng-content></ng-content>
+        </div>
+      </div>
+    </div>

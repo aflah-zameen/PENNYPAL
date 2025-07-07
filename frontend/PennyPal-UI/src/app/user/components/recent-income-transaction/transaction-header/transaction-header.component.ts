@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-transaction-header',
@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './transaction-header.component.css'
 })
 export class TransactionHeaderComponent {
+  @Output() seeAll = new EventEmitter<void>()
 
+  onSeeAll(): void {
+    this.seeAll.emit()
+  }
 }

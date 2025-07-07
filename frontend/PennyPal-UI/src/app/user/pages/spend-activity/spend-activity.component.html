@@ -1,0 +1,66 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Page Header -->
+        <div class="mb-12">
+          <div class="flex items-center space-x-4 mb-4">
+            <div class="p-4 rounded-3xl bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2V7a2 2 0 012-2h2a2 2 0 002 2v2a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2z"></path>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
+                Spending Activity
+              </h1>
+              <p class="text-xl text-gray-600 mt-2">Track your expenses and analyze spending patterns</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="space-y-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div *ngFor="let i of [1,2,3,4]" class="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
+              <div class="animate-pulse">
+                <div class="h-12 bg-gray-200 rounded-2xl mb-4"></div>
+                <div class="h-4 bg-gray-200 rounded mb-2"></div>
+                <div class="h-8 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+            <div class="animate-pulse">
+              <div class="h-8 bg-gray-200 rounded mb-6"></div>
+              <div class="space-y-4">
+                <div *ngFor="let i of [1,2,3,4,5]" class="h-12 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div *ngIf="!isLoading">
+          <!-- Summary Cards -->
+          <app-spend-summary-card [summary]="spendingSummary">
+          </app-spend-summary-card>
+
+          <!-- Category Chart - Full Width -->
+          <div class="mb-8">
+            <app-spend-category-chart 
+              [categories]="categorySpending"
+              [viewMode]="chartViewMode"
+              (viewModeChange)="onChartViewModeChange($event)"
+            ></app-spend-category-chart>
+          </div>
+
+          <!-- Recent Transactions - Full Width -->
+          <div>
+            <app-recent-spend-transaction 
+              [transactions]="transactions"
+              [categories]="categories"
+            ></app-recent-spend-transaction>
+          </div>
+        </div>
+      </div>
+    </div>

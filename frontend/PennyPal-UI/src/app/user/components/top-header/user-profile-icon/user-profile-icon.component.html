@@ -1,26 +1,47 @@
-<div class="relative">
-  <button (click)="toggleDropdown()" aria-label="Profile" class="rounded-full overflow-hidden p-[2px] bg-white">
-  <div class="w-13 h-13 rounded-full border-2 border-blue-600 flex items-center justify-center overflow-hidden">
-    <ng-container *ngIf="profileURL; else defaultIcon">
-      <img
-        [src]="profileURL"
-        (error)="profileURL = null"
-        alt="Profile"
-        class="w-full h-full object-cover rounded-full"
+ <div class="relative">
+      <!-- Profile Button -->
+      <button 
+        (click)="toggleDropdown()" 
+        aria-label="Profile" 
+        class="relative group p-1 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 hover:from-blue-200 hover:to-purple-200 transition-all duration-300 hover:shadow-lg hover:scale-105"
+      >
+        <!-- Profile Image Container -->
+        <div class="w-12 h-12 rounded-full border-2 border-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center overflow-hidden bg-white shadow-inner">
+          <ng-container *ngIf="profileURL; else defaultIcon">
+            <img
+              [src]="profileURL"
+              (error)="profileURL = null"
+              alt="Profile"
+              class="w-full h-full object-cover rounded-full"
+            />
+          </ng-container>
+          
+          <ng-template #defaultIcon>
+            <!-- Enhanced Default Avatar -->
+            <div class="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center rounded-full">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+          </ng-template>
+        </div>
+        
+        <!-- Online Status Indicator -->
+        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full shadow-sm animate-pulse"></div>
+        
+        <!-- Dropdown Arrow -->
+        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-white rounded-full border border-gray-200 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200">
+          <svg class="w-2 h-2 text-gray-600 group-hover:text-blue-600 transition-colors duration-200" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+      </button>
+
+      <!-- Enhanced Dropdown -->
+      <app-profile-dropdown
+        *ngIf="isDropdownOpen"
+        [items]="dropdownItems"
+        (itemClick)="onDropdownItemClick($event)"
+        (clickOutside)="closeDropdown()"
       />
-    </ng-container>
-    <ng-template #defaultIcon>
-      <svg width="32" height="32" fill="black" xmlns="http://www.w3.org/2000/svg" class="rounded-full">
-        <!-- Your SVG content -->
-      </svg>
-    </ng-template>
-  </div>
-</button>
-
-
-  <app-profile-dropdown
-  *ngIf="isDropdownOpen"
-  [items]="dropdownItems"
-  >
-  </app-profile-dropdown>
-</div>
+    </div>

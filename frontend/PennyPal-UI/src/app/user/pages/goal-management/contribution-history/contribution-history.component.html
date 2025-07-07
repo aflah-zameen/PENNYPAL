@@ -1,0 +1,77 @@
+ <div class="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl border border-gray-100 overflow-hidden">
+      
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-gray-200 bg-white">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+          </div>
+          <div>
+            <h4 class="font-bold text-gray-900">Contribution History</h4>
+            <p class="text-sm text-gray-600">{{ contributions.length }} contributions</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contributions List -->
+      <div class="max-h-64 overflow-y-auto">
+        <div *ngIf="contributions.length === 0" class="px-6 py-8 text-center">
+          <div class="mx-auto w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+          </div>
+          <p class="text-gray-500 font-medium">No contributions yet</p>
+          <p class="text-sm text-gray-400 mt-1">Start adding money to track your progress</p>
+        </div>
+
+        <div 
+          *ngFor="let contribution of contributions; trackBy: trackByContribution"
+          class="group px-6 py-4 border-b border-gray-100 last:border-b-0 hover:bg-white/50 transition-all duration-200"
+        >
+          <div class="flex items-start justify-between">
+            <!-- Left Side - Amount and Date -->
+            <div class="flex-1">
+              <div class="flex items-center space-x-3 mb-1">
+                <!-- Amount -->
+                <span class="text-lg font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
+                  {{ formatCurrency(contribution.amount) }}
+                </span>
+                <!-- Date -->
+                <span class="text-sm text-gray-600 font-medium">
+                  {{ formatDate(contribution.date) }}
+                </span>
+              </div>
+              
+              <!-- Notes -->
+              <p *ngIf="contribution.notes" class="text-sm text-gray-500 mt-1 leading-relaxed">
+                {{ contribution.notes }}
+              </p>
+            </div>
+
+            <!-- Right Side - Delete Button -->
+            <button 
+              (click)="onDeleteContribution(contribution.id)"
+              class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-105"
+              title="Delete contribution"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Summary -->
+      <div *ngIf="contributions.length > 0" class="px-6 py-4 bg-white border-t border-gray-200">
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-600 font-medium">Total Contributed:</span>
+          <span class="text-lg font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
+            {{ getTotalContributions() }}
+          </span>
+        </div>
+      </div>
+    </div>

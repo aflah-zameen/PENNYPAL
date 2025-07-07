@@ -21,7 +21,11 @@ import { FormsModule } from '@angular/forms';
 export class DateFilterComponent {
    @Output() filterChange = new EventEmitter<Partial<FiltersDTO>>();
 
-  onChange(field: 'joinedAfter' | 'joinedBefore', value: Date | null) {
-    this.filterChange.emit({ [field]: value ?? undefined });
+  onChange(key: string, event: any) {
+    const rawValue = event.target.value;
+    const dateValue = new Date(rawValue);    
+    this.filterChange.emit({
+      [key]: dateValue
+    });
   }
 }

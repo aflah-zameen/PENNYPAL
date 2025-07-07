@@ -7,5 +7,5 @@ import { Component,Input } from '@angular/core';
   styleUrl: './side-navbar-header.component.css'
 })
 export class SideNavbarHeaderComponent {
-   @Input() title: string = 'Main Navigation';
+   @Input() title: string = 'Navigation'
 }

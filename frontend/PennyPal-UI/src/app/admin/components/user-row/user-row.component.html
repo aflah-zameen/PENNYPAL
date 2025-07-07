@@ -1,16 +1,88 @@
-<div class="grid grid-cols-7 gap-4  px-5 text-gray-800 items-center text-sm sm:text-base">
-  <div class="truncate">{{ userData.id }}</div>
-  <div class="truncate">{{ userData.name }}</div>
-  <div class="truncate whitespace-nowrap overflow-hidden">{{ userData.email }}</div>
-  <div>{{ userData.active ? 'active' : 'inactive' }}</div>
-  <div>{{ userData.verified ? 'verified' : 'not verified' }}</div>
-  <div class="truncate">{{ userData.phone }}</div>
-  <div class="scale-[0.60]">
-    <app-action-button
-      class="text-sm"
-      [text]="userData.active ? 'BLOCK' : 'UNBLOCK'"
-      [variant]="userData.active ? 'danger' : 'primary'"
-      [onClick]="handleBlockUser"
-    />
-  </div>
-</div>
+<div class="grid grid-cols-7 gap-4 py-4 px-6 text-gray-800 items-center text-sm">
+      <!-- User Info -->
+      <div class="flex items-center gap-3">
+        <img 
+          [src]="userData.profileURL"
+          (error)="onImgError($event)"
+          class="h-10 w-10 rounded-full object-cover border-2 border-gray-100"
+        />
+
+        <div class="min-w-0 flex-1">
+          <p class="font-medium text-gray-900 truncate">{{ userData.name }}</p>
+          <p class="text-sm text-gray-500 truncate">{{ userData.email }}</p>
+          <p class="text-xs text-gray-400">{{ userData.id }}</p>
+        </div>
+      </div>
+
+      <!-- Role Badge -->
+      <div>
+        <span 
+          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border bg-purple-100 text-purple-800 border-purple-200"
+        >
+                {{ getRolesLabel() || 'User' }}
+        </span>
+      </div>
+
+      <!-- Status Badge -->
+      <div>
+        <span 
+          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
+          [ngClass]="getStatusBadgeClass(userData.active)"
+        >
+          {{ userData.active ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+
+      <!-- Verified Status -->
+      <div class="flex items-center gap-2">
+        <div 
+          class="h-2 w-2 rounded-full"
+          [ngClass]="userData.verified ? 'bg-green-500' : 'bg-red-500'"
+        ></div>
+        <span class="text-sm text-gray-600">
+          {{ userData.verified ? 'Verified' : 'Unverified' }}
+        </span>
+      </div>
+
+      <!-- Phone -->
+      <div class="truncate text-gray-600">{{ userData.phone }}</div>
+
+      <!-- Joined Date -->
+      <div class="text-gray-600">{{ userData.createdAt | date:'medium'}}</div>
+
+      <!-- Actions -->
+      <div class="flex items-center justify-end gap-2">
+        <button
+          (click)="handleBlockUser()"
+          class="px-3 py-1.5 text-xs font-medium rounded-md transition-colors duration-200"
+          [ngClass]="userData.active ? 
+            'bg-red-100 text-red-700 hover:bg-red-200 border border-red-200' : 
+            'bg-blue-100 text-blue-700 hover:bg-blue-200 border border-blue-200'"
+        >
+          {{ userData.active ? 'Block' : 'Unblock' }}
+        </button>
+        
+        <div class="relative">
+          <button 
+            class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors duration-200"
+            (click)="toggleDropdown()"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+            </svg>
+          </button>
+          
+          <div 
+            *ngIf="showDropdown"
+            class="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10"
+          >
+            <div class="py-1">
+              <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">View Details</button>
+              <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Edit User</button>
+              <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Reset Password</button>
+              <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Delete User</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

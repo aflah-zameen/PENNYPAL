@@ -1,50 +1,121 @@
-<div class="mt-5  flex flex-col">
-  <main class="flex-1 mx-auto w-full max-w-[1079px] bg-white border border-neutral-500 p-5">
-    <!-- Title -->
-    <header class="text-3xl font-bold tracking-wider text-black mb-8">
-      <h1>User Management</h1>
-    </header>
+<div class="min-h-screen bg-gray-50">
+      <div class="max-w-7xl mx-auto p-6">
+        <!-- Header -->
+        <header class="mb-8">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="p-2 bg-blue-100 rounded-lg">
+              <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+              </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">User Management</h1>
+          </div>
+          <p class="text-gray-600">Manage and monitor user accounts across your platform</p>
+        </header>
 
-    <!-- Filters -->
-    <section class="flex flex-wrap items-center gap-4 mb-6">
-      <app-search-bar 
-      placeholder="Search Users" 
-      (searchChange)="onSearchChange($event)"
-      />
-      <div class="flex gap-4 flex-wrap">
-        <app-filter-dropdown 
-        label="Role"
-        [options]="['ADMIN','USER','SUPER_ADMIN']"
-        filterKey = "role"
-        (filterChange)="updatePartialFilter($event)"
-         />
-        <app-filter-dropdown 
-        label="Status"
-        [options]="['ACTIVE','INACTIVE']"
-        filterKey = "status"
-        (filterChange)="updatePartialFilter($event)"
-         />
-        <app-date-filter
-        (filterChange)="updatePartialFilter($event)"
-        >
-        </app-date-filter>
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Total Users</p>
+                <p class="text-2xl font-bold text-gray-900">1,234</p>
+              </div>
+              <div class="p-3 bg-blue-100 rounded-full">
+                <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Active Users</p>
+                <p class="text-2xl font-bold text-green-600">987</p>
+              </div>
+              <div class="p-3 bg-green-100 rounded-full">
+                <div class="h-5 w-5 bg-green-600 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Verified</p>
+                <p class="text-2xl font-bold text-blue-600">856</p>
+              </div>
+              <div class="p-3 bg-blue-100 rounded-full">
+                <div class="h-5 w-5 bg-blue-600 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">New This Month</p>
+                <p class="text-2xl font-bold text-purple-600">47</p>
+              </div>
+              <div class="p-3 bg-purple-100 rounded-full">
+                <div class="h-5 w-5 bg-purple-600 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+          <div class="flex flex-col lg:flex-row gap-4">
+            <app-search-bar 
+              placeholder="Search users by name, email, or ID..." 
+              (searchChange)="onSearchChange($event)"
+              class="flex-1">
+            </app-search-bar>
+            
+            <div class="flex flex-wrap gap-3">
+              <app-filter-dropdown 
+                label="Role"
+                [options]="['ADMIN','USER','SUPER_ADMIN']"
+                filterKey="role"
+                (filterChange)="updatePartialFilter($event)">
+              </app-filter-dropdown>
+              
+              <app-filter-dropdown 
+                label="Status"
+                [options]="['ACTIVE','INACTIVE']"
+                filterKey="status"
+                (filterChange)="updatePartialFilter($event)">
+              </app-filter-dropdown>
+              
+              <app-date-filter
+                (filterChange)="updatePartialFilter($event)">
+              </app-date-filter>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <app-user-table [users]="users"></app-user-table>
+          <div *ngIf="!users?.length" class="text-center py-12">
+            <svg class="h-12 w-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+            </svg>
+            <p class="text-gray-500">No users found matching your criteria</p>
+          </div>
+        </div>
+
+        <!-- Bottom Pagination -->
+        <footer class="mt-6 flex justify-center">
+          <app-pagination
+            *ngIf="totalPages > 1"
+            [totalPages]="totalPages"
+            [currentPage]="currentPage"
+            (pageChanged)="onPageChange($event)">
+          </app-pagination>
+        </footer>
       </div>
-    </section>
-
-    <!-- Table -->
-    <section>
-      <app-user-table [users]="users"></app-user-table>
-      <p *ngIf="!users?.length" class="mt-4 text-neutral-600">No users found.</p>
-    </section>
-  </main>
-
-  <!-- Bottom Pagination -->
-    <footer class="mx-auto mb-5">
-    <app-pagination
-      *ngIf="totalPages > 1"
-      [totalPages]="totalPages"
-      [currentPage]="currentPage"
-      (pageChanged)="onPageChange($event)"
-    ></app-pagination>
-  </footer>
-</div>
+    </div>

@@ -5,6 +5,7 @@ import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.Us
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Component
 public class UserSpecification {

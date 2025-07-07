@@ -1,0 +1,99 @@
+<div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 border border-gray-100 group relative overflow-hidden text-sm">
+  <!-- Gradient hover effect -->
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+
+  <!-- Core Content -->
+  <div class="relative  space-y-4">
+    
+    <!-- Header: Icon + Info + Actions -->
+    <div class="flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 rounded-xl shadow group-hover:scale-105 transition-transform duration-200"
+             [style.background]="'linear-gradient(135deg, ' + goal.color + '20, ' + goal.color + '40)'">
+          <svg class="w-6 h-6" [style.color]="goal.color" fill="currentColor" viewBox="0 0 20 20">
+            <!-- Conditional Icon Paths -->
+          </svg>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-gray-900 leading-tight group-hover:text-blue-700 transition-colors">
+            {{ goal.title }}
+          </h3>
+          <p class="text-gray-600">
+            <span class="font-bold text-green-700">{{ formatCurrency(goal.currentAmount) }}</span>
+            <span class="mx-1 text-gray-400">/</span>
+            <span class="text-gray-500">{{ formatCurrency(goal.targetAmount) }}</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Edit/Delete Buttons -->
+      <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <button (click)="onEdit()" class="text-blue-600 hover:text-blue-700 p-2 rounded-md transition hover:bg-blue-50">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor"><!-- Edit Icon Path --></svg>
+        </button>
+        <button (click)="onDelete()" class="text-red-600 hover:text-red-700 p-2 rounded-md transition hover:bg-red-50">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor"><!-- Delete Icon Path --></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div>
+      <div class="flex justify-between items-center mb-1">
+        <span>Progress</span>
+        <span class="text-xs font-bold px-2 py-1 rounded bg-opacity-90 text-white shadow" [style.background-color]="goal.color">
+          {{ progressPercentage }}%
+        </span>
+      </div>
+      <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div class="h-full rounded-full transition-all duration-500"
+             [style.width.%]="progressPercentage"
+             [style.background]="'linear-gradient(90deg, ' + goal.color + ', ' + goal.color + 'CC)'">
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Money Button -->
+    <button (click)="openContributionModal()" class="w-full py-2 px-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md transition">
+      Add Money
+    </button>
+
+    <!-- Dates Section -->
+    <div class="grid grid-cols-2 gap-3">
+      <div class="bg-blue-50 p-2 rounded-md border border-blue-100">
+        <p class="text-xs text-gray-500">Start</p>
+        <p class="text-sm font-semibold text-gray-800">{{ formatDate(goal.startDate) }}</p>
+      </div>
+      <div class="bg-pink-50 p-2 rounded-md border border-pink-100">
+        <p class="text-xs text-gray-500">End</p>
+        <p class="text-sm font-semibold text-gray-800">{{ formatDate(goal.endDate) }}</p>
+      </div>
+    </div>
+
+    <!-- Days Remaining -->
+    <div class="p-2 rounded-md bg-gradient-to-r from-gray-50 to-blue-50 border border-gray-100">
+      <div class="flex justify-between items-center">
+        <span class="text-sm text-gray-600">Days Left</span>
+        <span class="font-bold text-sm px-2 py-1 rounded-full" [ngClass]="daysRemainingClass">
+          {{ daysRemaining }} days
+        </span>
+      </div>
+    </div>
+
+    <!-- Contribution History -->
+    <app-contribution-history
+      [contributions]="goal.contributions || []"
+      (deleteContribution)="onDeleteContribution($event)"
+    />
+  </div>
+
+  <!-- Modal -->
+  <app-add-contribution
+    [isOpen]="isContributionModalOpen"
+    [goalTitle]="goal.title"
+    [goalColor]="goal.color"
+    (close)="closeContributionModal()"
+    (submit)="onAddContribution($event)"
+  />
+</div>

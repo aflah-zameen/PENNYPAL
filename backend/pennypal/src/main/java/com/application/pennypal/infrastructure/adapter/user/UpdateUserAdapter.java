@@ -5,15 +5,13 @@ import com.application.pennypal.application.port.S3SystemPort;
 import com.application.pennypal.application.port.TokenServicePort;
 import com.application.pennypal.application.port.UpdateUserPort;
 import com.application.pennypal.application.port.UserRepositoryPort;
-import com.application.pennypal.application.service.ValidateEmailUniqueness;
+import com.application.pennypal.application.service.auth.ValidateEmailUniqueness;
 import com.application.pennypal.application.usecases.user.SendOtp;
 import com.application.pennypal.domain.user.entity.User;
 import com.application.pennypal.shared.exception.ApplicationException;
 import com.application.pennypal.shared.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor

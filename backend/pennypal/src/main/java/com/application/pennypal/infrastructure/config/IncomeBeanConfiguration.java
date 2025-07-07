@@ -11,18 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class IncomeBeanConfiguration {
     @Bean
-    public AddIncome addIncome(IncomeRepositoryPort incomeRepositoryPort){
+    public IncomeService incomeService(IncomeRepositoryPort incomeRepositoryPort){
         return new IncomeService(incomeRepositoryPort);
     }
-
-    @Bean
-    public GetTotalIncome getTotalIncome(IncomeRepositoryPort incomeRepositoryPort){
-        return new IncomeService(incomeRepositoryPort);
-    }
-
-    @Bean
-    public GetAllIncomes getAllIncomes(IncomeRepositoryPort incomeRepositoryPort){
-        return new IncomeService(incomeRepositoryPort);
-    }
-
 }

@@ -233,6 +233,9 @@ export class AuthService{
     return this.https.post<ApiResponse<string>>(`${this.apiURL}/logout`,null,{withCredentials:true})
     .pipe(
       map(res => res.message),
+      tap(() => {
+        this.userSubject.next(null);
+      }),
       catchError(this.handleError)
     );
   }

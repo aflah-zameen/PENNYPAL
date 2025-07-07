@@ -5,6 +5,7 @@
       [class.text-white]="isActive"
       [class.rounded-lg]="true"
       [class.whitespace-nowrap]="true"
+      (click)="routerLink ? router.navigate([routerLink]) : null"
     >
       <img
         *ngIf="icon"

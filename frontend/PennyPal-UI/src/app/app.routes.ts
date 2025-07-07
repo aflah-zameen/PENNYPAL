@@ -7,12 +7,15 @@ export const routes: Routes = [{
 },{
     path : 'user',
     loadChildren : () => import('./user/user-routes').then(m=>m.userRoutes),
-    // canActivate : [AuthGuard],
-    // data : {roles :['USER']}
+    canActivate : [AuthGuard],
+    data : {roles :['USER']}
 },{
     path : 'admin',
     loadChildren : () => import('./admin/admin-routes').then(m => m.adminRoutes),
-    canActivate : [AuthGuard],
-    data : {roles :['ADMIN','SUPER_ADMIN']}
+    // canActivate : [AuthGuard],
+    // data : {roles :['ADMIN','SUPER_ADMIN']}
+},{
+    path : '**',
+    loadComponent: () => import('./shared/components/error-page/error-page.component').then(m => m.ErrorPageComponent)  
 }
 ];

@@ -1,7 +1,7 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.entity;
 
+import com.application.pennypal.domain.user.valueObject.RecurrenceFrequency;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,9 +26,20 @@ public class IncomeEntity {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    private String source;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private CategoryEntity source;
+
     @Column(name = "income_date",nullable = false)
     private LocalDate incomeDate;
+
+    @Column(nullable = false)
+    private Boolean recurrence;
+
+    @Enumerated(EnumType.STRING)
+    private RecurrenceFrequency frequency;
+
+    private boolean recurrenceActive = true;
 
     private String notes;
 
@@ -37,11 +48,15 @@ public class IncomeEntity {
 
     private String status;
 
-    public IncomeEntity(Long userId,BigDecimal amount,String source,LocalDate incomeDate,String notes){
+    public IncomeEntity(Long userId,BigDecimal amount,CategoryEntity source,LocalDate incomeDate,String notes,
+                        Boolean recurrence, RecurrenceFrequency frequency,boolean recurrenceActive){
         this.userId = userId;
         this.amount= amount;
         this.source = source;
         this.incomeDate = incomeDate;
         this.notes = notes;
+        this.recurrence = recurrence;
+        this.frequency = frequency;
+        this.recurrenceActive = recurrenceActive;
     }
 }

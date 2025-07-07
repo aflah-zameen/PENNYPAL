@@ -20,4 +20,7 @@ export class UserTableComponent {
    updateUser(updatedUser : User){
     this.users = this.users?.map((user) => user.email === updatedUser?.email ? updatedUser : user)|| null;
    }
+   trackByUserId(index: number, user: User): number {
+    return user.id;
+  }
 }

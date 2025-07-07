@@ -10,6 +10,7 @@ import { Title } from '@angular/platform-browser';
 import { User } from '../../../../models/User';
 import { Observable } from 'rxjs';
 import { ProfileDropdownComponent } from "../../../../shared/components/profile-dropdown/profile-dropdown.component";
+import { ProfileDropdown } from '../../../models/profile-dropdown';
 
 @Component({
   selector: 'app-user-profile-icon',
@@ -74,5 +75,18 @@ export class UserProfileIconComponent {
     }
   });
   }
+
+
+  closeDropdown(): void {
+    this.isDropdownOpen = false
+  }
+
+  onDropdownItemClick(item: ProfileDropdown): void {
+  if (item?.action && typeof item.action === 'function') {
+    item.action(); // Safely call the action
+  }
+  this.closeDropdown();
+}
+
 
 }
