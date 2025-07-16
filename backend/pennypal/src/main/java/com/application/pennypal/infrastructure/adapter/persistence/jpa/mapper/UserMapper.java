@@ -1,6 +1,6 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper;
 
-import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.domain.entity.User;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

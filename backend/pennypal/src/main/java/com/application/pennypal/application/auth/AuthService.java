@@ -1,19 +1,12 @@
 package com.application.pennypal.application.auth;
 
-import com.application.pennypal.domain.user.valueObject.Roles;
-import com.application.pennypal.shared.exception.DuplicateEmailException;
-import com.application.pennypal.shared.exception.InvalidRoleException;
 import com.application.pennypal.application.port.UserRepositoryPort;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.RefreshToken.RefreshTokenRepository;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.RefreshTokenEntity;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper.UserMapper;
-import com.application.pennypal.interfaces.rest.dtos.*;
-import com.application.pennypal.domain.user.entity.User;
-import com.application.pennypal.infrastructure.security.jwt.JwtUtil;
-import io.jsonwebtoken.JwtException;
+import com.application.pennypal.domain.entity.User;
+import com.application.pennypal.interfaces.rest.dtos.auth.JwtData;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Set;
 
 @Service
 public class AuthService {

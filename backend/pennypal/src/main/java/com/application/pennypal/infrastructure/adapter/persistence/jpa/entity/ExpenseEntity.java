@@ -19,8 +19,9 @@ public class ExpenseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     @Column(name = "name",nullable = false)
     private String name;
@@ -44,17 +45,24 @@ public class ExpenseEntity {
     @Column(nullable = false)
     private final Boolean active = true;
 
+    private boolean delete;
+
     private final LocalDateTime createdAt = LocalDateTime.now();
 
-    public ExpenseEntity(Long userId,String name,CategoryEntity category,BigDecimal amount,
+    public ExpenseEntity(UserEntity user,String name,CategoryEntity category,BigDecimal amount,
                          String type,LocalDate startDate,LocalDate endDate){
-        this.userId = userId;
+        this.user = user;
         this.name=name;
         this.category = category;
         this.amount = amount;
         this.type = type;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    @PrePersist
+    protected void onCreate(){
+        this.delete = false;
     }
 
 }

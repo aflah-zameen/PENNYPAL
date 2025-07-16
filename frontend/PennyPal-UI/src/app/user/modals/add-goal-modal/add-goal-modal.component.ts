@@ -3,6 +3,7 @@ import { GoalFormData, GoalFormErrors } from '../../models/goal.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalOverlayComponent } from "../modal-overlay/modal-overlay.component";
+import { UserCategoryResponse } from '../../models/user-category.model';
 
 @Component({
   selector: 'app-add-goal-modal',
@@ -12,16 +13,17 @@ import { ModalOverlayComponent } from "../modal-overlay/modal-overlay.component"
 })
 export class AddGoalModalComponent {
   @Input() isOpen: boolean = false;
+  @Input() categories: UserCategoryResponse[] = [];
   @Output() close = new EventEmitter<void>();
   @Output() goalAdded = new EventEmitter<GoalFormData>();
 
   formData: GoalFormData = {
-    name: '',
-    amount: 0,
-    startDate: '',
+    title: '',
+    targetAmount: null,
+    startDate: new Date().toISOString().split('T')[0], // Default to today,
     endDate: '',
     description: '',
-    category: 'other'
+    categoryId: null
   };
 
   errors: GoalFormErrors = {};
@@ -36,11 +38,11 @@ export class AddGoalModalComponent {
   validateForm(): boolean {
     this.errors = {};
 
-    if (!this.formData.name.trim()) {
-      this.errors.name = 'Goal name is required';
+    if (!this.formData.title.trim()) {
+      this.errors.name = 'Goal title is required';
     }
 
-    if (!this.formData.amount || this.formData.amount <= 0) {
+    if (!this.formData.targetAmount || this.formData.targetAmount <= 0) {
       this.errors.amount = 'Please enter a valid target amount';
     }
 
@@ -50,6 +52,10 @@ export class AddGoalModalComponent {
 
     if (!this.formData.endDate) {
       this.errors.endDate = 'Target date is required';
+    }
+
+    if(!this.formData.categoryId){
+      this.errors.category = 'Please choose a category';
     }
 
     if (this.formData.startDate && this.formData.endDate) {
@@ -71,30 +77,31 @@ export class AddGoalModalComponent {
 
     this.isSubmitting = true;
 
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    // try {
+    //   // Simulate API call
+    //   await new Promise(resolve => setTimeout(resolve, 1000));
       
       this.goalAdded.emit({ ...this.formData });
       this.resetForm();
       this.onClose();
-    } catch (error) {
-      this.errors.general = 'Failed to create goal. Please try again.';
-    } finally {
-      this.isSubmitting = false;
-    }
+    // } catch (error) {
+    //   this.errors.general = 'Failed to create goal. Please try again.';
+    // } finally {
+    //   this.isSubmitting = false;
+    // }
   }
 
   resetForm(): void {
     this.formData = {
-      name: '',
-      amount: 0,
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: '',
-      description: '',
-      category: 'other'
-    };
+    title: '',
+    targetAmount: null,
+    startDate: new Date().toISOString().split('T')[0], // Default to today,
+    endDate: '',
+    description: '',
+    categoryId: null
+  };
     this.errors = {};
+    this.isSubmitting = false;
   }
 
   onClose(): void {

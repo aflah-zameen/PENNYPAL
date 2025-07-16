@@ -1,11 +1,7 @@
 package com.application.pennypal.application.port;
 
-import com.application.pennypal.domain.user.valueObject.RefreshTokenInfo;
-import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.RefreshTokenEntity;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import com.application.pennypal.domain.valueObject.RefreshTokenInfo;
 
-import java.time.Instant;
 import java.util.Optional;
 
 public interface RefreshTokenServicePort {

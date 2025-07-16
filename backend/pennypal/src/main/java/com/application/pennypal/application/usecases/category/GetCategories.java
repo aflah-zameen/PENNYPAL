@@ -1,6 +1,6 @@
 package com.application.pennypal.application.usecases.category;
 
-import com.application.pennypal.domain.user.entity.Category;
+import com.application.pennypal.domain.entity.Category;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.application.pennypal.infrastructure.security.details;
 
-import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.domain.entity.User;
 import com.application.pennypal.application.port.UserRepositoryPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

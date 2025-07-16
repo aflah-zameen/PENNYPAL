@@ -1,7 +1,7 @@
 package com.application.pennypal.application.port;
 
-import com.application.pennypal.application.dto.CategoryUserResponseDTO;
-import com.application.pennypal.domain.user.entity.Category;
+import com.application.pennypal.application.output.category.CategoryUserOutput;
+import com.application.pennypal.domain.entity.Category;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,5 +12,5 @@ public interface CategoryManagementRepositoryPort {
     List<Category> findAll();
     Optional<Category> findById(Long id);
     void deleteById(Long categoryId);
-    List<CategoryUserResponseDTO> getUserCategories();
+    List<CategoryUserOutput> getUserCategories();
 }

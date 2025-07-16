@@ -1,3 +1,5 @@
+import { UserCategoryResponse } from "./user-category.model";
+
 export interface Goal {
   id: number;
   title: string;
@@ -5,9 +7,10 @@ export interface Goal {
   targetAmount: number;
   startDate: string;
   endDate: string;
-  category: 'apartment' | 'car' | 'vacation' | 'education' | 'other';
-  color: string;
-  contributions?: Contribution[]
+  status : string
+  category: UserCategoryResponse;
+  contributions?: Contribution[];
+  createdAt : string
 }
 
 export interface GoalStats {
@@ -17,12 +20,12 @@ export interface GoalStats {
 }
 
 export interface GoalFormData {
-  name: string;
-  amount: number;
+  title: string;
+  targetAmount: number|null;
   startDate: string;
   endDate: string;
   description?: string;
-  category: 'apartment' | 'car' | 'vacation' | 'education' | 'other';
+  categoryId: number | null;
 }
 
 export interface GoalFormErrors {
@@ -31,6 +34,7 @@ export interface GoalFormErrors {
   startDate?: string;
   endDate?: string;
   general?: string;
+  category?:string; 
 }
 
 export interface Contribution {

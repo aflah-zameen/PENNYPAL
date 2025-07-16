@@ -26,6 +26,18 @@ export interface CategoryFormData {
   sortOrder: number
 }
 
+export interface Catgeory{
+  id : number;
+  name : string;
+  usageTypes : CategoryUsageType[];
+  description : string;
+  color : string;
+  icon : string;
+  sortOrder : number;
+  active : boolean;
+  isDefault : boolean;
+}
+
 export interface CategoryFilter {
   usageTypes: CategoryUsageType | "all"
   status: "all" | "active" | "inactive"

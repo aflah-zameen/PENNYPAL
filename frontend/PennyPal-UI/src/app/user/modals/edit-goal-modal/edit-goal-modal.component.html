@@ -14,16 +14,16 @@
         </div>
 
         <!-- Form -->
-        <form (ngSubmit)="onSubmit()" class="space-y-6">
+        <form class="space-y-6">
           <!-- Goal Name -->
           <div>
             <label class="block text-sm font-semibold text-gray-700 mb-2">
-              Goal Name <span class="text-red-500">*</span>
+              Goal Title <span class="text-red-500">*</span>
             </label>
             <div class="relative">
               <input
                 type="text"
-                [(ngModel)]="formData.name"
+                [(ngModel)]="formData.title"
                 name="name"
                 placeholder="e.g., Dream House, New Car"
                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
@@ -41,20 +41,30 @@
           <!-- Category and Amount Row -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Category -->
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
-              <select
-                [(ngModel)]="formData.category"
-                name="category"
-                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
-              >
-                <option value="apartment">🏠 Apartment</option>
-                <option value="car">🚗 Car</option>
-                <option value="vacation">✈️ Vacation</option>
-                <option value="education">🎓 Education</option>
-                <option value="other">📦 Other</option>
-              </select>
-            </div>
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Category <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                      <select
+                        [(ngModel)]="formData.categoryId"
+                        name="category"
+                        required
+                        class="appearance-none w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all duration-200 pr-10"
+                        [class.border-red-500]="errors.category"
+                      >
+                        <option value="" disabled>Select Category</option>
+                        <option *ngFor="let category of categories" [value]="category.id">
+                          {{ category.name }}
+                        </option>
+                      </select>
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                    <p *ngIf="errors.category" class="mt-1 text-sm text-red-600">{{ errors.category }}</p>
+                  </div>
+
 
             <!-- Target Amount -->
             <div>
@@ -67,7 +77,7 @@
                 </div>
                 <input
                   type="number"
-                  [(ngModel)]="formData.amount"
+                  [(ngModel)]="formData.targetAmount"
                   name="amount"
                   placeholder="0"
                   min="1"
@@ -92,7 +102,7 @@
               ></div>
             </div>
             <p class="text-xs text-gray-600 mt-1">
-              {{ formatCurrency(goal.currentAmount) }} of {{ formatCurrency(formData.amount) }}
+              {{ formatCurrency(goal.currentAmount) }} of {{ formatCurrency(formData.targetAmount!) }}
             </p>
           </div>
 
@@ -158,8 +168,9 @@
               Cancel
             </button>
             <button
-              type="submit"
-              [disabled]="isSubmitting"
+              type="button"
+              [disabled]="isSubmitting || !hasChanges()"
+              (click)="onSubmit()"
               class="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
             >
               <svg *ngIf="isSubmitting" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">

@@ -37,7 +37,7 @@
           </div>
 
           <!-- Form -->
-          <form (ngSubmit)="onSubmit()" class="px-8 py-6 space-y-6">
+          <form class="px-8 py-6 space-y-6">
             
             <!-- Amount Field -->
             <div>
@@ -53,6 +53,7 @@
                   id="amount"
                   name="amount"
                   [(ngModel)]="formData.amount"
+                  (ngModelChange)="onAmountChange($event)"
                   required
                   min="1"
                   step="0.01"
@@ -77,6 +78,11 @@
               ></textarea>
             </div>
 
+            <div *ngIf="errorMessage" class="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl p-3">
+              {{ errorMessage }}
+            </div>
+
+
             <!-- Action Buttons -->
             <div class="flex space-x-4 pt-4">
               <button
@@ -87,8 +93,9 @@
                 Cancel
               </button>
               <button
-                type="submit"
-                [disabled]="!formData.amount || formData.amount <= 0"
+                type="button"
+                [disabled]="isSubmitDisabled"
+                (click)="onSubmit()"
                 class="flex-1 py-3 px-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg"
               >
                 Add Contribution

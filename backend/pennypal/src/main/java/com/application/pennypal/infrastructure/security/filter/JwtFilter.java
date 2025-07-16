@@ -1,10 +1,7 @@
 package com.application.pennypal.infrastructure.security.filter;
 
 import com.application.pennypal.application.port.CheckUserBlockedPort;
-import com.application.pennypal.domain.user.valueObject.Roles;
-import com.application.pennypal.infrastructure.adapter.auth.CheckUserBlockedAdapter;
 import com.application.pennypal.infrastructure.adapter.auth.JwtTokenServiceAdapter;
-import com.application.pennypal.infrastructure.security.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -23,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {

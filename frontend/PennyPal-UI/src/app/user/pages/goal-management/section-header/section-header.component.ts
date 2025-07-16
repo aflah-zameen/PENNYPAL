@@ -13,6 +13,7 @@ export class SectionHeaderComponent {
   @Input() icon = true
   @Input() showSeeAll = false
   @Input() showSearch = false
+  @Input() filterCategories : string[]=[]
 
   @Output() seeAll = new EventEmitter<void>()
   @Output() search = new EventEmitter<string>()
@@ -23,7 +24,7 @@ export class SectionHeaderComponent {
   showFilterDropdown = false
   selectedCategory = ""
   selectedProgress = ""
-  selectedSort = "title"
+  selectedSort = "recent"
   viewMode = "grid"
 
   get hasActiveFilters(): boolean {
@@ -66,7 +67,7 @@ export class SectionHeaderComponent {
   clearFilters(): void {
     this.selectedCategory = ""
     this.selectedProgress = ""
-    this.selectedSort = "title"
+    this.selectedSort = "recent"
     this.showFilterDropdown = false
     this.emitFilterChange()
   }

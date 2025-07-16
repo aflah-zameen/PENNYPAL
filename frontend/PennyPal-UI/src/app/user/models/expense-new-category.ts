@@ -1,7 +1,7 @@
 export interface NewExpense {
   name: string;
-  category: string;
-  amount: number;
+  categoryId: number | null;
+  amount: number | null;
   type: string;
   startDate: string;
   endDate: string;

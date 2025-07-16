@@ -3,7 +3,7 @@ package com.application.pennypal.infrastructure.adapter.auth;
 import com.application.pennypal.application.port.EmailSendPort;
 import com.application.pennypal.application.port.OtpServicePort;
 import com.application.pennypal.application.port.UserRepositoryPort;
-import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.domain.entity.User;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.OtpEntity;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.otp.OtpRepository;
 import com.application.pennypal.shared.exception.OtpInvalidException;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
 

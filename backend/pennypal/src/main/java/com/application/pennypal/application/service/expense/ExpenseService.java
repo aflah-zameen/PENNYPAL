@@ -1,25 +1,64 @@
 package com.application.pennypal.application.service.expense;
 
+import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.input.expense.ExpenseInputModel;
+import com.application.pennypal.application.mappers.expense.ExpenseApplicationMapper;
+import com.application.pennypal.application.output.expense.ExpenseOutputModel;
 import com.application.pennypal.application.port.ExpenseRepositoryPort;
 import com.application.pennypal.application.usecases.expense.AddExpense;
+import com.application.pennypal.application.usecases.expense.DeleteExpense;
+import com.application.pennypal.application.usecases.expense.EditExpense;
 import com.application.pennypal.application.usecases.expense.GetAllExpenses;
-import com.application.pennypal.domain.user.entity.Expense;
-import com.application.pennypal.domain.user.valueObject.ExpenseDTO;
+import com.application.pennypal.domain.entity.Expense;
+import com.application.pennypal.domain.valueObject.ExpenseDTO;
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class ExpenseService implements AddExpense, GetAllExpenses {
+public class ExpenseService implements AddExpense, GetAllExpenses, EditExpense, DeleteExpense {
     private final ExpenseRepositoryPort expenseRepositoryPort;
+    private final ExpenseApplicationMapper expenseApplicationMapper;
     @Override
     public Expense add(ExpenseDTO expense,Long userId) {
         return expenseRepositoryPort.save(expense,userId);
     }
 
     @Override
-    public List<Expense> getAll(Long userId) {
-        return expenseRepositoryPort.fectchAllExpenses(userId);
+    public List<ExpenseOutputModel> getAll(Long userId) {
+        List<Expense> expenses = expenseRepositoryPort.fetchAllExpenses(userId);
+        return expenses.stream()
+                .map(expenseApplicationMapper::toOutput)
+                .toList();
+
+    }
+
+    @Override
+    public void execute(Long userId, ExpenseInputModel expenseInputModel) {
+        Expense expense = expenseRepositoryPort.getExpenseById(expenseInputModel.id())
+                .orElseThrow(() -> new BusinessException("Expense cannot be found","NOT_FOUND"));
+        if(expense.getUserId().equals(userId)){
+            expense.setName(expenseInputModel.name());
+            expense.setAmount(expenseInputModel.amount());
+            expense.setType(expenseInputModel.type().getValue());
+            expense.setStartDate(expenseInputModel.startDate());
+            expense.setEndDate(expenseInputModel.endDate());
+            expense.setCategoryId(expenseInputModel.categoryId());
+            expenseRepositoryPort.save(expense);
+        }else{
+            throw new BusinessException("User action is unauthorized","UNAUTHORIZED_ACTION");
+        }
+    }
+
+    @Override
+    public void execute(Long userId, Long expenseId) {
+        Expense expense = expenseRepositoryPort.getExpenseById(expenseId)
+                .orElseThrow(() -> new BusinessException("Expense cannot be found","NOT_FOUND"));
+        if(expense.getUserId().equals(userId)){
+            expense.deleteExpense();
+            expenseRepositoryPort.save(expense);
+        }else{
+            throw new BusinessException("User action is unauthorized","UNAUTHORIZED_ACTION");
+        }
     }
 }

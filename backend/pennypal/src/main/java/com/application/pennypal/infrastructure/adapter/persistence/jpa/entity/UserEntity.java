@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -49,4 +50,22 @@ public class UserEntity {
 
     @Column()
     private String profileURL;
+
+
+    //Relations defined
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<TransactionEntity> transactions;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<IncomeEntity> incomes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ExpenseEntity> expenses;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<RecurringIncomeLogEntity> recurringIncomeLogs;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<GoalEntity> goals;
 }

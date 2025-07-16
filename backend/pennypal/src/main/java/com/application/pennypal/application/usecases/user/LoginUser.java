@@ -1,7 +1,7 @@
 package com.application.pennypal.application.usecases.user;
 
-import com.application.pennypal.application.dto.LoginResponseDTO;
+import com.application.pennypal.application.output.auth.LoginResponseOutput;
 
 public interface LoginUser {
-    LoginResponseDTO execute(String email,String password,String ipAddress);
+    LoginResponseOutput execute(String email, String password, String ipAddress);
 }

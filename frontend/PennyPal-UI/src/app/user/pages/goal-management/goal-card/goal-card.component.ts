@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AddContributionComponent } from "../../../modals/add-contribution/add-contribution.component";
 import { ContributionHistoryComponent } from "../contribution-history/contribution-history.component";
 import { ContributionFormData } from '../../../models/contribution-form-date.model';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-goal-card',
@@ -14,7 +15,7 @@ import { ContributionFormData } from '../../../models/contribution-form-date.mod
 export class GoalCardComponent {
   @Input() goal!: Goal;
   @Output() edit = new EventEmitter<Goal>();
-  @Output() delete = new EventEmitter<number>();
+  @Output() delete = new EventEmitter<Goal>();
   @Output() addContribution = new EventEmitter<ContributionFormData>()
   @Output() deleteContribution = new EventEmitter<number>()
 
@@ -56,11 +57,11 @@ export class GoalCardComponent {
   }
 
   onEdit(): void {
-    this.edit.emit(this.goal);
+  this.edit.emit(this.goal);
   }
 
   onDelete(): void {
-    this.delete.emit(this.goal.id);
+    this.delete.emit(this.goal);
   }
 
   openContributionModal(): void {

@@ -1,16 +1,8 @@
-import { UserCategoryResponse } from "./user-category.model";
+import { IncomeResponseModel } from "./income.model";
 
 export interface RecurringIncomesModel {
 
-   recurringIncomeDTOS: {
-      id : number,
-    amount : number,
-    source : string,
-    incomeDate : string,
-    recurrence : boolean,
-    frequency : string,
-    active : boolean,
-  }[];
+   recurringIncomeDTOS: IncomeResponseModel[];
     totalRecurring: number;
     monthlyTotal: number;
 }

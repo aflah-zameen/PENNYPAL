@@ -1,13 +1,13 @@
 package com.application.pennypal.infrastructure.adapter.user;
 
-import com.application.pennypal.application.dto.UserUpdateApplicationDTO;
+import com.application.pennypal.application.output.user.UserUpdateApplicationOutput;
 import com.application.pennypal.application.port.S3SystemPort;
 import com.application.pennypal.application.port.TokenServicePort;
 import com.application.pennypal.application.port.UpdateUserPort;
 import com.application.pennypal.application.port.UserRepositoryPort;
 import com.application.pennypal.application.service.auth.ValidateEmailUniqueness;
 import com.application.pennypal.application.usecases.user.SendOtp;
-import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.domain.entity.User;
 import com.application.pennypal.shared.exception.ApplicationException;
 import com.application.pennypal.shared.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class UpdateUserAdapter implements UpdateUserPort {
     private final SendOtp sendOtp;
 
     @Override
-    public User update(UserUpdateApplicationDTO user,String token) {
+    public User update(UserUpdateApplicationOutput user, String token) {
         if(token != null){
             String currentEmail = tokenServicePort.getUsernameFromToken(token);
             if(currentEmail != null && !currentEmail.isEmpty()){

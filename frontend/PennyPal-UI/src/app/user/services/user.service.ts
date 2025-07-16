@@ -5,6 +5,7 @@ import { environment } from "../../../environments/environment";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { ApiResponse } from "../../models/ApiResponse";
 import { UserCategoryResponse } from "../models/user-category.model";
+import { ContributionFormData } from "../models/contribution-form-date.model";
 
 @Injectable({
     providedIn : 'root'
@@ -43,6 +44,7 @@ export class UserService{
       catchError(this.handleError)
     );
   }
+
 
 
    //handle all erros from the client or server

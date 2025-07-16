@@ -1,8 +1,6 @@
 package com.application.pennypal.application.port;
 
-import com.application.pennypal.domain.user.entity.User;
-import com.application.pennypal.domain.user.valueObject.TokenPairDTO;
-import com.application.pennypal.domain.user.valueObject.Roles;
+import com.application.pennypal.domain.entity.User;
 
 import java.util.Set;
 

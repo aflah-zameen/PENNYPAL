@@ -1,8 +1,8 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.user;
 
-import com.application.pennypal.application.dto.PagedResult;
-import com.application.pennypal.application.dto.UserFiltersDTO;
-import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.application.output.paged.PagedResultOutput;
+import com.application.pennypal.application.output.user.UserFiltersOutput;
+import com.application.pennypal.domain.entity.User;
 import com.application.pennypal.application.port.UserRepositoryPort;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.UserEntity;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper.UserMapper;
@@ -73,7 +73,7 @@ public class JpaUserRepositoryPort implements UserRepositoryPort {
     }
 
     @Override
-    public PagedResult<User> findAllFiltered(UserFiltersDTO userFiltersDTO,int page,int size,String keyword) {
+    public PagedResultOutput<User> findAllFiltered(UserFiltersOutput userFiltersDTO, int page, int size, String keyword) {
         Pageable pageable = PageRequest.of(page,size);
         Specification<UserEntity> spec = UserSpecification.hasRole(userFiltersDTO.role() != null ? userFiltersDTO.role().toString() : null )
                 .and(UserSpecification.keywordLike(keyword))
@@ -83,7 +83,7 @@ public class JpaUserRepositoryPort implements UserRepositoryPort {
         Page<UserEntity> userEntityPage = springDataUserRepository.findAll(spec,pageable);
         List<User> userList = userEntityPage.getContent().stream()
                 .map(userMapper::toDomain).toList();
-        return new PagedResult<>(userList,userEntityPage.getNumber(),userEntityPage.getSize(),
+        return new PagedResultOutput<>(userList,userEntityPage.getNumber(),userEntityPage.getSize(),
                 userEntityPage.getTotalElements(),userEntityPage.getTotalPages());
     }
 }

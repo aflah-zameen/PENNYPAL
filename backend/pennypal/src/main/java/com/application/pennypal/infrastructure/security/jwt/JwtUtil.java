@@ -1,11 +1,8 @@
 package com.application.pennypal.infrastructure.security.jwt;
 
-import com.application.pennypal.application.port.TokenServicePort;
-import com.application.pennypal.domain.user.entity.User;
-import com.application.pennypal.domain.user.valueObject.Roles;
+import com.application.pennypal.domain.entity.User;
+import com.application.pennypal.domain.valueObject.Roles;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;

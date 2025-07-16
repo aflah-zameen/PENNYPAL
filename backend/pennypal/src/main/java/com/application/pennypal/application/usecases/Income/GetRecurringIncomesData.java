@@ -1,7 +1,7 @@
 package com.application.pennypal.application.usecases.Income;
 
-import com.application.pennypal.application.dto.RecurringIncomesDataDTO;
+import com.application.pennypal.application.output.income.RecurringIncomesDataOutput;
 
 public interface GetRecurringIncomesData {
-    RecurringIncomesDataDTO execute(Long userId);
+    RecurringIncomesDataOutput execute(Long userId);
 }

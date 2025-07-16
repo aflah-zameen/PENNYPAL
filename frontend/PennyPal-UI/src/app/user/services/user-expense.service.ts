@@ -12,6 +12,7 @@ import { ExpenseModel } from "../models/expense.model";
 export class UserExpenseService{
     private apiURL = environment.apiBaseUrl+"/api/user"
     private addExpenseSubject = new Subject<void>();
+    
     addExpense$ = this.addExpenseSubject.asObservable();
 
     constructor(private https : HttpClient){}
@@ -33,6 +34,20 @@ export class UserExpenseService{
             map(response => response.data),
             catchError(this.handleError)
         );
+    }
+
+    editExpense(expense : ExpenseModel){
+      return this.https.put<ApiResponse<string>>(`${this.apiURL}/expense/edit-expense`,expense,{withCredentials:true}).pipe(
+        map(res => res.data),
+        catchError(this.handleError)
+      );
+    }
+
+    deleteExpense(expenseId : number){
+      return this.https.delete<ApiResponse<string>>(`${this.apiURL}/expense/delete-expense`,{withCredentials:true,params:{id : expenseId}}).pipe(
+        map(res => res.data),
+        catchError(this.handleError)
+      );
     }
 
 

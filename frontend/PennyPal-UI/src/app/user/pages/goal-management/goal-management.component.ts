@@ -8,6 +8,15 @@ import { CommonModule } from '@angular/common';
 import { AddGoalModalComponent } from "../../modals/add-goal-modal/add-goal-modal.component";
 import { EditGoalModalComponent } from "../../modals/edit-goal-modal/edit-goal-modal.component";
 import { FeatureButtonComponent } from "../../components/feature-button/feature-button.component";
+import { UserCategoryResponse } from '../../models/user-category.model';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { UserService } from '../../services/user.service';
+import { UserGoalService } from '../../services/user-goal.service';
+import { Observable } from 'rxjs';
+import { ContributionFormData } from '../../models/contribution-form-date.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-goal-management',
@@ -21,55 +30,102 @@ export class GoalManagementComponent {
   filterOptions: GoalFilterOptions = {
     category: "",
     progress: "",
-    sort: "title",
+    sort: "recent",
   }
 stats: GoalStats = {
-    totalActiveGoals: 5,
-    totalSaved: 101410,
-    completedGoals: 12
+    totalActiveGoals: 0,
+    totalSaved: 0.00,
+    completedGoals: 0
   };
 
-  goals: Goal[] = [
-    {
-      id: 1,
-      title: 'Apartment',
-      currentAmount: 180000,
-      targetAmount: 200000,
-      startDate: '2024-04-02',
-      endDate: '2026-04-02',
-      category: 'apartment',
-      color: '#3B82F6',
-      contributions: [
-        { id: 1, amount: 5000, date: "2024-01-15", notes: "Initial savings transfer" },
-        { id: 2, amount: 3000, date: "2024-02-01", notes: "Monthly salary bonus" },
-        { id: 3, amount: 2000, date: "2024-02-15" },
-        { id: 4, amount: 5000, date: "2024-03-01", notes: "Tax refund" },
-      ],
-    },
-    {
-      id: 2,
-      title: 'Car',
-      currentAmount: 80000,
-      targetAmount: 100000,
-      startDate: '2024-04-02',
-      endDate: '2026-04-02',
-      category: 'car',
-      color: '#8B5CF6'
-    }
-  ];
+
+
+  categories : UserCategoryResponse[] = [];
+  allGoals$ : Observable<Goal[]>;
+  allGoals: Goal[] = [];
+
+  constructor(private spinner : NgxSpinnerService,private toastr : ToastrService ,
+    private userService :UserService,private goalService : UserGoalService,
+    private dialog : MatDialog
+  ){
+      this.allGoals$= goalService.allGoals.asObservable();
+      this.allGoals$.subscribe({
+        next : (goals)=>{
+          this.allGoals = goals;
+        }
+      })
+      
+  }
 
   isModalOpen: boolean = false;
   showEditModal: boolean = false;
   selectedGoal: Goal | null = null;
-  ngOnInit() {}
-
-  get savingPlanGoals(): Goal[] {
-    return this.goals;
+  ngOnInit() {
+    this.goalService.goalStats.subscribe({
+      next : (stats)=>{
+        if(stats != null){
+          this.stats = stats;
+        }
+      }
+    })
+    this.goalService.changeCycle.subscribe({
+        next:()=>{
+          this.loadCatgories();
+          this.loadAllGoals();
+          this.loadGoalSummary();
+        }
+      });
+    this.loadCatgories();
+    this.loadAllGoals();
+    this.loadGoalSummary();
   }
 
-  get upcomingDeadlineGoals(): Goal[] {
-    return this.goals.sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
+
+  // get upcomingDeadlineGoals(): Goal[] {
+  //   return this.goals.sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
+  // }
+
+  loadCatgories(){
+    this.spinner.show();
+    this.userService.getCategories().subscribe({
+      next : (categories)=>{
+        this.categories = categories.filter((category) => category.usageTypes.includes("GOAL"));
+        this.spinner.hide();
+      },
+      error:(err)=>{
+        this.spinner.hide();
+        this.toastr.error("Failed to load categories");
+      }
+    })
   }
+
+  loadAllGoals(){
+    this.spinner.show();
+    this.goalService.getAllIncomes().subscribe({
+      next : ()=>{
+        this.spinner.hide();
+      },
+      error:(err)=>{
+        this.spinner.hide();
+        this.toastr.error("Some issues while fetching goals");
+      }
+    })
+  }
+
+  loadGoalSummary(){
+    this.spinner.show();
+    this.goalService.goalSummary().subscribe({
+      next : ()=>{
+        this.spinner.hide();
+      },
+      error:(err)=>{
+        this.spinner.hide();
+        this.toastr.error("Failed during fetching goal stats");
+      }
+    })
+  }
+
+
 
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-US', {
@@ -89,9 +145,31 @@ stats: GoalStats = {
     this.isModalOpen = false;
   }
 
+  // Can edit the goal method
+  canEditGoal(goal :Goal): boolean {
+  if (!goal?.createdAt) return false;
+
+  const createdAt = new Date(goal.createdAt).getTime();
+  const now = Date.now();
+  console.log(createdAt+" "+now);
+  
+  const diffInMinutes = (now - createdAt) / (1000 * 60);
+
+  if (diffInMinutes > 30) {
+    this.toastr.warning(`You can't edit this goal at the moment.`);
+    return false;
+  }
+
+  return true;
+  }
+
+
   openEditModal(goal: Goal): void {
-    this.selectedGoal = goal;
-    this.showEditModal = true;
+    if(this.canEditGoal(goal)){
+      this.selectedGoal = goal;
+      this.showEditModal = true;
+    }
+    
   }
 
   closeEditModal(): void {
@@ -101,59 +179,74 @@ stats: GoalStats = {
 
     // Goal Management
   onGoalAdded(goalData: GoalFormData): void {
-    const newGoal: Goal = {
-      id: this.goals.length + 1,
-      title: goalData.name,
-      currentAmount: 0,
-      targetAmount: goalData.amount,
-      startDate: goalData.startDate,
-      endDate: goalData.endDate,
-      category: goalData.category,
-      color: this.getColorForCategory(goalData.category)
-    };
-
-    this.goals.push(newGoal);
-    this.updateStats();
-    console.log('Goal added:', newGoal);
+    this.spinner.show()
+    this.goalService.addNewGoal(goalData).subscribe({
+      next : ()=>{
+        this.spinner.hide();
+        this.toastr.success("New goal added successfully");
+      },
+      error:(err)=>{
+        this.spinner.hide();
+        this.toastr.error(`Failed due to : ${err.message}`||"Something gone wrong");
+      }
+    });
   }
 
   onGoalUpdated(event: { id: number; data: GoalFormData }): void {
-    const goalIndex = this.goals.findIndex(g => g.id === event.id);
-    if (goalIndex !== -1) {
-      this.goals[goalIndex] = {
-        ...this.goals[goalIndex],
-        title: event.data.name,
-        targetAmount: event.data.amount,
-        startDate: event.data.startDate,
-        endDate: event.data.endDate,
-        category: event.data.category,
-        color: this.getColorForCategory(event.data.category)
-      };
-      this.updateStats();
-      console.log('Goal updated:', this.goals[goalIndex]);
-    }
-  }
-
-  private getColorForCategory(category: string): string {
-    const colors: { [key: string]: string } = {
-      apartment: '#3B82F6',
-      car: '#8B5CF6',
-      vacation: '#10B981',
-      education: '#F59E0B',
-      other: '#6B7280'
-    };
-    return colors[category] || colors['other'];
-  }
-
-  private updateStats(): void {
-    this.stats.totalActiveGoals = this.goals.length;
-    this.stats.totalSaved = this.goals.reduce((sum, goal) => sum + goal.currentAmount, 0);
+    this.spinner.show();
+    this.goalService.editGoal(event).subscribe({
+      next:(res)=>{
+        this.spinner.hide();
+          this.toastr.success("The goal edited successfully");
+          // this.toastr.info("You cannot edit the goal now.")
+      },
+      error:(err)=>{
+        console.log(err);
+        this.spinner.hide();
+        this.toastr.error("Failed during editing the goal");
+      }
+    })
+    
   }
 
 
-  onDeleteGoal(goalId: number): void {
-    this.goals = this.goals.filter(goal => goal.id !== goalId);
-    console.log('Delete goal:', goalId);
+
+  onDeleteGoal(goal: Goal): void {
+    const message = `
+  <b>Are you sure you want to delete this goal?</b><br><br>
+  <strong>• Title:</strong> ${goal.title}<br>
+  <strong>• Target Amount:</strong> ${this.formatCurrency(goal.targetAmount)}<br>
+  <strong>• Category:</strong> ${goal.category.name}<br>
+  <strong>• Status:</strong> ${goal.status}<br><br>
+  This action cannot be undone.
+  `;
+
+    this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Delete Goal?',
+          message: message,
+          confirmText: 'Delete',
+          cancelText: 'Cancel'
+        }
+      }).afterClosed().subscribe({
+        next: (confirmed) => {
+          if (confirmed) {
+            this.spinner.show();
+            this.goalService.deleteGoal(goal.id).subscribe({
+              next: () => {
+                this.toastr.success('Goal deleted successfully');
+                this.spinner.hide();
+              },
+              error: (err) => {
+                this.toastr.error(`Failed to delete goal: ${err.errorCode}`);
+                this.spinner.hide();
+              }
+            });
+          }
+        }
+      });
+
   }
 
   onSeeAllSavingPlans(): void {
@@ -166,6 +259,8 @@ stats: GoalStats = {
 
   //filters and serach
   onViewModeChange(mode: string): void {
+    console.log(mode);
+    
     this.viewMode = mode
   }
 
@@ -175,7 +270,7 @@ stats: GoalStats = {
     this.filterOptions = {
       category: "",
       progress: "",
-      sort: "title",
+      sort: "recent",
     }
   }
 
@@ -188,7 +283,7 @@ stats: GoalStats = {
   }
 
   get hasActiveFilters(): boolean {
-    return !!(this.filterOptions.category || this.filterOptions.progress || this.filterOptions.sort !== "title")
+    return !!(this.filterOptions.category || this.filterOptions.progress || this.filterOptions.sort !== "recent")
   }
 
   trackByGoal(index: number, goal: Goal): number {
@@ -196,19 +291,19 @@ stats: GoalStats = {
   }
 
   get filteredGoals(): Goal[] {
-    let filtered = [...this.goals]
+    let filtered = [...this.allGoals]
 
     // Apply search filter
     if (this.searchQuery) {
       const query = this.searchQuery.toLowerCase()
       filtered = filtered.filter(
-        (goal) => goal.title.toLowerCase().includes(query) || goal.category.toLowerCase().includes(query),
+        (goal) => goal.title.toLowerCase().includes(query) || goal.category.name.toLowerCase().includes(query),
       )
     }
 
     // Apply category filter
     if (this.filterOptions.category) {
-      filtered = filtered.filter((goal) => goal.category === this.filterOptions.category)
+      filtered = filtered.filter((goal) => goal.category.name.toLocaleLowerCase() === this.filterOptions.category.toLocaleLowerCase())
     }
 
     // Apply progress filter
@@ -229,12 +324,18 @@ stats: GoalStats = {
           return b.targetAmount - a.targetAmount
         case "deadline":
           return new Date(a.endDate).getTime() - new Date(b.endDate).getTime()
-        default:
+        case "title":
           return a.title.localeCompare(b.title)
+        default :
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();  
       }
     })
 
     return filtered
+  }
+
+  get filterCategories():string[]{
+    return this.categories.map(category => category.name);
   }
 
    getSearchSummary(): string {
@@ -244,5 +345,23 @@ stats: GoalStats = {
     if (this.filterOptions.progress) parts.push(`with ${this.filterOptions.progress}% progress`)
     return parts.join(", ") || "showing all goals"
   }
+
+  addContribution(contribution : ContributionFormData){
+      
+      this.spinner.show();
+      this.goalService.addContribution(contribution).subscribe({
+        next:()=>{
+          this.spinner.hide();
+          this.toastr.success("Contribution added successfully");
+        }
+        ,
+        error:(err)=>{
+          this.spinner.hide();
+          this.toastr.error("Something gone wrong during adding contribution");
+        }
+      })
+  }
+
+  
 
 }

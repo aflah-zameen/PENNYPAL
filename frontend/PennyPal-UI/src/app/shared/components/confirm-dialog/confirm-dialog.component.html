@@ -1,5 +1,9 @@
 <h2 mat-dialog-title>{{ data.title }}</h2>
-<mat-dialog-content class="mt-2">{{ data.message }}</mat-dialog-content>
+
+<mat-dialog-content class="mt-2 text-sm text-gray-800 leading-relaxed">
+  <div [innerHTML]="data.message"></div>
+</mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">
     {{ data.cancelText || 'Cancel' }}

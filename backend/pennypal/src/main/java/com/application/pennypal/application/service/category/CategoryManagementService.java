@@ -1,10 +1,10 @@
 package com.application.pennypal.application.service.category;
 
-import com.application.pennypal.application.dto.CategoryUserResponseDTO;
+import com.application.pennypal.application.output.category.CategoryUserOutput;
 import com.application.pennypal.application.port.CategoryManagementRepositoryPort;
 import com.application.pennypal.application.usecases.category.*;
 import com.application.pennypal.application.usecases.expense.GetUserCategories;
-import com.application.pennypal.domain.user.entity.Category;
+import com.application.pennypal.domain.entity.Category;
 import com.application.pennypal.shared.exception.ApplicationException;
 import com.application.pennypal.shared.exception.DuplicateException;
 import com.application.pennypal.shared.exception.UserNotFoundException;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class CategoryManagementService implements CreateCategory,GetCategories,UpdateCategory,
-        ToggleCategoryStatus, DeleteCategory, GetUserCategories {
+        ToggleCategoryStatus, DeleteCategory, GetUserCategories,GetCategoryById {
     private final CategoryManagementRepositoryPort categoryManagementRepositoryPort;
     @Override
     public Category execute(Category category, Long userId) {
@@ -63,7 +63,15 @@ public class CategoryManagementService implements CreateCategory,GetCategories,U
     }
 
     @Override
-    public List<CategoryUserResponseDTO> get() {
+    public List<CategoryUserOutput> get() {
         return this.categoryManagementRepositoryPort.getUserCategories();
+    }
+
+    @Override
+    public CategoryUserOutput get(Long categoryId) {
+        Category category = categoryManagementRepositoryPort.findById(categoryId)
+                .orElseThrow(() -> new ApplicationException("Category not found","NOT_FOUND"));
+        return new CategoryUserOutput(category.getId(),category.getName(),category.getUsageTypes(),
+                category.isActive(),category.isDefault(),category.getSortOrder(),category.getColor(),category.getIcon());
     }
 }

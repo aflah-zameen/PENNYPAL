@@ -1,7 +1,6 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.entity;
 
-import com.application.pennypal.domain.user.entity.Category;
-import com.application.pennypal.domain.user.valueObject.CategoryType;
+import com.application.pennypal.domain.valueObject.CategoryType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -25,7 +23,7 @@ public class CategoryEntity {
     private Long createdBy;
     @Enumerated(EnumType.STRING)
     private List<CategoryType> usageTypes;
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int sortOrder;
     private String description;
@@ -35,9 +33,23 @@ public class CategoryEntity {
     private String icon;
     private int usageCount;
 
-    @OneToMany(mappedBy = "source" ,cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "category" ,cascade = CascadeType.ALL,orphanRemoval = true)
     private List<IncomeEntity> incomeEntities = new ArrayList<>();
     @OneToMany(mappedBy = "category" ,cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ExpenseEntity> expenseEntities = new ArrayList<>();
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<TransactionEntity> transactions = new ArrayList<>();
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<GoalEntity> goals = new ArrayList<>();
 
+    @PrePersist
+    protected void onCreate(){
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        this.updatedAt = LocalDateTime.now();
+    }
 }

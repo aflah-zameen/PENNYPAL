@@ -1,6 +1,6 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper;
 
-import com.application.pennypal.domain.user.entity.Category;
+import com.application.pennypal.domain.entity.Category;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.CategoryEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,6 +10,7 @@ import org.mapstruct.Mappings;
 public interface CategoryMapper {
     @Mappings({
             @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "updatedAt", ignore = true),
             @Mapping(source = "usageTypes", target = "usageTypes")
     })
     CategoryEntity toEntity(Category category);

@@ -3,8 +3,8 @@ package com.application.pennypal.application.service.auth;
 import com.application.pennypal.application.port.EncodePasswordPort;
 import com.application.pennypal.application.port.UserRepositoryPort;
 import com.application.pennypal.application.usecases.user.UpdatePassword;
-import com.application.pennypal.domain.user.entity.User;
-import com.application.pennypal.domain.user.validator.PasswordValidator;
+import com.application.pennypal.domain.entity.User;
+import com.application.pennypal.domain.validator.PasswordValidator;
 import com.application.pennypal.shared.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 

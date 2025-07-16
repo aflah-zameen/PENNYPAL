@@ -1,11 +1,15 @@
 package com.application.pennypal.application.port;
 
-import com.application.pennypal.domain.user.entity.Expense;
-import com.application.pennypal.domain.user.valueObject.ExpenseDTO;
+import com.application.pennypal.domain.entity.Expense;
+import com.application.pennypal.domain.valueObject.ExpenseDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ExpenseRepositoryPort {
     Expense save(ExpenseDTO expense,Long userId);
-    List<Expense> fectchAllExpenses(Long userId);
+    Expense save(Expense expense);
+    List<Expense> fetchAllExpenses(Long userId);
+
+    Optional<Expense> getExpenseById(Long expenseId);
 }

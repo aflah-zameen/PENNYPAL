@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AddIncomeModel } from '../../models/add-income.model';
-import { IncomeModel } from '../../models/income.model';
 import { ModalOverlayComponent } from "../modal-overlay/modal-overlay.component";
 import { UserCategoryResponse } from '../../models/user-category.model';
+import { IncomeRequestModel } from '../../models/income.model';
 
 @Component({
   selector: 'app-add-income',
@@ -13,21 +12,19 @@ import { UserCategoryResponse } from '../../models/user-category.model';
   styleUrl: './add-income.component.css'
 })
 export class AddIncomeComponent {
-  @Input() isModalOpen: boolean = false;
+  @Input() isModalOpen: boolean = false;  
   @Input() categories: UserCategoryResponse[] = [];
   @Output() close = new EventEmitter<void>();
-  @Output() submitForm = new EventEmitter<IncomeModel>();
+  @Output() submitForm = new EventEmitter<IncomeRequestModel>();
 
 
-  formData: IncomeModel = {
-    source: null,
-    amount: 0,
-    income_date: new Date().toISOString().split('T')[0], // Default to today
-    notes: '',
-    recurrence: false, 
-    frequency: '',
+  formData: IncomeRequestModel = {
+    title: '',
+    amount: null,
+    incomeDate: new Date().toISOString().split('T')[0], // Default to today
     description: '',
-    status: ''
+    categoryId : null,
+    isRecurring : false
   };
 
   errors: any = {};
@@ -36,64 +33,50 @@ export class AddIncomeComponent {
   ngOnInit() {
     // Set default date to today
     const today = new Date().toISOString().split('T')[0];
-    this.formData.income_date = today;
+    this.formData.incomeDate = today;
   }
 
   validateForm(): boolean {
     this.errors = {};
 
-    if (!this.formData.source) {
-      this.errors.source = 'Please select an income source';
-    }
-
     if (!this.formData.amount || this.formData.amount <= 0) {
       this.errors.amount = 'Please enter a valid amount';
     }
 
-    if (!this.formData.income_date) {
-      this.errors.income_date = 'Please select a date';
+    if (!this.formData.title || this.formData.title.trim() === '') {
+      this.errors.sourceDetail = 'Source is required';
+    }
+
+    if (!this.formData.incomeDate) {
+      this.errors.income_date = 'Date is required';
+    }
+
+    if (!this.formData.categoryId) {
+      this.errors.category = 'Category is required';
     }
 
     return Object.keys(this.errors).length === 0;
   }
 
-  async onSubmit(): Promise<void> {
+  onSubmit(){
     if (!this.validateForm()) {
       return;
     }
 
     this.isSubmitting = true;
-
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-
-      const submissionData = {
-        ...this.formData,
-        description: this.formData.notes
-      };
-      
-      this.submitForm.emit(submissionData);
-      this.resetForm();
-      this.close.emit();
-    } catch (error) {
-      this.errors.general = 'Failed to add income. Please try again.';
-    } finally {
-      this.isSubmitting = false;
-    }
+    this.submitForm.emit(this.formData);
+    this.resetForm();
+    this.close.emit();
   }
 
   resetForm(): void {
     this.formData = {
-      source: null,
-      amount: 0,
-      income_date: new Date().toISOString().split('T')[0], // Default to today
-      notes: '',
-      recurrence: false, 
-      frequency: '',
-    description: '',
-    status: ''
+      title: '',
+      categoryId: null,
+      amount: null,
+      incomeDate: new Date().toISOString().split('T')[0], // Default to today
+      description: '',
+      isRecurring : false
   };
     this.errors = {};
   }

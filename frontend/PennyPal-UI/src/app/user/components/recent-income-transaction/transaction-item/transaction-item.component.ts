@@ -19,11 +19,11 @@ export class TransactionItemComponent {
       currency: "USD",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(this.incomes.amount)
+    }).format(this.incomes.amount!)
   }
 
   getCategoryType(): number {
-    return this.incomes.source!.id 
+    return this.incomes.category!.id 
   }
 
   getCategoryBgClass(): string {

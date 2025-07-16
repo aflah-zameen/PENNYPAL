@@ -1,6 +1,6 @@
 package com.application.pennypal.application.usecases.user;
 
-import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.domain.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CreateUser {

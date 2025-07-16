@@ -1,7 +1,7 @@
 package com.application.pennypal.infrastructure.adapter.auth;
 
 import com.application.pennypal.application.port.RefreshTokenServicePort;
-import com.application.pennypal.domain.user.valueObject.RefreshTokenInfo;
+import com.application.pennypal.domain.valueObject.RefreshTokenInfo;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.RefreshToken.RefreshTokenRepository;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.RefreshTokenEntity;
 import com.application.pennypal.infrastructure.security.jwt.JwtProperties;

@@ -29,7 +29,7 @@
           {{ getFormattedContent() }}
         </h3>
         
-        <div class="mt-3 flex items-center space-x-2">
+        <div class="mt-3 flex items-center space-x-2" *ngIf="performance !== null">
           <div class="flex items-center space-x-1">
             <svg 
               class="w-4 h-4" 

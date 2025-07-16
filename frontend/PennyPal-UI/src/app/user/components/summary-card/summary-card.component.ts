@@ -9,7 +9,7 @@ import { Component,Input,Output } from '@angular/core';
   providers :[CurrencyPipe]
 })
 export class SummaryCardComponent {
-  @Input() performance : number =0;
+  @Input() performance : number | null =null;
   @Input() growth : boolean =false;
   @Input() header : string = '';
   @Input() content : string|number =0;

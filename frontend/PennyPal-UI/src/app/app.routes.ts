@@ -12,8 +12,8 @@ export const routes: Routes = [{
 },{
     path : 'admin',
     loadChildren : () => import('./admin/admin-routes').then(m => m.adminRoutes),
-    // canActivate : [AuthGuard],
-    // data : {roles :['ADMIN','SUPER_ADMIN']}
+    canActivate : [AuthGuard],
+    data : {roles :['ADMIN','SUPER_ADMIN']}
 },{
     path : '**',
     loadComponent: () => import('./shared/components/error-page/error-page.component').then(m => m.ErrorPageComponent)  

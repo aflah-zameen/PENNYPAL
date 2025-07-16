@@ -6,6 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UserExpenseService } from '../../services/user-expense.service';
 import { ExpenseModel } from '../../models/expense.model';
+import { UserCategoryResponse } from '../../models/user-category.model';
+import { UserService } from '../../services/user.service';
+import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-expense-management',
@@ -16,33 +21,39 @@ import { ExpenseModel } from '../../models/expense.model';
 export class ExpenseManagementComponent implements OnInit {
   searchTerm: string = '';
   
-  categories: ExpenseModel[] = []
+  categories: UserCategoryResponse[] = []
+  expenses : ExpenseModel[] = []
 
   newExpense: NewExpense = {
     name: '',
-    category: 'Food',
-    amount: 0,
+    categoryId: null  ,
+    amount: null,
     type: 'monthly',
     startDate: '',
     endDate: ''
   };
 
   constructor(private spinner:NgxSpinnerService,
-    private userExpenseService: UserExpenseService
+    private userExpenseService: UserExpenseService,
+    private userService : UserService,
+    private toastr : ToastrService,
+    private dialog : MatDialog
   ){}
 
   ngOnInit() {
-    this.loadCategories();
     this.userExpenseService.addExpense$.subscribe(() => {
       this.loadCategories();
+      this.loadExpenses();
     });
+      this.loadCategories();
+      this.loadExpenses();
   }
 
   get filteredCategories(): ExpenseModel[] {
     if (!this.searchTerm) {
-      return this.categories;
+      return this.expenses;
     }
-    return this.categories.filter(category =>
+    return this.expenses.filter(category =>
       category.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
@@ -56,8 +67,8 @@ export class ExpenseManagementComponent implements OnInit {
         // Reset the form
         this.newExpense = {
           name: '',
-          category: 'Food',
-          amount: 0,
+          categoryId: null,
+          amount: null,
           type: 'monthly',
           startDate: '',
           endDate: ''
@@ -70,20 +81,64 @@ export class ExpenseManagementComponent implements OnInit {
     });
   }
 
-  editCategory(category: ExpenseModel) {
-    // Implement edit functionality
-    console.log('Edit category:', category);
+  editCategory(expense: ExpenseModel) {
+    this.spinner.show();
+    this.userExpenseService.editExpense(expense).subscribe({
+      next : ()=>{
+        this.spinner.hide();
+        this.toastr.success("Successfully edited");
+      },
+      error:(err)=>{
+        this.spinner.hide();
+        this.toastr.error("Errro during editing catgeory");
+      }
+    })
   }
 
-  deleteCategory(id: number) {
-    this.categories = this.categories.filter(cat => cat.id !== id);
+  deleteCategory(expense: ExpenseModel) {
+    const message = `
+    <b>Are you sure you want to delete this expense?</b><br><br>
+    <strong>• Title:</strong> ${expense.name}<br>
+    <strong>• Target Amount:</strong> ${this.formatCurrency(expense.amount)}<br>
+    <strong>• Category:</strong> ${expense.category.name}<br>
+    <strong>• Type:</strong> ${expense.type}<br><br>
+    This action cannot be undone.
+    `;
+
+  
+    this.dialog.open(ConfirmDialogComponent, {
+            width: '400px',
+            data: {
+              title: 'Delete Expense?',
+              message: message,
+              confirmText: 'Delete',
+              cancelText: 'Cancel'
+            }
+          }).afterClosed().subscribe({
+            next: (confirmed) => {
+              if (confirmed) {
+                this.spinner.show();
+                this.userExpenseService.deleteExpense(expense.id).subscribe({
+                  next: () => {
+                    this.toastr.success('Expense deleted successfully');
+                    this.spinner.hide();
+                  },
+                  error: (err) => {
+                    this.toastr.error(`Failed to delete expense: ${err.errorCode}`);
+                    this.spinner.hide();
+                  }
+                });
+              }
+            }
+          });
+    
   }
 
   loadCategories() {
     this.spinner.show();
-    this.userExpenseService.getExpenseCategories().subscribe({
+    this.userService.getCategories().subscribe({
       next: (response) => {
-        this.categories = response;
+        this.categories = response.filter(category => category.usageTypes.includes("EXPENSE") || category.usageTypes.includes("SHARED"));
         this.spinner.hide();
       },
       error: (error) => {
@@ -91,5 +146,26 @@ export class ExpenseManagementComponent implements OnInit {
         this.spinner.hide();
       }
     });
+  }
+  loadExpenses(){
+    this.spinner.show();
+    this.userExpenseService.getExpenseCategories().subscribe({
+      next : (response)=>{
+        this.expenses = response;
+        this.spinner.hide();
+      },
+      error:(error)=>{
+        this.spinner.hide();
+        console.error('Error fetching expenses:', error?.errorCode);
+      }
+    })
+  }
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
   }
 }

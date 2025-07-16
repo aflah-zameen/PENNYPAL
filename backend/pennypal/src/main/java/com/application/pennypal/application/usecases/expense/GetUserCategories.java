@@ -1,9 +1,9 @@
 package com.application.pennypal.application.usecases.expense;
 
-import com.application.pennypal.application.dto.CategoryUserResponseDTO;
+import com.application.pennypal.application.output.category.CategoryUserOutput;
 
 import java.util.List;
 
 public interface GetUserCategories {
-    List<CategoryUserResponseDTO> get();
+    List<CategoryUserOutput> get();
 }

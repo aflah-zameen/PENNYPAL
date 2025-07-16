@@ -1,6 +1,5 @@
 package com.application.pennypal.application.port;
 
-import com.application.pennypal.domain.user.entity.User;
 import com.application.pennypal.shared.exception.ApplicationException;
 
 public interface UserAuthenticationPort {

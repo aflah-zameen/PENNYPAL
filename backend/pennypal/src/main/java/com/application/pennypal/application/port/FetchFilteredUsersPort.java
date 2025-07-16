@@ -1,9 +1,9 @@
 package com.application.pennypal.application.port;
 
-import com.application.pennypal.application.dto.PagedResult;
-import com.application.pennypal.application.dto.UserFiltersDTO;
-import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.application.output.paged.PagedResultOutput;
+import com.application.pennypal.application.output.user.UserFiltersOutput;
+import com.application.pennypal.domain.entity.User;
 
 public interface FetchFilteredUsersPort {
-    PagedResult<User> execute(UserFiltersDTO userFiltersDTO, int page, int size,String keyword);
+    PagedResultOutput<User> execute(UserFiltersOutput userFiltersDTO, int page, int size, String keyword);
 }

@@ -1,6 +1,6 @@
 package com.application.pennypal.infrastructure.config;
 
-import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.domain.entity.User;
 import com.application.pennypal.application.port.UserRepositoryPort;
 import com.application.pennypal.infrastructure.security.details.CustomUserDetails;
 import org.springframework.context.annotation.Bean;

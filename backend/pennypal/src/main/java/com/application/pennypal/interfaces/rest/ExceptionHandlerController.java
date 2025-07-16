@@ -1,5 +1,6 @@
 package com.application.pennypal.interfaces.rest;
 
+import com.application.pennypal.application.exception.BusinessException;
 import com.application.pennypal.shared.exception.ApplicationException;
 import com.application.pennypal.interfaces.rest.dtos.ApiResponse;
 import io.jsonwebtoken.JwtException;
@@ -28,6 +29,12 @@ public class ExceptionHandlerController {
                 .toList();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(false,"Validation failed",errors,"VALIDATION_ERROR"));
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ApiResponse<String>> handleBusinessException(BusinessException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiResponse<>(false, ex.getMessage(),null ,ex.getCode()));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -60,7 +67,7 @@ public class ExceptionHandlerController {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiResponse<String>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ApiResponse<>(false, "Email already exists", null, "DUPLICATE_EMAIL"));
+                .body(new ApiResponse<>(false, ex.getMessage(), null, "DATA_INTEGRITY_VIOLATION"));
     }
 
     @ExceptionHandler(Exception.class)

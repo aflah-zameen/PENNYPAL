@@ -1,11 +1,9 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.specification;
 
-import com.application.pennypal.domain.user.valueObject.Roles;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.UserEntity;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Component
 public class UserSpecification {

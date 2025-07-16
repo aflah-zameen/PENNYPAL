@@ -1,9 +1,9 @@
 package com.application.pennypal.infrastructure.adapter.category;
 
 
-import com.application.pennypal.application.dto.CategoryUserResponseDTO;
+import com.application.pennypal.application.output.category.CategoryUserOutput;
 import com.application.pennypal.application.port.CategoryManagementRepositoryPort;
-import com.application.pennypal.domain.user.entity.Category;
+import com.application.pennypal.domain.entity.Category;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.category.CategoryRepository;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.CategoryEntity;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper.CategoryMapper;
@@ -47,11 +47,9 @@ public class CategoryRepositoryAdapter implements CategoryManagementRepositoryPo
     }
 
     @Override
-    public List<CategoryUserResponseDTO> getUserCategories() {
+    public List<CategoryUserOutput> getUserCategories() {
         List<CategoryEntity> categories = categoryRepository.findAllByIsActiveTrue();
-        return categories.stream().map(categoryEntity -> {
-            return new CategoryUserResponseDTO(categoryEntity.getId(),categoryEntity.getName(),categoryEntity.getUsageTypes(),
-                    categoryEntity.isActive(),categoryEntity.isDefault(),categoryEntity.getSortOrder());
-        }).toList();
+        return categories.stream().map(categoryEntity -> new CategoryUserOutput(categoryEntity.getId(),categoryEntity.getName(),categoryEntity.getUsageTypes(),
+                categoryEntity.isActive(),categoryEntity.isDefault(),categoryEntity.getSortOrder(),categoryEntity.getColor(),categoryEntity.getIcon())).toList();
     }
 }

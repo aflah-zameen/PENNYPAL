@@ -27,7 +27,7 @@
                 title="Total Active Goals"
                 [value]="stats.totalActiveGoals.toString()"
                 iconBgClass="bg-blue-100"
-                trend="+2 this month"
+               
                 trendClass="text-green-600"
               >
                 <svg slot="icon" class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -40,7 +40,7 @@
                 [value]="formatCurrency(stats.totalSaved)"
                 subtitle="Across all goals"
                 iconBgClass="bg-green-100"
-                trend="+12.5%"
+                
                 trendClass="text-green-600"
               >
                 <svg slot="icon" class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -54,7 +54,6 @@
                 [value]="stats.completedGoals.toString()"
                 subtitle="Lifetime achievements"
                 iconBgClass="bg-purple-100"
-                trend="+3 this year"
                 trendClass="text-green-600"
               >
                 <svg slot="icon" class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
@@ -95,6 +94,7 @@
         <app-section-header
           title="Financial Goals"
           [icon]="true"
+          [filterCategories]="filterCategories"
           [showSearch]="true"
           (search)="onSearch($event)"
           (filterChange)="onFilterChange($event)"
@@ -129,10 +129,11 @@
         </div>
             <div class="space-y-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
               <app-goal-card
-                *ngFor="let goal of upcomingDeadlineGoals"
+                *ngFor="let goal of filteredGoals"
                 [goal]="goal"
                 (edit)="openEditModal($event)"
                 (delete)="onDeleteGoal($event)"
+                (addContribution)="addContribution($event)"
               ></app-goal-card>
             </div>
           </div>
@@ -143,12 +144,14 @@
     <!-- Modals -->
     <app-add-goal-modal
       [isOpen]="isModalOpen"
+      [categories]="categories"
       (close)="closeAddModal()"
       (goalAdded)="onGoalAdded($event)"
     ></app-add-goal-modal>
 
     <app-edit-goal-modal
       [isOpen]="showEditModal"
+      [categories]="categories"
       [goal]="selectedGoal"
       (close)="closeEditModal()"
       (goalUpdated)="onGoalUpdated($event)"
