@@ -7,8 +7,8 @@ import com.application.pennypal.application.port.GoalRepositoryPort;
 import com.application.pennypal.application.port.TransactionRepositoryPort;
 import com.application.pennypal.application.usecases.goal.AddGoal;
 import com.application.pennypal.domain.entity.Goal;
-import com.application.pennypal.domain.entity.Transactions;
-import com.application.pennypal.domain.valueObject.TransactionOriginType;
+import com.application.pennypal.domain.entity.Transaction;
+import com.application.pennypal.domain.valueObject.TransactionType;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class AddGoalService implements AddGoal {
         Goal newIncome = goalRepositoryPort.save(goal);
 
         /// Get contribution transaction list
-        List<Transactions> contributionTrx = transactionRepositoryPort.findAllByUserIdAndOriginIdAndType(userId,goal.getId(), TransactionOriginType.GOAL);
+        List<Transaction> contributionTrx = transactionRepositoryPort.findAllByUserIdAndOriginIdAndType(userId,goal.getId(), TransactionType.GOAL);
         return goalApplicationMapper.toOutput(newIncome,contributionTrx);
     }
 }

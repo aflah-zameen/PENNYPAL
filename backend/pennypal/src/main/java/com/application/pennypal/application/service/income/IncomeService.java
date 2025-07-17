@@ -1,6 +1,6 @@
 package com.application.pennypal.application.service.income;
 
-import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.mappers.income.IncomeApplicationMapper;
 import com.application.pennypal.application.output.income.RecurringIncomeOutput;
 import com.application.pennypal.application.output.income.RecurringIncomesDataOutput;
@@ -10,9 +10,9 @@ import com.application.pennypal.application.usecases.Income.*;
 import com.application.pennypal.domain.entity.Income;
 import com.application.pennypal.application.input.income.IncomeInputModel;
 import com.application.pennypal.application.output.income.IncomeOutputModel;
-import com.application.pennypal.domain.entity.Transactions;
-import com.application.pennypal.domain.valueObject.IncomeStatus;
-import com.application.pennypal.domain.valueObject.TransactionOriginType;
+import com.application.pennypal.domain.entity.Transaction;
+import com.application.pennypal.domain.valueObject.RecurringStatus;
+import com.application.pennypal.domain.valueObject.TransactionType;
 import com.application.pennypal.domain.valueObject.TransactionStatus;
 import com.application.pennypal.shared.exception.ApplicationException;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class IncomeService implements AddIncome, GetAllIncomes,GetRecentIncomes,
                     inputModel.amount(),
                     inputModel.categoryId(),
                     inputModel.incomeDate(),
-                    IncomeStatus.COMPLETED,
+                    RecurringStatus.COMPLETED,
                     inputModel.description(),
                     inputModel.isRecurring(),
                     inputModel.startDate(),
@@ -58,18 +58,18 @@ public class IncomeService implements AddIncome, GetAllIncomes,GetRecentIncomes,
                         userId,
                         newIncome.getAmount(),
                         newIncome.getIncomeDate(),
-                        TransactionOriginType.INCOME,
+                        TransactionType.INCOME,
                         newIncome.getId(),
                         newIncome.getCategoryId()
                 )){
                     String referenceId = newIncome.getIsRecurring()
                             ? "recurring-income-" + income.getId()
                             : "manual-income-" + income.getId();
-                    Transactions transactions = new Transactions(
+                    Transaction transaction = new Transaction(
                             userId,
                             newIncome.getAmount(),
                             newIncome.getIncomeDate(),
-                            TransactionOriginType.INCOME,
+                            TransactionType.INCOME,
                             newIncome.getId(),
                             TransactionStatus.COMPLETED,
                             newIncome.getCategoryId(),
@@ -80,9 +80,9 @@ public class IncomeService implements AddIncome, GetAllIncomes,GetRecentIncomes,
                             referenceId,
                             null
                     );
-                    transactionRepositoryPort.save(transactions);
+                    transactionRepositoryPort.save(transaction);
                 }else{
-                    throw new BusinessException("Duplicate transaction already exists","DUPLICATE_TRANSACTION");
+                    throw new ApplicationBusinessException("Duplicate transaction already exists","DUPLICATE_TRANSACTION");
                 }
 
             }
@@ -95,7 +95,7 @@ public class IncomeService implements AddIncome, GetAllIncomes,GetRecentIncomes,
             return incomeApplicationMapper.toOutput(newIncome);
         }
         else
-            throw new BusinessException("Duplicate income already exists","DUPLICATE_INCOME");
+            throw new ApplicationBusinessException("Duplicate income already exists","DUPLICATE_INCOME");
     }
 
 

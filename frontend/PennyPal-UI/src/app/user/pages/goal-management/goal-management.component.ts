@@ -17,6 +17,7 @@ import { Observable } from 'rxjs';
 import { ContributionFormData } from '../../models/contribution-form-date.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-goal-management',
@@ -37,6 +38,8 @@ stats: GoalStats = {
     totalSaved: 0.00,
     completedGoals: 0
   };
+
+  goalEditTimeInMin:number = environment.goalEditTimeInMin;
 
 
 
@@ -155,7 +158,7 @@ stats: GoalStats = {
   
   const diffInMinutes = (now - createdAt) / (1000 * 60);
 
-  if (diffInMinutes > 30) {
+  if (diffInMinutes > this.goalEditTimeInMin) {
     this.toastr.warning(`You can't edit this goal at the moment.`);
     return false;
   }

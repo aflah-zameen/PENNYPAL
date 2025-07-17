@@ -1,4 +1,4 @@
 package com.application.pennypal.application.output.expense;
 
-public record ActiveRecurringExpenseOutput() {
+public record ActiveRecurringExpenseOutput(Integer count) {
 }

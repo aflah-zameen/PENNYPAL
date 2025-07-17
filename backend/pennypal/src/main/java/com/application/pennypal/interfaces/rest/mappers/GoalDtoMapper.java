@@ -1,6 +1,6 @@
 package com.application.pennypal.interfaces.rest.mappers;
 
-import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.input.goal.AddGoalInputModel;
 import com.application.pennypal.application.input.goal.EditGoalInputModel;
 import com.application.pennypal.application.output.goal.GoalResponseOutput;
@@ -36,10 +36,10 @@ public class GoalDtoMapper {
 
     public static AddGoalInputModel toInput(AddGoalRequestDTO addGoalRequestDTO){
         if(addGoalRequestDTO.startDate() != null && (LocalDate.parse(addGoalRequestDTO.startDate())).isBefore(LocalDate.now())){
-            throw new BusinessException("Start date cannot be before current date","DATE_VALIDATION_ERROR");
+            throw new ApplicationBusinessException("Start date cannot be before current date","DATE_VALIDATION_ERROR");
         }
         if(addGoalRequestDTO.startDate() != null && addGoalRequestDTO.endDate() != null && LocalDate.parse(addGoalRequestDTO.startDate()).isAfter(LocalDate.parse(addGoalRequestDTO.endDate()))){
-            throw new BusinessException("Start date cannot be after end date","DATE_VALIDATION_ERROR");
+            throw new ApplicationBusinessException("Start date cannot be after end date","DATE_VALIDATION_ERROR");
         }
         return new AddGoalInputModel(
                 addGoalRequestDTO.title(),
@@ -54,10 +54,10 @@ public class GoalDtoMapper {
 
     public static EditGoalInputModel toInput(EditGoalRequestDTO editGoalRequestDTO){
         if(editGoalRequestDTO.startDate() != null && (LocalDate.parse(editGoalRequestDTO.startDate())).isBefore(LocalDate.now())){
-            throw new BusinessException("Start date cannot be before current date","DATE_VALIDATION_ERROR");
+            throw new ApplicationBusinessException("Start date cannot be before current date","DATE_VALIDATION_ERROR");
         }
         if(editGoalRequestDTO.startDate() != null && editGoalRequestDTO.endDate() != null && LocalDate.parse(editGoalRequestDTO.startDate()).isAfter(LocalDate.parse(editGoalRequestDTO.endDate()))){
-            throw new BusinessException("Start date cannot be after end date","DATE_VALIDATION_ERROR");
+            throw new ApplicationBusinessException("Start date cannot be after end date","DATE_VALIDATION_ERROR");
         }
         return new EditGoalInputModel(
                 editGoalRequestDTO.goalId(),

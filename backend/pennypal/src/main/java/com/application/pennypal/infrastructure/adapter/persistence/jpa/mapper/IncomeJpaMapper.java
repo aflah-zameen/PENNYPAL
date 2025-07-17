@@ -2,7 +2,7 @@ package com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper;
 
 import com.application.pennypal.application.output.income.IncomeSummaryOutput;
 import com.application.pennypal.domain.entity.Income;
-import com.application.pennypal.domain.valueObject.IncomeStatus;
+import com.application.pennypal.domain.valueObject.RecurringStatus;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.CategoryEntity;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.IncomeEntity;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.UserEntity;
@@ -36,10 +36,10 @@ public interface IncomeJpaMapper {
     })
     IncomeEntity toEntity(Income income, UserEntity user, CategoryEntity category);
 
-    default IncomeStatus mapStatus(LocalDate incomeDate) {
+    default RecurringStatus mapStatus(LocalDate incomeDate) {
         if(incomeDate != null)
-            return incomeDate.isAfter(LocalDate.now()) ? IncomeStatus.PENDING : IncomeStatus.COMPLETED;
+            return incomeDate.isAfter(LocalDate.now()) ? RecurringStatus.PENDING : RecurringStatus.COMPLETED;
         else
-            return IncomeStatus.RECURRING;
+            return RecurringStatus.RECURRING;
     }
 }

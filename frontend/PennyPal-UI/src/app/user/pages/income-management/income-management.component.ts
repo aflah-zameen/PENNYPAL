@@ -13,8 +13,9 @@ import { ToastrService } from 'ngx-toastr';
 import { PendingIncomesComponent } from "../../components/pending-incomes/pending-incomes.component";
 import{MatIconModule} from "@angular/material/icon"
 import { AddRecurringIncomeComponent } from "../../modals/add-recurring-income/add-recurring-income.component";
-import { IncomeRequestModel, IncomeResponseModel, RecentIncomeTransaction } from '../../models/income.model';
+import { IncomeRequestModel, IncomeResponseModel,} from '../../models/income.model';
 import { AllPendingIncomesSummary, IncomeSummary, PendingIncomesModel, PendingIncomeSummary } from '../../models/income-summary-model';
+import { Transaction } from '../../models/transaction.model';
 
 @Component({
   selector: 'app-income-management',
@@ -29,7 +30,7 @@ export class IncomeManagementComponent implements OnInit,OnDestroy{
   // private incomeAddedSubscritpion : Subscription | null = null; 
 
   incomeSummary$! : Observable<IncomeSummary>; 
-  recentIncomeTransactions$ : Observable<RecentIncomeTransaction[]|null>;
+  recentIncomeTransactions$ : Observable<Transaction[]|null>;
   allPendingIncomeSummary$! : Observable<AllPendingIncomesSummary|null>;
   incomeAddedSubscritpion: Subscription | null = null;
   sizeOfRecentIncomes : number = 5; 

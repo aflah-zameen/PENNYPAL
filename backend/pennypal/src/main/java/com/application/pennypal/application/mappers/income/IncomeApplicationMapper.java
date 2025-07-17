@@ -10,7 +10,7 @@ import com.application.pennypal.shared.exception.ApplicationException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class IncomeApplicationMapper {
+public class    IncomeApplicationMapper {
     protected final CategoryManagementRepositoryPort categoryManagementRepositoryPort;
 
     public IncomeOutputModel toOutput(Income income){

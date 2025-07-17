@@ -1,4 +1,6 @@
 package com.application.pennypal.application.output.expense;
 
-public record PendingIncomeSummaryOutput() {
+import java.math.BigDecimal;
+
+public record PendingExpenseSummaryOutput(BigDecimal totalAmount, Long pendingExpenses) {
 }

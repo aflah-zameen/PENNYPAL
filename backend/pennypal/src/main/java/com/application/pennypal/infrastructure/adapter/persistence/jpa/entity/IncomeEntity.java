@@ -1,6 +1,6 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.entity;
 
-import com.application.pennypal.domain.valueObject.IncomeStatus;
+import com.application.pennypal.domain.valueObject.RecurringStatus;
 import com.application.pennypal.domain.valueObject.RecurrenceFrequency;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -42,7 +42,7 @@ public class IncomeEntity {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private IncomeStatus status;
+    private RecurringStatus status;
 
     private Boolean deleted;
 
@@ -68,9 +68,9 @@ public class IncomeEntity {
     private LocalDateTime updatedAt;
 
 
-    public IncomeEntity(UserEntity user,String title, BigDecimal amount, CategoryEntity category,
-                        LocalDate incomeDate, String description,IncomeStatus status,Boolean deleted,
-                        Boolean isRecurring,LocalDate startDate,LocalDate endDate, RecurrenceFrequency frequency, boolean recurrenceActive,LocalDateTime createdAt){
+    public IncomeEntity(UserEntity user, String title, BigDecimal amount, CategoryEntity category,
+                        LocalDate incomeDate, String description, RecurringStatus status, Boolean deleted,
+                        Boolean isRecurring, LocalDate startDate, LocalDate endDate, RecurrenceFrequency frequency, boolean recurrenceActive, LocalDateTime createdAt){
         this.user = user;
         this.title = title;
         this.amount= amount;

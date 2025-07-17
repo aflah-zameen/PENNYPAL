@@ -1,6 +1,6 @@
 package com.application.pennypal.application.mappers.goal;
 
-import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.input.goal.AddGoalInputModel;
 import com.application.pennypal.application.input.goal.EditGoalInputModel;
 import com.application.pennypal.application.mappers.category.CategoryApplicationMapper;
@@ -9,8 +9,7 @@ import com.application.pennypal.application.output.goal.GoalResponseOutput;
 import com.application.pennypal.application.port.CategoryManagementRepositoryPort;
 import com.application.pennypal.domain.entity.Category;
 import com.application.pennypal.domain.entity.Goal;
-import com.application.pennypal.domain.entity.Income;
-import com.application.pennypal.domain.entity.Transactions;
+import com.application.pennypal.domain.entity.Transaction;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -18,9 +17,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GoalApplicationMapper {
     private final CategoryManagementRepositoryPort categoryManagementRepositoryPort;
-    public  GoalResponseOutput toOutput(Goal goal, List<Transactions> transactionsList){
+    public  GoalResponseOutput toOutput(Goal goal, List<Transaction> transactionList){
         Category category = categoryManagementRepositoryPort.findById(goal.getCategoryId())
-                .orElseThrow(()->new BusinessException("Category not found","NOT_FOUND"));
+                .orElseThrow(()->new ApplicationBusinessException("Category not found","NOT_FOUND"));
         return new GoalResponseOutput(
                 goal.getId(),
                 goal.getUserId(),
@@ -36,7 +35,7 @@ public class GoalApplicationMapper {
                 goal.isDeleted(),
                 goal.getCreatedAt(),
                 goal.getUpdatedAt(),
-                transactionsList.stream()
+                transactionList.stream()
                         .map(trx -> new GoalContributionOutput(trx.getId(),trx.getAmount(),trx.getTransactionDate(),trx.getDescription()))
                         .toList()
         );

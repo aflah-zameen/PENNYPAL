@@ -1,6 +1,6 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.Income;
 
-import com.application.pennypal.domain.valueObject.IncomeStatus;
+import com.application.pennypal.domain.valueObject.RecurringStatus;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.IncomeEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -69,6 +69,6 @@ public interface IncomeRepository extends JpaRepository<IncomeEntity,Long>, JpaS
     List<IncomeEntity> findPendingNonRecurringIncomeBeforeDate(
             @Param("userId") Long userId,
             @Param("date") LocalDate date,
-            @Param("status") IncomeStatus status
+            @Param("status") RecurringStatus status
     );
 }

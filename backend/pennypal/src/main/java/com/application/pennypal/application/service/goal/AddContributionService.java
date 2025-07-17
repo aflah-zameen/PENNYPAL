@@ -1,12 +1,12 @@
 package com.application.pennypal.application.service.goal;
 
-import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.port.GoalRepositoryPort;
 import com.application.pennypal.application.port.TransactionRepositoryPort;
 import com.application.pennypal.application.usecases.goal.AddContribution;
 import com.application.pennypal.domain.entity.Goal;
-import com.application.pennypal.domain.entity.Transactions;
-import com.application.pennypal.domain.valueObject.TransactionOriginType;
+import com.application.pennypal.domain.entity.Transaction;
+import com.application.pennypal.domain.valueObject.TransactionType;
 import com.application.pennypal.domain.valueObject.TransactionStatus;
 import lombok.RequiredArgsConstructor;
 
@@ -20,17 +20,17 @@ public class AddContributionService implements AddContribution {
     @Override
     public void execute(Long userId,Long goalId, BigDecimal amount, String notes) {
         Goal goal = goalRepositoryPort.getGoalById(goalId)
-                .orElseThrow(() -> new BusinessException("Goal cannot be found","NOT_FOUND"));
+                .orElseThrow(() -> new ApplicationBusinessException("Goal cannot be found","NOT_FOUND"));
         if(goal.getUserId().equals(userId)){
             goal.contribute(amount);
             goalRepositoryPort.save(goal);
 
             /// Create a new Transaction
-            Transactions contributionTrx = new Transactions(
+            Transaction contributionTrx = new Transaction(
                     userId,
                     amount,
                     LocalDate.now(),
-                    TransactionOriginType.GOAL,
+                    TransactionType.GOAL,
                     goal.getId(),
                     TransactionStatus.COMPLETED,
                     goal.getCategoryId(),
@@ -43,7 +43,7 @@ public class AddContributionService implements AddContribution {
             );
             transactionRepositoryPort.save(contributionTrx);
         }else{
-            throw new BusinessException("User is not authenticated for this action","UNAUTHORIZED_ACTION");
+            throw new ApplicationBusinessException("User is not authenticated for this action","UNAUTHORIZED_ACTION");
         }
     }
 }

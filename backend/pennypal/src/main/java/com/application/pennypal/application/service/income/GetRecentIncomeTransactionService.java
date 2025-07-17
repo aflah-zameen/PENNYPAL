@@ -1,6 +1,6 @@
 package com.application.pennypal.application.service.income;
 
-import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.mappers.category.CategoryApplicationMapper;
 import com.application.pennypal.application.mappers.income.IncomeApplicationMapper;
 import com.application.pennypal.application.output.category.CategoryUserOutput;
@@ -10,13 +10,9 @@ import com.application.pennypal.application.port.CategoryManagementRepositoryPor
 import com.application.pennypal.application.port.IncomeRepositoryPort;
 import com.application.pennypal.application.port.TransactionRepositoryPort;
 import com.application.pennypal.application.usecases.Income.GetRecentIncomeTransactions;
-import com.application.pennypal.application.usecases.category.GetCategoryById;
 import com.application.pennypal.domain.entity.Category;
 import com.application.pennypal.domain.entity.Income;
-import com.application.pennypal.domain.entity.Transactions;
-import com.application.pennypal.domain.valueObject.IncomeStatus;
-import com.application.pennypal.domain.valueObject.TransactionStatus;
-import com.application.pennypal.infrastructure.adapter.persistence.jpa.category.CategoryRepository;
+import com.application.pennypal.domain.entity.Transaction;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -32,18 +28,18 @@ public class GetRecentIncomeTransactionService implements GetRecentIncomeTransac
     public List<IncomeTransactionOutputModel> execute(Long userId, int size) {
 
         //Get all recent transactions
-        List<Transactions> transactions = transactionRepositoryPort.findRecentIncomeTransaction(userId,size);
+        List<Transaction> transactions = transactionRepositoryPort.findRecentIncomeTransaction(userId,size);
         List<IncomeTransactionOutputModel> transactionOutputModelList = new ArrayList<>();
-        for(Transactions tra : transactions){
+        for(Transaction tra : transactions){
 
             /// Fetching Income entity
             Income income = incomeRepositoryPort.getIncomeById(tra.getOriginId())
-                            .orElseThrow(() -> new BusinessException("Income Entity cannot be found","NOT_FOUND"));
+                            .orElseThrow(() -> new ApplicationBusinessException("Income Entity cannot be found","NOT_FOUND"));
             IncomeOutputModel incomeOutputModel = incomeApplicationMapper.toOutput(income);
 
             /// Fetching Category entity
             Category category = categoryManagementRepositoryPort.findById(tra.getCategoryId())
-                            .orElseThrow(() -> new BusinessException("Category entity cannot be found","NOT_FOUND"));
+                            .orElseThrow(() -> new ApplicationBusinessException("Category entity cannot be found","NOT_FOUND"));
             CategoryUserOutput categoryUserOutput = CategoryApplicationMapper.toOutput(category);
 
             /// Add each transaction entries to the list.

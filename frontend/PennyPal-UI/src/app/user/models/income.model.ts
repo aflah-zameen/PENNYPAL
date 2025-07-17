@@ -1,5 +1,5 @@
 import { CategoryFilter, CategoryFormData, CategoryUsageType, Catgeory } from "../../admin/models/category-management.model"
-import { IncomeFrequency } from "../enums/income-frequency.enum"
+import { RecurringFrequency } from "../enums/income-frequency.enum"
 
 export interface IncomeResponseModel{
     id : number
@@ -10,7 +10,7 @@ export interface IncomeResponseModel{
     status : string
     description : string
     isRecurring : boolean,
-    frequency ?: IncomeFrequency
+    frequency ?: RecurringFrequency
     startDate ?: string;
     endDate ?: string;
     createdAt : string
@@ -25,20 +25,9 @@ export interface IncomeRequestModel{
     incomeDate ?: string,
     description : string
     isRecurring : boolean,
-    frequency ?: IncomeFrequency
+    frequency ?: RecurringFrequency
     startDate ?: string;
     endDate ?: string;
 }
 
-export interface RecentIncomeTransaction{
-    id : number;
-    title :string;
-    amount : number;
-    transactionDate : Date;
-    category : {
-        name : string,
-        icon : string,
-        color : string
-    }
 
-}

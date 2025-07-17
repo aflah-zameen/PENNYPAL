@@ -1,4 +1,4 @@
-export enum IncomeFrequency {
+export enum RecurringFrequency {
     DAILY = 'DAILY',
     WEEKLY = 'WEEKLY',
     MONTHLY = 'MONTHLY',

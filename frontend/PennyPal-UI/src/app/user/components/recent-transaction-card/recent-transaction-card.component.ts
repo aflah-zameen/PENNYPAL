@@ -13,26 +13,6 @@ import { CommonModule } from '@angular/common';
 })
 export class RecentTransactionCardComponent {
   transactions: Transaction[] = [
-    {
-      name: 'Netflix',
-      category: 'Entertainment',
-      date: 'Today',
-      time: '12.00PM',
-      amount: '-$50'
-    },
-    {
-      name: 'Amazon',
-      category: 'Shopping',
-      date: '12 march 2025',
-      time: '12.00PM',
-      amount: '-$150'
-    },
-    {
-      name: 'Robert Green',
-      category: 'Payment Link',
-      date: '10 march 2025',
-      time: '12.00PM',
-      amount: '+$1150'
-    }
+      
   ];
 }

@@ -4,10 +4,12 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record AddExpenseRequest(@NotNull(message = "Expense name should be given") String name,
-                             @NotNull(message = "Expense amount should be given") BigDecimal amount,
-                             @NotNull(message = "Expense category should be given") Long categoryId,
-                             @NotNull(message = "Expense type should be given") String type,
-                             @NotNull(message = "Expense start date should be given") String startDate,
-                             @NotNull(message = "Expense end date should be given") String endDate)  {
-}
+public record AddExpenseRequest(@NotNull(message = "Amount can't be null") BigDecimal amount,
+                                String title,
+                                Long categoryId,
+                                String expenseDate,
+                                String description,
+                                @NotNull(message = "Recurrence value cannot be null") boolean isRecurring,
+                                String frequency,
+                                String startDate,
+                                String endDate) { }

@@ -30,7 +30,6 @@ export class UserGoalService{
                 this.allGoals.next([...this.allGoals.value,goal])
                 this.changeCycle.next();
             }),
-            catchError(this.handleError)
         )
     }
 
@@ -41,7 +40,6 @@ export class UserGoalService{
             tap((goals)=> {
                 this.allGoals.next(goals);
             }),
-            catchError(this.handleError)
         )
     }
 
@@ -52,7 +50,6 @@ export class UserGoalService{
       tap(()=> {
         this.changeCycle.next();
       }),
-      catchError(this.handleError)
     )
     }
 
@@ -89,47 +86,8 @@ export class UserGoalService{
       return this.https.get<ApiResponse<GoalStats>>(`${this.apiURL}/goal/summary`,{withCredentials:true}).pipe(
         map(res=> res.data),
         tap((stats) => this.goalStats.next(stats)),
-        catchError(this.handleError)
       )
     }
 
-
-
-     //handle all erros from the client or server
-  private handleError(error : HttpErrorResponse):Observable<never>{
-      let errorMessage : string = "An unknown error occured!";
-      let validationErrors : string[] =[];
-              
-      if(error?.status ===0){
-        errorMessage = 'Cannot connect to the server. Please try again later.';
-      }
-      else if(error.error instanceof ErrorEvent){
-        //client-side or network error
-        errorMessage = `Client Error : ${error.error}`;
-      }
-      else{
-        if(error.status === 500){
-          errorMessage = 'Server issues. Try again later';
-        }else{
-        const errorBody = error.error;
-        
-        if(errorBody){
-          if(typeof errorBody === 'string'){
-            errorMessage = errorBody;
-          }else if(errorBody.message){
-            errorMessage = errorBody.message;
-          }
-          if(errorBody.errors && Array.isArray(errorBody.errors)){
-            validationErrors = errorBody.error;
-          }
-        }
-      }
-    }
-    return throwError(()=>({
-      message : errorMessage,
-      status : error.status,
-      errors : validationErrors
-    }))
-  }
 
 }

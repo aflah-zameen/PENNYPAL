@@ -1,274 +1,258 @@
-  <div class="min-h-screen ">
-      <!-- Header -->
-      <div class="text-center mb-8">
-        <h1 class="text-2xl font-bold text-blue-600 mb-2">Expense Category</h1>
-        <p class="text-gray-600">Categorize your expenses.</p>
-      </div>
+<div class="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center">
+          <!-- Title & Subtitle -->
+          <div class="flex flex-col">
+            <h1 class="text-5xl font-bold bg-gradient-to-r from-red-600 via-pink-600 to-red-800 bg-clip-text text-transparent mb-2">
+              Expense Management
+            </h1>
+            <p class="text-gray-600 text-lg">Track your expenses and manage payments</p>
+          </div>
+          <!-- Add Expense Button (Right-Aligned) -->
+          <button
+            (click)="isExpenseModalOpen = true"
+            class="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white px-8 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add Expense
+          </button>
+        </div>
 
-      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- All Categories Panel -->
-        <div class="lg:col-span-2 bg-white rounded-lg shadow-lg p-6">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-semibold text-gray-800">All Categories</h2>
-            <div class="relative">
-              <input
-                type="text"
-                placeholder="Search"
-                [(ngModel)]="searchTerm"
-                class="pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <svg class="absolute right-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        <!-- Top Stats Section -->
+        <div *ngIf="expenseSummary$ | async as summary" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <!-- Total Expenses Card -->
+          <div class="bg-white rounded-3xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-gray-600 text-sm font-medium">Total Expenses</h3>
+              <div class="p-2 bg-red-100 rounded-lg">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                </svg>
+              </div>
+            </div>
+            <div *ngIf="summary.totalExpenseSummary.totalAmount > 0; else noExpenseState" class="text-3xl font-bold text-gray-900 mb-2">
+              {{ getFormattedContent(summary.totalExpenseSummary.totalAmount) }}
+            </div>
+            <ng-template #noExpenseState>
+              <div class="text-sm text-gray-500">No expenses recorded yet.</div>
+              <div class="text-xs text-blue-600 mt-1">Start by adding your first expense.</div>
+            </ng-template>
+            <div *ngIf="summary.totalExpenseSummary.progressValue !== 0" class="flex items-center text-sm"
+                 [ngClass]="summary.totalExpenseSummary.progressValue > 0 ? 'text-red-600' : 'text-green-600'">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path *ngIf="summary.totalExpenseSummary.progressValue > 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"/>
+                <path *ngIf="summary.totalExpenseSummary.progressValue <= 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
               </svg>
+              {{ Math.abs(summary.totalExpenseSummary.progressValue) }}% vs last month
             </div>
           </div>
 
-          <!-- Categories List -->
-          <div class="space-y-4">
-            <div
-              *ngFor="let category of filteredCategories"
-              class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
-            >
-              <div class="flex-1">
-                <h3 class="text-xl font-semibold text-blue-600 mb-1">{{ category.name }}</h3>
-                <!-- <p class="text-sm" [ngClass]="{
-                  'text-green-600': category.percentageChange >= 0,
-                  'text-red-600': category.percentageChange < 0
-                }">
-                  {{ category.percentageChange >= 0 ? '+' : '' }}{{ category.percentageChange }}% vs last month
-                </p> -->
+          <!-- Pending Payments Card -->
+          <div class="bg-white rounded-3xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-gray-600 text-sm font-medium">Pending Payments</h3>
+              <div class="p-2 bg-orange-100 rounded-lg">
+                <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
               </div>
-              <div class="flex items-center space-x-4">
-                <div class="text-right flex">
-                  <p class="text-lg font-semibold">${{ category.amount }}</p>
-                  <!-- <p class="text-lg text-gray-500">/${{ category.budget }}</p> -->
-                </div>
-                <div class="flex space-x-2">
-                  <button
-                    (click)="editCategory(category)"
-                    class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    (click)="deleteCategory(category)"
-                    class="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
+            </div>
+            <div *ngIf="summary.pendingExpenseSummary.totalAmount > 0; else noPendingState" class="text-3xl font-bold text-gray-900 mb-2">
+              {{ getFormattedContent(summary.pendingExpenseSummary.totalAmount) }}
+            </div>
+            <ng-template #noPendingState>
+              <div class="text-sm text-gray-500">No pending payments 🎉</div>
+              <div class="text-xs text-green-600 mt-1">All expenses are up to date.</div>
+            </ng-template>
+            <div *ngIf="summary.pendingExpenseSummary.pendingExpenses > 0" class="flex items-center text-orange-600 text-sm">
+              {{ summary.pendingExpenseSummary.pendingExpenses }} payments pending
             </div>
           </div>
 
-          <!-- Show More Button -->
-          <div class="text-center mt-6">
-            <button class="text-gray-600 hover:text-gray-800 transition-colors">
-              <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
+          <!-- Active Streams Card -->
+          <div class="bg-white rounded-3xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-gray-600 text-sm font-medium">Active Streams</h3>
+              <div class="p-2 bg-purple-100 rounded-lg">
+                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+              </div>
+            </div>
+            <div *ngIf="summary.activeRecurringExpense.count > 0; else noStreamsState" class="text-3xl font-bold text-gray-900 mb-2">
+              {{ summary.activeRecurringExpense.count }}
+            </div>
+            <ng-template #noStreamsState>
+              <div class="text-sm text-gray-500">No active streams found.</div>
+              <div class="text-xs text-purple-600 mt-1">Add a recurring expense to start tracking.</div>
+            </ng-template>
+            <div *ngIf="summary.activeRecurringExpense.count > 0" class="flex items-center text-purple-600 text-sm">
+              Recurring expense sources
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Section - Two Components Side by Side -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <!-- Recurring Expenses Component -->
+          <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-xl font-bold text-gray-900">Recurring Expenses</h2>
+              <button
+                (click)="isRecurringModalOpen = true"
+                class="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors flex items-center text-sm"
+              >
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Add
+              </button>
+            </div>
+
+            <!-- Recurring Expenses List -->
+            <ng-container *ngIf="recurringExpenses$ | async as recurringExpenses">
+              <div class="space-y-4 max-h-96 overflow-y-auto pr-2">
+                <div *ngFor="let expense of recurringExpenses.recurringExpenseList" class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                  <div class="flex items-center space-x-3">
+                    <div class="h-10 w-10 flex-shrink-0 rounded-lg flex items-center justify-center text-white font-semibold"
+                         [style.background-color]="expense.category.color">
+                      <span class="text-lg">{{ expense.category.icon }}</span>
+                    </div>
+                    <div>
+                      <h4 class="font-medium text-gray-900">{{ expense.title }}</h4>
+                      <p class="text-sm text-gray-500">{{ expense.frequency }}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span class="font-semibold text-gray-900">{{ getFormattedContent(expense.amount) }}</span>
+                    <!-- Toggle active/inactive -->
+                    <button
+                      (click)="toggleRecurringExpense(expense)"
+                      [class]="expense.recurrenceActive ? 'p-1 rounded-lg text-green-600 hover:bg-green-50' : 'p-1 rounded-lg text-gray-400 hover:bg-gray-100'"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                    </button>
+                    <!-- Delete icon -->
+                    <button
+                      (click)="deleteRecurringExpense(expense)"
+                      class="p-1 rounded-lg text-red-500 hover:bg-red-100"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Empty state -->
+                <div *ngIf="recurringExpenses.recurringExpenseList.length === 0" class="text-center text-gray-500 py-10">
+                  <div class="mx-auto w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  </div>
+                  <h3 class="text-lg font-semibold text-gray-700">No recurring expenses yet</h3>
+                  <p class="text-sm mt-1">Start building your recurring expense schedule by clicking "Add"</p>
+                </div>
+              </div>
+
+              <!-- Footer Summary -->
+              <div *ngIf="recurringExpenses.recurringExpenseList.length > 0" class="pt-4 border-t border-gray-200 mt-6">
+                <div class="flex justify-between items-center text-sm text-gray-700">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-red-400 rounded-full"></div>
+                    <span>Total Sources:</span>
+                    <span class="font-semibold text-gray-900">{{ recurringExpenses.totalRecurring }}</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></div>
+                    <span>Monthly Total:</span>
+                    <span class="font-bold text-base bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
+                      {{ getFormattedContent(recurringExpenses.monthlyTotal)}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Pending Expenses Component -->
+          <app-pending-expenses
+            [pendingExpenses]=" (allPendingExpenseSummary$ | async) || [] "
+            (collectExpensePayment)="collectPendingPayment($event)"
+          ></app-pending-expenses>
+        </div>
+
+        <!-- Recent Transactions - Full Width -->
+        <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">Recent Transactions</h2>
+            <button class="px-4 py-2 border border-gray-300 rounded-xl bg-transparent hover:bg-gray-50 transition-colors">
+              View All
             </button>
           </div>
-        </div>
-
-        <!-- Right Panel -->
-        <div class="space-y-6">
-          <!-- Create New Category Form -->
-          <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Create new Category</h2>
-            
-            <form (ngSubmit)="addExpense()" class="space-y-4">
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                  <input
-                    type="text"
-                    [(ngModel)]="newExpense.name"
-                    name="name"
-                    placeholder="Name"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+          <div class="space-y-4">
+            <div *ngFor="let recentTransaction of recentExpenseTransactions$ | async" class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
+              <!-- Left Side: Icon and Transaction Info -->
+              <div class="flex items-center space-x-4">
+                <div
+                  class="h-10 w-10 flex-shrink-0 rounded-lg flex items-center justify-center text-white font-semibold"
+                  [style.background-color]="recentTransaction.category.color"
+                >
+                  <span class="text-lg">{{ recentTransaction.category.icon }}</span>
                 </div>
-                <div *ngIf="categories">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                  <select
-                    [(ngModel)]="newExpense.categoryId"
-                    name="category"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <div>
+                  <h3 class="font-semibold text-gray-900">{{ recentTransaction.category.name }}</h3>
+                  <p class="text-sm text-gray-500">{{ recentTransaction.transactionDate }}</p>
+                  <p class="text-sm text-gray-700 italic">{{ recentTransaction.title }}</p>
+                </div>
+              </div>
+              <!-- Right Side: Amount and View Icon -->
+              <div class="text-right flex items-center space-x-2">
+                <div class="text-lg font-bold text-red-600">
+                  -{{ getFormattedContent(recentTransaction.amount) }}
+                </div>
+                <button
+                  class="p-2 rounded-full hover:bg-gray-200 transition-colors"
+                  aria-label="View Details"
+                >
+                  <svg
+                    class="h-5 w-5 text-gray-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <option *ngFor="let catgeory of categories" [value]="catgeory.id">{{catgeory.name}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
-                  <input
-                    type="number"
-                    [(ngModel)]="newExpense.amount"
-                    name="amount"
-                    placeholder="amount"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
-                  <select
-                    [(ngModel)]="newExpense.type"
-                    name="time"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="monthly">Monthly</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="daily">Daily</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Start date</label>
-                  <input type="date"
-                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                   [(ngModel)]="newExpense.startDate"
-                   name="startDate"
-                   >
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">End date</label>
-                 <input type="date"
-                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                   [(ngModel)]="newExpense.endDate"
-                   name="endDate"
-                   >
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Submit
-              </button>
-            </form>
-          </div>
-
-          <!-- Spending Chart -->
-          <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex justify-between items-center mb-6">
-              <div></div>
-              <select class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="month">month</option>
-                <option value="week">week</option>
-                <option value="year">year</option>
-              </select>
-            </div>
-
-            <!-- Chart Container -->
-            <div class="relative flex justify-center items-center mb-6">
-              <div class="relative w-64 h-64">
-                <!-- Circular Progress Ring -->
-                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <!-- Background circle -->
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    stroke="#f3f4f6"
-                    stroke-width="8"
-                    fill="none"
-                  />
-                  <!-- Progress segments -->
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    stroke="#10b981"
-                    stroke-width="8"
-                    fill="none"
-                    stroke-dasharray="75 251"
-                    stroke-dashoffset="0"
-                    class="transition-all duration-300"
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    stroke="#3b82f6"
-                    stroke-width="8"
-                    fill="none"
-                    stroke-dasharray="50 251"
-                    stroke-dashoffset="-75"
-                    class="transition-all duration-300"
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    stroke="#06b6d4"
-                    stroke-width="8"
-                    fill="none"
-                    stroke-dasharray="40 251"
-                    stroke-dashoffset="-125"
-                    class="transition-all duration-300"
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    stroke="#ef4444"
-                    stroke-width="8"
-                    fill="none"
-                    stroke-dasharray="30 251"
-                    stroke-dashoffset="-165"
-                    class="transition-all duration-300"
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    stroke="#f59e0b"
-                    stroke-width="8"
-                    fill="none"
-                    stroke-dasharray="25 251"
-                    stroke-dashoffset="-195"
-                    class="transition-all duration-300"
-                  />
-                </svg>
-                
-                <!-- Center text -->
-                <div class="absolute inset-0 flex flex-col justify-center items-center">
-                  <p class="text-gray-500 text-sm">Spend</p>
-                  <p class="text-3xl font-bold text-gray-800">$11.35K</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Legend -->
-            <div class="grid grid-cols-2 gap-2 text-sm">
-              <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 bg-cyan-500 rounded-full"></div>
-                <span class="text-gray-700">Transport</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <span class="text-gray-700">Grocery</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span class="text-gray-700">Food</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span class="text-gray-700">Entertainment</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                <span class="text-gray-700">Health</span>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12H9m12 0A9 9 0 11.999 12 9 9 0 0121 12z"
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Modals -->
+        <app-add-expense-modal
+          [isModalOpen]="isExpenseModalOpen"
+          [categories]="(categories$ | async) || []"
+          (close)="isExpenseModalOpen = false"
+          (submitForm)="handleSubmitForm($event)"
+        ></app-add-expense-modal>
+
+        <app-add-recurring-expense-modal
+          [isModalOpen]="isRecurringModalOpen"
+          (close)="isRecurringModalOpen = false"
+          [categories]="(categories$ | async) || []"
+          (submitForm)="handleSubmitForm($event)"
+        ></app-add-recurring-expense-modal>
       </div>
     </div>

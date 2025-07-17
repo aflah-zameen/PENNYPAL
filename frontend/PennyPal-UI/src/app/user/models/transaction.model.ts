@@ -1,7 +1,12 @@
 export interface Transaction{
-    name :string,
-    category : string,
-    date : string,
-    time : string,
-    amount : string
+    id : number;
+    title :string;
+    amount : number;
+    transactionDate : Date;
+    category : {
+        name : string,
+        icon : string,
+        color : string
+    }
+
 }

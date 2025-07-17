@@ -6,7 +6,7 @@ import com.application.pennypal.application.output.income.PendingIncomeSummaryOu
 import com.application.pennypal.application.output.income.RecurringIncomeOutput;
 import com.application.pennypal.application.port.IncomeRepositoryPort;
 import com.application.pennypal.domain.entity.Income;
-import com.application.pennypal.domain.valueObject.IncomeStatus;
+import com.application.pennypal.domain.valueObject.RecurringStatus;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.Income.IncomeRepository;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.Income.PendingIncomeStatsProjection;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.category.CategoryRepository;
@@ -17,7 +17,6 @@ import com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper.Ca
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper.IncomeJpaMapper;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper.UserMapper;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.user.SpringDataUserRepository;
-import com.application.pennypal.interfaces.rest.dtos.catgeory.CategoryUserResponseDTO;
 import com.application.pennypal.interfaces.rest.mappers.CategoryDtoMapper;
 import com.application.pennypal.shared.exception.ApplicationException;
 import com.application.pennypal.shared.exception.UserNotFoundException;
@@ -141,7 +140,7 @@ public class IncomeRepositoryAdapter implements IncomeRepositoryPort {
 
     @Override
     public List<Income> findAllOneTimePendingIncomes(Long userId,LocalDate date) {
-        return incomeRepository.findPendingNonRecurringIncomeBeforeDate(userId,date, IncomeStatus.PENDING).stream()
+        return incomeRepository.findPendingNonRecurringIncomeBeforeDate(userId,date, RecurringStatus.PENDING).stream()
                 .map(incomeJpaMapper::toDomain).toList();
     }
 

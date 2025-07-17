@@ -1,6 +1,6 @@
 package com.application.pennypal.infrastructure.adapter.goal;
 
-import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.port.GoalRepositoryPort;
 import com.application.pennypal.domain.entity.Goal;
 import com.application.pennypal.domain.valueObject.GoalStatus;
@@ -28,9 +28,9 @@ public class GoalRepositoryAdapter implements GoalRepositoryPort {
     @Override
     public Goal save(Goal goal) {
         UserEntity user = springDataUserRepository.findById(goal.getUserId())
-                .orElseThrow(() -> new BusinessException("User not found","NOT_FOUND"));
+                .orElseThrow(() -> new ApplicationBusinessException("User not found","NOT_FOUND"));
         CategoryEntity category = categoryRepository.findById(goal.getCategoryId())
-                .orElseThrow(() -> new BusinessException("Category not found","NOT_FOUND"));
+                .orElseThrow(() -> new ApplicationBusinessException("Category not found","NOT_FOUND"));
         GoalEntity goalEntity = goalJpaMapper.toEntity(goal,user,category);
         GoalEntity responseGoalEntity = goalRepository.save(goalEntity);
         return goalJpaMapper.toDomain(responseGoalEntity);

@@ -1,7 +1,6 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.transaction;
 
-import com.application.pennypal.domain.entity.Transactions;
-import com.application.pennypal.domain.valueObject.TransactionOriginType;
+import com.application.pennypal.domain.valueObject.TransactionType;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.TransactionEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,7 +29,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity,L
             Long userId,
             BigDecimal amount,
             LocalDate transactionDate,
-            TransactionOriginType type,
+            TransactionType type,
             Long originId,
             Long categoryId
     );
@@ -43,9 +42,9 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity,L
             """)
     List<TransactionEntity> findRecentIncomeTransactions(
             @Param("userId") Long userId,
-            @Param("originType") TransactionOriginType originType,
+            @Param("originType") TransactionType originType,
             Pageable pageable
     );
 
-    List<TransactionEntity> findAllByUserIdAndOriginIdAndTypeOrderByCreatedAtDesc(Long userId, Long originId,TransactionOriginType type);
+    List<TransactionEntity> findAllByUserIdAndOriginIdAndTypeOrderByCreatedAtDesc(Long userId, Long originId, TransactionType type);
 }

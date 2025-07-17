@@ -1,6 +1,6 @@
 package com.application.pennypal.application.service.expense;
 
-import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.input.expense.ExpenseInputModel;
 import com.application.pennypal.application.mappers.expense.ExpenseApplicationMapper;
 import com.application.pennypal.application.output.expense.ExpenseOutputModel;
@@ -36,7 +36,7 @@ public class ExpenseService implements AddExpense, GetAllExpenses, EditExpense, 
     @Override
     public void execute(Long userId, ExpenseInputModel expenseInputModel) {
         Expense expense = expenseRepositoryPort.getExpenseById(expenseInputModel.id())
-                .orElseThrow(() -> new BusinessException("Expense cannot be found","NOT_FOUND"));
+                .orElseThrow(() -> new ApplicationBusinessException("Expense cannot be found","NOT_FOUND"));
         if(expense.getUserId().equals(userId)){
             expense.setName(expenseInputModel.name());
             expense.setAmount(expenseInputModel.amount());
@@ -46,19 +46,19 @@ public class ExpenseService implements AddExpense, GetAllExpenses, EditExpense, 
             expense.setCategoryId(expenseInputModel.categoryId());
             expenseRepositoryPort.save(expense);
         }else{
-            throw new BusinessException("User action is unauthorized","UNAUTHORIZED_ACTION");
+            throw new ApplicationBusinessException("User action is unauthorized","UNAUTHORIZED_ACTION");
         }
     }
 
     @Override
     public void execute(Long userId, Long expenseId) {
         Expense expense = expenseRepositoryPort.getExpenseById(expenseId)
-                .orElseThrow(() -> new BusinessException("Expense cannot be found","NOT_FOUND"));
+                .orElseThrow(() -> new ApplicationBusinessException("Expense cannot be found","NOT_FOUND"));
         if(expense.getUserId().equals(userId)){
             expense.deleteExpense();
             expenseRepositoryPort.save(expense);
         }else{
-            throw new BusinessException("User action is unauthorized","UNAUTHORIZED_ACTION");
+            throw new ApplicationBusinessException("User action is unauthorized","UNAUTHORIZED_ACTION");
         }
     }
 }

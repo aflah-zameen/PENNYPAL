@@ -1,4 +1,6 @@
 package com.application.pennypal.application.output.expense;
 
-public record TotalExpenseSummaryOutput() {
+import java.math.BigDecimal;
+
+public record TotalExpenseSummaryOutput(BigDecimal totalAmount, Double progressValue) {
 }

@@ -1,6 +1,6 @@
 package com.application.pennypal.domain.entity;
 
-import com.application.pennypal.domain.valueObject.IncomeStatus;
+import com.application.pennypal.domain.valueObject.RecurringStatus;
 import com.application.pennypal.domain.valueObject.RecurrenceFrequency;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class Income {
     private BigDecimal amount;
     private Long categoryId;
     private LocalDate incomeDate;
-    private IncomeStatus status;
+    private RecurringStatus status;
     private String description;
 
     private Boolean isRecurring;

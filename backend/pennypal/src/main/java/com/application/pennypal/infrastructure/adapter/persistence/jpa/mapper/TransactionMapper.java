@@ -1,7 +1,6 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.mapper;
 
-import com.application.pennypal.domain.entity.Category;
-import com.application.pennypal.domain.entity.Transactions;
+import com.application.pennypal.domain.entity.Transaction;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.CategoryEntity;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.TransactionEntity;
 import com.application.pennypal.infrastructure.adapter.persistence.jpa.entity.UserEntity;
@@ -13,15 +12,15 @@ import org.mapstruct.Mappings;
 public interface TransactionMapper {
     @Mapping(target = "userId",source = "user.id")
     @Mapping(target = "categoryId", source = "category.id")
-    Transactions toDomain(TransactionEntity transactionEntity);
+    Transaction toDomain(TransactionEntity transactionEntity);
 
     @Mappings({
             @Mapping(target = "id",ignore = true),
-            @Mapping(target = "description", source = "transactions.description"),
+            @Mapping(target = "description", source = "transaction.description"),
             @Mapping(target = "createdAt",ignore = true),
             @Mapping(target = "updatedAt", ignore = true),
             @Mapping(target = "user", source = "user"),
             @Mapping(target = "category", source = "category")
     })
-    TransactionEntity toEntity(Transactions transactions, UserEntity user, CategoryEntity category);
+    TransactionEntity toEntity(Transaction transaction, UserEntity user, CategoryEntity category);
 }

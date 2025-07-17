@@ -4,8 +4,11 @@ import com.application.pennypal.interfaces.rest.dtos.catgeory.CategoryUserRespon
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public record ExpenseResponseDTO(Long id, String name, CategoryUserResponseDTO category,
-                                 BigDecimal amount, LocalDate startDate,LocalDate endDate,String type) {
+public record ExpenseResponseDTO(Long id, BigDecimal amount, String title, CategoryUserResponseDTO category,
+                                 LocalDate paymentDate, String status, String description, Boolean isRecurring,
+                                 String frequency, LocalDate startDate, LocalDate endDate, LocalDateTime updatedAt,
+                                 LocalDateTime createdAt, Boolean recurrenceActive, Boolean deleted) {
 
 }

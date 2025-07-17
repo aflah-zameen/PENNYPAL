@@ -1,7 +1,7 @@
 package com.application.pennypal.infrastructure.adapter.persistence.jpa.entity;
 
 import com.application.pennypal.domain.valueObject.TransactionStatus;
-import com.application.pennypal.domain.valueObject.TransactionOriginType;
+import com.application.pennypal.domain.valueObject.TransactionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +34,7 @@ public class TransactionEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TransactionOriginType type; //"INCOME","EXPENSE","TRANSFER"
+    private TransactionType type; //"INCOME","EXPENSE","TRANSFER"
 
     @Column(nullable = false)
     private Long originId; // Transaction Origin Types ID.

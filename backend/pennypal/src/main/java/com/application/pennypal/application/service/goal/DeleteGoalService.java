@@ -1,6 +1,6 @@
 package com.application.pennypal.application.service.goal;
 
-import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.port.GoalRepositoryPort;
 import com.application.pennypal.application.usecases.goal.DeleteGoal;
 import com.application.pennypal.domain.entity.Goal;
@@ -12,12 +12,12 @@ public class DeleteGoalService implements DeleteGoal {
     @Override
     public void execute(Long userId,Long goalId) {
         Goal goal = goalRepositoryPort.getGoalById(goalId)
-                .orElseThrow(() -> new BusinessException("Goal cannot be found","NOT_FOUND"));
+                .orElseThrow(() -> new ApplicationBusinessException("Goal cannot be found","NOT_FOUND"));
         if(goal.getUserId().equals(userId)){
             goal.setDeleted(true);
             goalRepositoryPort.save(goal);
         }else {
-            throw new BusinessException("User action is not authenticated","UNAUTHENTICATED_ACTION");
+            throw new ApplicationBusinessException("User action is not authenticated","UNAUTHENTICATED_ACTION");
         }
     }
 }

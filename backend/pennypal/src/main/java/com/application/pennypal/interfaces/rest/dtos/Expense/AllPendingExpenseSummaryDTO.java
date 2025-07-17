@@ -1,4 +1,7 @@
 package com.application.pennypal.interfaces.rest.dtos.Expense;
 
-public record AllPendingExpenseSummaryDTO() {
+import java.math.BigDecimal;
+import java.util.List;
+
+public record AllPendingExpenseSummaryDTO(List<PendingExpenseResponseDTO> pendingExpenseList, int totalCount, BigDecimal totalAmount) {
 }

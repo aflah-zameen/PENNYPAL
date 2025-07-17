@@ -1,6 +1,6 @@
 package com.application.pennypal.application.service.goal;
 
-import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.input.goal.EditGoalInputModel;
 import com.application.pennypal.application.mappers.goal.GoalApplicationMapper;
 import com.application.pennypal.application.port.GoalRepositoryPort;
@@ -18,11 +18,11 @@ public class EditGoalService implements EditGoal {
     @Override
     public void execute(Long userId, EditGoalInputModel editGoalInputModel) {
         Goal goal = goalRepositoryPort.getGoalById(editGoalInputModel.id())
-                .orElseThrow(() ->new BusinessException("Goal is not found","NOT_FOUND"));
+                .orElseThrow(() ->new ApplicationBusinessException("Goal is not found","NOT_FOUND"));
         if(goal.getUserId().equals(userId)){
             Duration duration = Duration.between(goal.getCreatedAt(),LocalDateTime.now());
             if(duration.toMinutes() >30){
-                throw new BusinessException("You can't  edit the goal after 30 minutes of creation", "EDIT_RESTRICTED");
+                throw new ApplicationBusinessException("You can't  edit the goal after 30 minutes of creation", "EDIT_RESTRICTED");
             }
 
             Goal updatedGoal = goalApplicationMapper.toDomain(editGoalInputModel,userId);
@@ -34,7 +34,7 @@ public class EditGoalService implements EditGoal {
 
             goalRepositoryPort.save(updatedGoal);
         }else{
-            throw new BusinessException("User action is not authenticated","UNAUTHENTICATED_ACTION");
+            throw new ApplicationBusinessException("User action is not authenticated","UNAUTHENTICATED_ACTION");
         }
     }
 }

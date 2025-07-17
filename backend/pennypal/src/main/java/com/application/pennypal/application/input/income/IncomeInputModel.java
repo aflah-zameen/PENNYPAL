@@ -1,6 +1,5 @@
 package com.application.pennypal.application.input.income;
 
-import com.application.pennypal.domain.valueObject.IncomeStatus;
 import com.application.pennypal.domain.valueObject.RecurrenceFrequency;
 
 import java.math.BigDecimal;

@@ -1,4 +1,4 @@
-package com.application.pennypal.interfaces.rest.dtos.income;
+package com.application.pennypal.interfaces.rest.dtos.Expense;
 
-public record ActiveRecurringIncomeDTO(Integer count) {
+public record ActiveRecurringExpenseDTO(Integer count) {
 }

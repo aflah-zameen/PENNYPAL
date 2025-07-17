@@ -4,7 +4,7 @@ import { UserCategoryResponse } from '../../models/user-category.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IncomeRequestModel} from '../../models/income.model';
-import { IncomeFrequency } from '../../enums/income-frequency.enum';
+import { RecurringFrequency } from '../../enums/income-frequency.enum';
 
 @Component({
   selector: 'app-add-recurring-income',
@@ -22,7 +22,7 @@ export class AddRecurringIncomeComponent {
       title: '',
       amount: null,
       categoryId : null,
-      frequency : IncomeFrequency.MONTHLY,
+      frequency : RecurringFrequency.MONTHLY,
       endDate : '',
       startDate : '',
       description : '',
@@ -89,7 +89,7 @@ export class AddRecurringIncomeComponent {
       title: '',
       amount: null,
       categoryId : null,
-      frequency : IncomeFrequency.MONTHLY,
+      frequency : RecurringFrequency.MONTHLY,
       endDate : '',
       startDate : '',
       description : '',

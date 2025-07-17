@@ -1,6 +1,6 @@
 package com.application.pennypal.application.service.income;
 
-import com.application.pennypal.application.exception.BusinessException;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.mappers.category.CategoryApplicationMapper;
 import com.application.pennypal.application.output.income.AllPendingIncomeSummaryOutput;
 import com.application.pennypal.application.output.income.PendingIncomeOutput;
@@ -33,7 +33,7 @@ public class GetAllPendingIncomeSummaryService implements GetAllPendingIncomeSum
             List<Income> oneTimePendingIncomes = incomeRepositoryPort.findAllOneTimePendingIncomes(userId, LocalDate.now());
             for(Income income : oneTimePendingIncomes){
                 Category category = categoryManagementRepositoryPort.findById(income.getCategoryId())
-                                .orElseThrow(() -> new BusinessException("Category entity not found","NOT_FOUND"));
+                                .orElseThrow(() -> new ApplicationBusinessException("Category entity not found","NOT_FOUND"));
                 pendingIncomeOutputList.add(new PendingIncomeOutput(
                         income.getId(),
                         income.getTitle(),
@@ -47,7 +47,7 @@ public class GetAllPendingIncomeSummaryService implements GetAllPendingIncomeSum
             List<Income> recurringPendingIncomes = recurringIncomeLogRepositoryPort.findAllPendingRecurringIncomeLogs(userId,LocalDate.now());
             for(Income income : recurringPendingIncomes) {
                 Category category = categoryManagementRepositoryPort.findById(income.getCategoryId())
-                        .orElseThrow(() -> new BusinessException("Category entity not found", "NOT_FOUND"));
+                        .orElseThrow(() -> new ApplicationBusinessException("Category entity not found", "NOT_FOUND"));
                 pendingIncomeOutputList.add(new PendingIncomeOutput(
                         income.getId(),
                         income.getTitle(),
