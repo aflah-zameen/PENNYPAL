@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record ExpenseRequest(@NotNull(message = "Expense name should be given") String name,
+public record AddExpenseRequest(@NotNull(message = "Expense name should be given") String name,
                              @NotNull(message = "Expense amount should be given") BigDecimal amount,
                              @NotNull(message = "Expense category should be given") Long categoryId,
                              @NotNull(message = "Expense type should be given") String type,
