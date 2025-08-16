@@ -1,6 +1,6 @@
 package com.application.pennypal.infrastructure.scheduler;
 
-import com.application.pennypal.application.usecases.Income.GenerateScheduledRecurringIncome;
+import com.application.pennypal.application.port.in.Income.GenerateScheduledRecurringTransaction;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RecurringIncomeScheduler {
 
-    private final GenerateScheduledRecurringIncome scheduleRecurringIncomeService;
+    private final GenerateScheduledRecurringTransaction scheduleRecurringIncomeService;
 
     @PostConstruct
     public void runOnStartup(){

@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
-import { CategorySpending, SpendingCategory, SpendingSummary, Transaction } from '../../models/spend-activity';
+import { CategorySpending, SpendingCategory, SpendingSummary} from '../../models/spend-activity';
 import { SpendingDataService } from '../../services/spending-data.service';
 import { CommonModule } from '@angular/common';
 import { SpendSummaryCardComponent } from "./spend-summary-card/spend-summary-card.component";
 import { SpendCategoryChartComponent } from "./spend-category-chart/spend-category-chart.component";
 import { RecentSpendTransactionComponent } from "./recent-spend-transaction/recent-spend-transaction.component";
+import { Transaction } from '../../models/transaction.model';
+import { Observable } from 'rxjs';
+import { UserService } from '../../services/user.service';
+import { UserCategoryResponse } from '../../models/user-category.model';
 
 @Component({
   selector: 'app-spend-activity',
@@ -13,41 +17,23 @@ import { RecentSpendTransactionComponent } from "./recent-spend-transaction/rece
   styleUrl: './spend-activity.component.css'
 })
 export class SpendActivityComponent {
-  isLoading = true
-  transactions: Transaction[] = []
-  categories: SpendingCategory[] = []
-  spendingSummary!: SpendingSummary
-  categorySpending: CategorySpending[] = []
-  chartViewMode: "bar" | "pie" = "bar"
+  transactions$!: Observable<Transaction[]> ;
+  categories$!: Observable<UserCategoryResponse[]>;
+  spendingSummary$!: Observable<SpendingSummary>;
+  categorySpending$!: Observable<CategorySpending[]>;
+  chartViewMode: "bar" | "pie" = "bar";
 
-  constructor(private spendingDataService: SpendingDataService) {}
+  constructor(private spendingDataService: SpendingDataService, private userService : UserService) {}
 
   ngOnInit() {
     this.loadData()
   }
 
-  private async loadData() {
-    try {
-      // Simulate loading delay for better UX
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      this.transactions = this.spendingDataService.getTransactions()
-      this.categories = this.spendingDataService.getCategories()
-      this.spendingSummary = this.spendingDataService.calculateSpendingSummary(this.transactions)
-      this.categorySpending = this.spendingDataService.calculateCategorySpending(
-        this.transactions.filter((t) => {
-          const date = new Date(t.date)
-          const currentMonth = new Date().getMonth()
-          const currentYear = new Date().getFullYear()
-          return date.getMonth() === currentMonth && date.getFullYear() === currentYear
-        }),
-      )
-
-      this.isLoading = false
-    } catch (error) {
-      console.error("Error loading spending data:", error)
-      this.isLoading = false
-    }
+  private loadData() {
+      this.transactions$ = this.spendingDataService.getTransactions();      
+      this.categories$ = this.userService.getCategories()
+      this.spendingSummary$ = this.spendingDataService.getSpendingSummary()
+      // this.categorySpending$ = this.spendingDataService.getCategorySpending()
   }
 
   onChartViewModeChange(mode: "bar" | "pie"): void {

@@ -1,0 +1,107 @@
+ <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 bg-gradient-to-r from-gray-500 to-gray-600 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold text-gray-800">Recent Transactions</h3>
+            <p class="text-gray-600">Your latest financial activity</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <!-- Filter Dropdown -->
+          <select class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange()">
+            <option value="all">All Transactions</option>
+            <option value="income">Income Only</option>
+            <option value="expense">Expenses Only</option>
+            <option value="pending">Pending</option>
+          </select>
+          
+          <button class="p-2 text-gray-400 hover:text-blue-600 transition-colors duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Transactions List -->
+      <div class="space-y-3 max-h-96 overflow-y-auto">
+        <div *ngFor="let transaction of getFilteredTransactions()" 
+             class="p-4 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-300"
+             [ngClass]="getTransactionClasses(transaction)">
+          
+          <div class="flex items-center justify-between">
+            <!-- Left Side - Icon and Details -->
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center"
+                   [ngClass]="getTransactionIconBg(transaction)">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     [ngClass]="getTransactionIconColor(transaction)">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        [attr.d]="getTransactionIconPath(transaction)"></path>
+                </svg>
+              </div>
+              
+              <div>
+                <h4 class="font-semibold text-gray-800">{{transaction.description}}</h4>
+                <div class="flex items-center space-x-3 mt-1">
+                  <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">{{transaction.category}}</span>
+                  <span class="text-xs text-gray-500" *ngIf="transaction.merchant">{{transaction.merchant}}</span>
+                  <span class="text-xs px-2 py-1 rounded-full font-medium"
+                        [ngClass]="getStatusClasses(transaction.status)">
+                    {{transaction.status | titlecase}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Right Side - Amount and Time -->
+            <div class="text-right">
+              <p class="text-lg font-bold" [ngClass]="getAmountClasses(transaction)">
+                {{transaction.type === 'income' ? '+' : '-'}}\${{transaction.amount | number:'1.2-2'}}
+              </p>
+              <p class="text-xs text-gray-500">{{transaction.timestamp}}</p>
+              <p class="text-xs text-gray-400" *ngIf="transaction.paymentMethod">{{transaction.paymentMethod}}</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div *ngIf="getFilteredTransactions().length === 0" class="text-center py-8">
+          <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+          </svg>
+          <p class="text-gray-500">No transactions found</p>
+        </div>
+      </div>
+
+      <!-- Load More Button -->
+      <div class="mt-6 text-center" *ngIf="hasMoreTransactions">
+        <button class="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors duration-200">
+          Load More Transactions
+        </button>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="mt-6 grid grid-cols-3 gap-4">
+        <div class="text-center p-3 bg-green-50 rounded-xl">
+          <p class="text-sm text-green-600 font-medium">Total Income</p>
+          <p class="text-lg font-bold text-green-700">\${{getTotalIncome() | number:'1.2-2'}}</p>
+        </div>
+        <div class="text-center p-3 bg-red-50 rounded-xl">
+          <p class="text-sm text-red-600 font-medium">Total Expenses</p>
+          <p class="text-lg font-bold text-red-700">\${{getTotalExpenses() | number:'1.2-2'}}</p>
+        </div>
+        <div class="text-center p-3 bg-blue-50 rounded-xl">
+          <p class="text-sm text-blue-600 font-medium">Net Flow</p>
+          <p class="text-lg font-bold text-blue-700">\${{getNetFlow() | number:'1.2-2'}}</p>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,71 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div class="max-w-7xl mx-auto p-6">
+        <!-- Header -->
+        <div class="text-center mb-12">
+          <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-4">
+            Money Transfer Demo
+          </h1>
+          <p class="text-gray-600 text-lg">Click "Send Money" on any contact to start the transfer flow</p>
+        </div>
+
+        <!-- Contact Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <app-contact-card
+            *ngFor="let contact of contacts"
+            [contact]="contact"
+            (sendMoney)="onSendMoney($event)"
+            (message)="onMessage($event)"
+          ></app-contact-card>
+        </div>
+
+        <!-- User Balance Display -->
+        <!-- <div class="max-w-md mx-auto">
+          <div class="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Your Wallet</h3>
+            <div class="flex items-center justify-between">
+              <span class="text-gray-600">Available Balance</span>
+              <span class="text-3xl font-bold text-green-600">₹{{ userBalance.available | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Modals -->
+      <app-send-money-modal
+        [isOpen]="currentStep.step === 'amount'"
+        [recipient]="selectedContact"
+        [paymentMethods]="paymentMethods"
+        (close)="onCloseModal()"
+        (continue)="onAmountConfirmed($event)"
+      ></app-send-money-modal>
+
+      <app-pin-confirmation-modal
+        [isOpen]="currentStep.step === 'pin'"
+        [recipient]="selectedContact"
+        [amount]="transferData.amount"
+        [paymentMethod]="selectedPaymentMethod"
+        (close)="onCloseModal()"
+        (confirm)="onPinConfirmed($event)"
+      ></app-pin-confirmation-modal>
+
+      <app-transaction-status-modal
+        [isOpen]="currentStep.step === 'processing' || currentStep.step === 'success' || currentStep.step === 'failed'"
+        [status]="getStatusModalStatus()"
+        [recipient]="selectedContact"
+        [transaction]="currentTransaction"
+        [paymentMethod]="selectedPaymentMethod"
+        [failureReason]="failureReason"
+        (close)="onCloseModal()"
+        (done)="onTransactionDone()"
+        (retry)="onRetryTransfer()"
+        (viewReceipt)="onViewReceipt($event)"
+      ></app-transaction-status-modal>
+
+      <app-transaction-receipt
+        [isOpen]="showReceipt"
+        [transaction]="currentTransaction"
+        [recipient]="selectedContact"
+        [paymentMethod]="selectedPaymentMethod"
+        (close)="onCloseReceipt()"
+      ></app-transaction-receipt>
+    </div>

@@ -8,5 +8,5 @@ import { Component,Input } from '@angular/core';
   styleUrl: './notification-icon.component.css'
 })
 export class NotificationIconComponent {
-  @Input() count: number = 0;
+  @Input() count: number|null = null;
 }

@@ -1,0 +1,81 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Wallet Balance Card -->
+      <!-- <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 group">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+            </svg>
+          </div>
+          <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Current</span>
+        </div>
+        <h3 class="text-gray-600 text-sm font-medium mb-2">Wallet Balance</h3>
+        <p class="text-3xl font-bold text-gray-800 mb-1">\${{summaryData.walletBalance | number:'1.2-2'}}</p>
+        <p class="text-xs text-green-600 flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+          +2.5% from last month
+        </p>
+      </div> -->
+
+      <!-- Total Expenses Card -->
+      <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 group">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-5 5l-7-7l10-10"></path>
+            </svg>
+          </div>
+          <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">This Month</span>
+        </div>
+        <h3 class="text-gray-600 text-sm font-medium mb-2">Total Expenses</h3>
+        <p class="text-3xl font-bold text-gray-800 mb-1">${{summaryData?.expenseSummary?.totalExpenses| number:'1.2-2'}}</p>
+        <p *ngIf="summaryData?.expenseSummary?.progressValue" class="text-xs text-red-600 flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+          </svg>
+          {{summaryData?.expenseSummary?.progressValue}}% from last month
+        </p>
+      </div>
+
+      <!-- Total Income Card -->
+      <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 group">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+          </div>
+          <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">This Month</span>
+        </div>
+        <h3 class="text-gray-600 text-sm font-medium mb-2">Total Income</h3>
+        <p class="text-3xl font-bold text-gray-800 mb-1">${{summaryData?.incomeSummary?.totalIncomes| number:'1.2-2'}}</p>
+        <p *ngIf="summaryData?.incomeSummary?.progressValue" class="text-xs text-green-600 flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+          {{summaryData?.incomeSummary?.progressValue}}% from last month
+        </p>
+      </div>
+
+      <!-- Net Savings Card -->
+      <!-- <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 group">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Net</span>
+        </div>
+        <h3 class="text-gray-600 text-sm font-medium mb-2">Net Savings</h3>
+        <p class="text-3xl font-bold text-gray-800 mb-1">\${{summaryData.netSavings | number:'1.2-2'}}</p>
+        <p class="text-xs text-purple-600 flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+          +12.3% from last month
+        </p>
+      </div> -->
+    </div>

@@ -1,7 +1,14 @@
 package com.application.pennypal.infrastructure.security.filter;
 
-import com.application.pennypal.application.port.CheckUserBlockedPort;
-import com.application.pennypal.infrastructure.adapter.auth.JwtTokenServiceAdapter;
+import com.application.pennypal.application.port.out.repository.UserRepositoryPort;
+import com.application.pennypal.application.port.out.service.CheckUserBlockedPort;
+import com.application.pennypal.application.port.out.service.TokenBlackListPort;
+import com.application.pennypal.application.port.out.service.TokenServicePort;
+import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.infrastructure.adapter.out.auth.JwtTokenServiceAdapter;
+import com.application.pennypal.infrastructure.exception.InfraErrorCode;
+import com.application.pennypal.infrastructure.exception.auth.InvalidAccessTokenInfrastructureException;
+import com.application.pennypal.infrastructure.persistence.jpa.entity.UserEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -11,6 +18,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,22 +31,40 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtTokenServiceAdapter  jwtTokenServiceAdapter;
+    private final TokenServicePort  tokenServicePort;
+    private final TokenBlackListPort tokenBlackListPort;
     private final CheckUserBlockedPort checkUserBlockedPort;
-    public JwtFilter(JwtTokenServiceAdapter jwtTokenServiceAdapter, CheckUserBlockedPort checkUserBlockedPort){
-        this.jwtTokenServiceAdapter = jwtTokenServiceAdapter;
-        this.checkUserBlockedPort = checkUserBlockedPort;
-    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request){
+        String path = request.getRequestURI();
+        return !path.startsWith("/api/private");    }
+
+    @Override
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+
         String accessToken = extractTokenFromCookie(request,"accessToken");
-        String refreshToken = extractTokenFromCookie(request,"refreshToken");
-        if(accessToken != null && !request.getRequestURI().contains("/login")){
+        if(accessToken == null || accessToken.isBlank() || !tokenServicePort.isValid(accessToken)){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+
+            Map<String, Object> errorBody = new HashMap<>();
+            errorBody.put("timestamp", LocalDateTime.now().toString());
+            errorBody.put("status", 401);
+            errorBody.put("errorCode", InfraErrorCode.INVALID_ACCESS_TOKEN.code());
+            errorBody.put("message", "The token is invalid");
+            errorBody.put("path", ((HttpServletRequest) request).getRequestURI());
+
+            new ObjectMapper().writeValue(response.getOutputStream(),errorBody);
+            return;
+        }
             try{
-                String email = jwtTokenServiceAdapter.getUsernameFromToken(accessToken);
+                String email = tokenServicePort.getUsernameFromToken(accessToken);
                 if(checkUserBlockedPort.check(email)){
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.setContentType("application/json");
@@ -53,7 +80,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     new ObjectMapper().writeValue(response.getOutputStream(),errorBody);
                     return;
                 }
-                Set<String> roles = jwtTokenServiceAdapter.getRolesFromToken(accessToken);
+                Set<String> roles = tokenServicePort.getRolesFromToken(accessToken);
 
                 List<SimpleGrantedAuthority> authorities = roles != null
                         ? roles.stream()
@@ -78,9 +105,19 @@ public class JwtFilter extends OncePerRequestFilter {
                 response.getWriter().write(ex.getMessage());
                 return ;
             }
-        }
-        if(accessToken == null && !request.getRequestURI().contains("/api/auth")){
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        String refreshToken = extractTokenFromCookie(request,"refreshToken");
+        if(refreshToken != null && (tokenBlackListPort.isBlacklisted(accessToken)||tokenBlackListPort.isBlacklisted(refreshToken))){
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json");
+
+            Map<String, Object> errorBody = new HashMap<>();
+            errorBody.put("timestamp", LocalDateTime.now().toString());
+            errorBody.put("status", 401);
+            errorBody.put("errorCode", InfraErrorCode.TOKEN_BLACKLISTED.code());
+            errorBody.put("message", "Not able to access at the moment. Login again");
+            errorBody.put("path", ((HttpServletRequest) request).getRequestURI());
+
+            new ObjectMapper().writeValue(response.getOutputStream(),errorBody);
             return;
         }
         filterChain.doFilter(request,response);

@@ -1,7 +1,7 @@
 package com.application.pennypal.infrastructure.security.jwt;
 
-import com.application.pennypal.domain.entity.User;
-import com.application.pennypal.domain.valueObject.Roles;
+import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.domain.user.valueObject.Roles;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 

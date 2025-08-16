@@ -11,7 +11,7 @@ import { Transaction } from "../models/transaction.model";
     providedIn : 'root'
 })
 export class UserExpenseService{
-    private apiURL = environment.apiBaseUrl+"/api/user"
+    private apiURL = environment.apiBaseUrl+"/api/private/user"
     private addExpenseSubject = new Subject<void>();
     
     addExpense$ = this.addExpenseSubject.asObservable();

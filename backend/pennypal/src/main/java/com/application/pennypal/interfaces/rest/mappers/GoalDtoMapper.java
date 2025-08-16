@@ -1,9 +1,9 @@
 package com.application.pennypal.interfaces.rest.mappers;
 
 import com.application.pennypal.application.exception.base.ApplicationBusinessException;
-import com.application.pennypal.application.input.goal.AddGoalInputModel;
-import com.application.pennypal.application.input.goal.EditGoalInputModel;
-import com.application.pennypal.application.output.goal.GoalResponseOutput;
+import com.application.pennypal.application.dto.input.goal.AddGoalInputModel;
+import com.application.pennypal.application.dto.input.goal.EditGoalInputModel;
+import com.application.pennypal.application.dto.output.goal.GoalResponseOutput;
 import com.application.pennypal.interfaces.rest.dtos.goal.AddGoalRequestDTO;
 import com.application.pennypal.interfaces.rest.dtos.goal.EditGoalRequestDTO;
 import com.application.pennypal.interfaces.rest.dtos.goal.GoalContributionResponseDTO;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class GoalDtoMapper {
     public static GoalResponseDTO toDto (GoalResponseOutput goalResponseOutput){
         return new GoalResponseDTO(
-                goalResponseOutput.id(),
+                goalResponseOutput.goalId(),
                 goalResponseOutput.userId(),
                 goalResponseOutput.title(),
                 goalResponseOutput.description(),
@@ -29,7 +29,7 @@ public class GoalDtoMapper {
                 goalResponseOutput.createdAt(),
                 goalResponseOutput.updatedAt(),
                 goalResponseOutput.contributions().stream()
-                        .map(contribution -> new GoalContributionResponseDTO(contribution.id(),contribution.amount(),contribution.date(),contribution.notes()))
+                        .map(contribution -> new GoalContributionResponseDTO(contribution.contributionId(),contribution.amount(),contribution.date(),contribution.notes()))
                         .toList()
         );
     }

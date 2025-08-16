@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IncomeRequestModel} from '../../models/income.model';
 import { RecurringFrequency } from '../../enums/income-frequency.enum';
+import { RecurringTransactionRequest, TransactionRequest } from '../../models/transaction.model';
 
 @Component({
   selector: 'app-add-recurring-income',
@@ -16,9 +17,9 @@ export class AddRecurringIncomeComponent {
   @Input() isModalOpen: boolean = false;
   @Input() categories: UserCategoryResponse[] = [];
   @Output() close = new EventEmitter<void>();
-  @Output() submitForm = new EventEmitter<IncomeRequestModel>();
+  @Output() submitForm = new EventEmitter<RecurringTransactionRequest>();
 
-    formData :IncomeRequestModel  = {
+    formData :RecurringTransactionRequest  = {
       title: '',
       amount: null,
       categoryId : null,
@@ -26,8 +27,9 @@ export class AddRecurringIncomeComponent {
       endDate : '',
       startDate : '',
       description : '',
-      isRecurring : true
-    };
+    transactionType: 'INCOME',
+  cardId : null 
+ };
   
     errors: any = {};
     isSubmitting: boolean = false;
@@ -93,7 +95,8 @@ export class AddRecurringIncomeComponent {
       endDate : '',
       startDate : '',
       description : '',
-      isRecurring : true
+      transactionType: 'INCOME',
+      cardId : null
     };
       this.errors = {};
       this.isSubmitting = false;

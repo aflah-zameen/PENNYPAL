@@ -1,0 +1,79 @@
+<div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-600 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold text-gray-800">AI Financial Insights</h3>
+            <p class="text-gray-600">Personalized recommendations for you</p>
+          </div>
+        </div>
+        
+        <button class="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white px-4 py-2 rounded-xl transition-all duration-300 flex items-center space-x-2 active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          <span>Chat with AI</span>
+        </button>
+      </div>
+
+      <!-- Suggestions List -->
+      <div class="space-y-4">
+        <div *ngFor="let suggestion of suggestions" 
+             class="p-4 rounded-2xl border transition-all duration-300 hover:shadow-md"
+             [ngClass]="getSuggestionClasses(suggestion.type)">
+          
+          <div class="flex items-start space-x-4">
+            <!-- Icon -->
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+                 [ngClass]="getIconClasses(suggestion.type)">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="getIconPath(suggestion.type)"></path>
+              </svg>
+            </div>
+            
+            <!-- Content -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="font-semibold text-gray-800">{{suggestion.title}}</h4>
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs px-2 py-1 rounded-full font-medium"
+                        [ngClass]="getPriorityClasses(suggestion.priority)">
+                    {{suggestion.priority | titlecase}}
+                  </span>
+                  <span class="text-xs text-gray-500">{{suggestion.category}}</span>
+                </div>
+              </div>
+              
+              <p class="text-gray-700 text-sm mb-3">{{suggestion.message}}</p>
+              
+              <button *ngIf="suggestion.action" 
+                      class="text-sm font-medium px-3 py-1 rounded-lg transition-colors duration-200"
+                      [ngClass]="getActionButtonClasses(suggestion.type)"
+                      (click)="onActionClick(suggestion)">
+                {{suggestion.action}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Chat Preview -->
+      <div class="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl border border-purple-100">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-gradient-to-r from-purple-400 to-blue-500 rounded-full flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-purple-800">Ask me anything about your finances!</p>
+            <p class="text-xs text-purple-600">Try: "How can I save more money?" or "Analyze my spending patterns"</p>
+          </div>
+        </div>
+      </div>
+    </div>

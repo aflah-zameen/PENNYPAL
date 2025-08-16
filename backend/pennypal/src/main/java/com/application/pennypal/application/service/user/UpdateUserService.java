@@ -1,9 +1,9 @@
 package com.application.pennypal.application.service.user;
 
-import com.application.pennypal.application.output.user.UserUpdateApplicationOutput;
-import com.application.pennypal.application.port.UpdateUserPort;
-import com.application.pennypal.application.usecases.user.UpdateUser;
-import com.application.pennypal.domain.entity.User;
+import com.application.pennypal.application.dto.output.user.UserUpdateApplicationOutput;
+import com.application.pennypal.application.port.out.service.UpdateUserPort;
+import com.application.pennypal.application.port.in.user.UpdateUser;
+import com.application.pennypal.domain.user.entity.User;
 import com.application.pennypal.domain.valueObject.UserDomainDTO;
 
 public class UpdateUserService implements UpdateUser {
@@ -15,9 +15,9 @@ public class UpdateUserService implements UpdateUser {
     @Override
     public UserDomainDTO update(UserUpdateApplicationOutput user, String token) {
         User updatedUser = this.updateUserPort.update(user,token);
-        return new UserDomainDTO(updatedUser.getId(),updatedUser.getName(),updatedUser.getEmail(),
+        return new UserDomainDTO(updatedUser.getUserId(),updatedUser.getName(),updatedUser.getEmail(),
                 updatedUser.getRoles(),updatedUser.getPhone(),updatedUser.isActive(),
-                updatedUser.isVerified(),updatedUser.getCreatedAt(),updatedUser.getUpdatedAt(),
-                updatedUser.getProfileURL());
+                updatedUser.isVerified(),updatedUser.getCreatedAt(),
+                updatedUser.getProfileURL().isPresent()? updatedUser.getProfileURL().get() : null);
     }
 }

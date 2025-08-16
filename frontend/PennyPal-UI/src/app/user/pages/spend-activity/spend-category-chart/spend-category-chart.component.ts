@@ -14,7 +14,7 @@ export class SpendCategoryChartComponent {
   @Output() viewModeChange = new EventEmitter<"bar" | "pie">()
 
   trackByCategory(index: number, category: CategorySpending): string {
-    return category.category.id
+    return category.category.categoryId
   }
 
   setViewMode(mode: "bar" | "pie"): void {

@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common';
 import { AddContributionComponent } from "../../../modals/add-contribution/add-contribution.component";
 import { ContributionHistoryComponent } from "../contribution-history/contribution-history.component";
 import { ContributionFormData } from '../../../models/contribution-form-date.model';
-import { MatIcon } from '@angular/material/icon';
+import { PaymentMethod } from '../../../models/transaction.model';
+import { User } from '../../../../models/User';
 
 @Component({
   selector: 'app-goal-card',
@@ -18,11 +19,31 @@ export class GoalCardComponent {
   @Output() delete = new EventEmitter<Goal>();
   @Output() addContribution = new EventEmitter<ContributionFormData>()
   @Output() deleteContribution = new EventEmitter<number>()
+  @Output() withdraw = new EventEmitter<Goal>();
+  @Input() paymentMethods: PaymentMethod[] = [];
 
   isContributionModalOpen = false
+  isHistoryVisible = false;
 
   get progressPercentage(): number {
     return Math.round((this.goal.currentAmount / this.goal.targetAmount) * 100);
+  }
+
+  getTextColorForBackground(hexColor: string): '#FFFFFF' | '#000000' {
+    if (!hexColor) return '#FFFFFF';
+
+    const cleanHex = hexColor.startsWith('#') ? hexColor.slice(1) : hexColor;
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+    
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    return luminance > 0.5 ? '#000000' : '#FFFFFF';
+  }
+
+  toggleHistory(): void {
+    this.isHistoryVisible = !this.isHistoryVisible;
   }
 
   get daysRemaining(): number {
@@ -73,11 +94,17 @@ export class GoalCardComponent {
   }
 
   onAddContribution(formData: ContributionFormData): void {
-    this.addContribution.emit(formData)
-    this.closeContributionModal()
+    this.addContribution.emit(formData);
+    this.closeContributionModal();
   }
 
   onDeleteContribution(contributionId: number): void {
     this.deleteContribution.emit(contributionId)
   }
+
+  requestWithdrawal(): void {
+    this.withdraw.emit(this.goal);
+  }
+
+  contactSupport(){}
 }

@@ -15,14 +15,14 @@ export class UserService{
   private apiURL :string;
 
     constructor(private https : HttpClient){
-      this.apiURL = environment.apiBaseUrl+"/api/user"
+      this.apiURL = environment.apiBaseUrl+"/api/private/user"
     }
   
     //update-user
   updateUser(userPartial : Partial<User>,profilePicture : File | null):Observable<User>{
     const updateProfileFormData : FormData = new FormData();
-    if(userPartial.name)
-      updateProfileFormData.append('name',userPartial.name);
+    if(userPartial.userName)
+      updateProfileFormData.append('name',userPartial.userName);
     if(userPartial.email)
       updateProfileFormData.append('email',userPartial.email);
     if(userPartial.phone)

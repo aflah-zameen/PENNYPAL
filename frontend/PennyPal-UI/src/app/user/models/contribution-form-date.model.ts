@@ -1,5 +1,6 @@
-export interface ContributionFormData {
-  goalId : number
-  notes: string,
-  amount: number|null,
-}
+  export interface ContributionFormData {
+    goalId : string
+    cardId:  string,
+    notes: string,
+    amount: number|null,
+  }

@@ -1,0 +1,28 @@
+<div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100">
+      <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+        <svg class="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+        Quick Actions
+      </h3>
+      
+      <div class="space-y-3">
+        <button 
+          *ngFor="let action of quickActions"
+          (click)="onActionClick(action.id)"
+          class="w-full flex items-center p-4 rounded-xl border-2 border-gray-100 hover:border-blue-300 hover:bg-blue-50 transition-all duration-300 group">
+          <div [ngClass]="action.iconBg" class="w-10 h-10 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="action.iconPath"></path>
+            </svg>
+          </div>
+          <div class="flex-1 text-left">
+            <p class="font-semibold text-gray-800 group-hover:text-blue-700">{{action.title}}</p>
+            <p class="text-sm text-gray-500">{{action.description}}</p>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>

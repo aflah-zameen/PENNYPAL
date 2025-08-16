@@ -1,0 +1,62 @@
+<div class="min-h-screen bg-gray-50">
+      <!-- Header -->
+      <div class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between items-center py-6">
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">Transaction Oversight</h1>
+              <p class="mt-1 text-sm text-gray-500">Monitor and manage all user transactions</p>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <nav class="flex space-x-8">
+              <button 
+                (click)="setActiveTab('all')"
+                [class]="activeTab === 'all' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors"
+              >
+                All Transactions
+                <span class="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs font-medium">
+                  {{totalTransactions}}
+                </span>
+              </button>
+              <button 
+                (click)="setActiveTab('flagged')"
+                [class]="activeTab === 'flagged' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors"
+              >
+                Flagged
+                <span class="ml-2 bg-red-100 text-red-900 py-0.5 px-2.5 rounded-full text-xs font-medium">
+                  {{flaggedCount}}
+                </span>
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Filters (only show for all transactions) -->
+        <app-transaction-filters *ngIf="activeTab === 'all'"></app-transaction-filters>
+
+        <!-- Transaction List -->
+        <app-transaction-list 
+          *ngIf="activeTab === 'all'"
+          (transactionSelected)="openTransactionDetail($event)">
+        </app-transaction-list>
+
+        <!-- Flagged Transactions -->
+        <app-flagged-transaction 
+          *ngIf="activeTab === 'flagged'"
+          (transactionSelected)="openTransactionDetail($event)">
+        </app-flagged-transaction>
+      </div>
+
+      <!-- Transaction Detail Drawer -->
+      <app-transaction-detail
+        [transaction]="selectedTransaction"
+        [isOpen]="isDetailOpen"
+        (closeDrawer)="closeTransactionDetail()">
+      </app-transaction-detail>
+    </div>

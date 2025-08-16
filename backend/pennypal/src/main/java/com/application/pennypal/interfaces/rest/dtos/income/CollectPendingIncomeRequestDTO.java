@@ -4,6 +4,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record CollectPendingIncomeRequestDTO(@NotNull(message = "Income id cannot be null") Long incomeId,
+public record CollectPendingIncomeRequestDTO(@NotNull(message = "Income id cannot be null") Long incomeLogId,
                                              @NotNull(message = "Payment date cannot be null") LocalDate incomeDate) {
 }

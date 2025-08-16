@@ -1,0 +1,99 @@
+<div class="mb-6">
+  <label class="block text-gray-700 font-semibold mb-3">Select Payment Method</label>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div 
+      *ngFor="let method of paymentMethods" 
+      class="relative cursor-pointer"
+      (click)="onSelectMethod(method)"
+    >
+      <div 
+        class="flex p-4 border-2 rounded-2xl transition-all duration-300 hover:shadow-md"
+        [class.border-blue-500]="selectedMethodId === method.id"
+        [class.bg-blue-50]="selectedMethodId === method.id"
+        [class.border-gray-200]="selectedMethodId !== method.id"
+        [class.bg-white]="selectedMethodId !== method.id"
+      >
+        <!-- Icon & Radio -->
+        <div class="flex flex-col items-center justify-between mr-4 space-y-2">
+          <!-- Radio Button -->
+          <div 
+            class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200"
+            [class.border-blue-500]="selectedMethodId === method.id"
+            [class.bg-blue-500]="selectedMethodId === method.id"
+            [class.border-gray-300]="selectedMethodId !== method.id"
+          >
+            <div 
+              *ngIf="selectedMethodId === method.id"
+              class="w-2 h-2 bg-white rounded-full"
+            ></div>
+          </div>
+
+          <!-- Payment Method Icon -->
+          <div 
+            class="w-10 h-10 rounded-xl flex items-center justify-center"
+            [ngClass]="getIconBackground(method.type)"
+          >
+            <ng-container [ngSwitch]="method.type">
+              <svg *ngSwitchCase="'wallet'" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+              </svg>
+              <svg *ngSwitchCase="'card'" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+              </svg>
+              <svg *ngSwitchCase="'bank'" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+              </svg>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="flex-1 space-y-1">
+          <div class="flex items-center justify-between">
+            <h4 class="font-semibold text-gray-800 truncate">{{ method.name }}</h4>
+            <!-- <span 
+              *ngIf="method.isDefault"
+              class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full"
+            >Default</span> -->
+          </div>
+
+          <!-- Card Info -->
+          <div *ngIf="method.type === 'card'" class="text-sm text-gray-600">
+            <p>•••• •••• •••• {{ method.cardNumber?.slice(-4) }}</p>
+          </div>
+
+          <!-- Wallet/Bank Info -->
+          <div *ngIf="method.type === 'wallet' || method.type === 'bank'" class="text-sm text-gray-600">
+            <p>{{ method.name }}</p>
+          </div>
+
+          <!-- Balance -->
+          <div *ngIf="method.balance !== undefined" class="text-sm mt-1">
+            <span class="text-gray-500">Balance:</span>
+            <span 
+              class="font-semibold ml-1"
+              [class.text-green-600]="method.balance > 0"
+              [class.text-red-500]="method.balance <= 0"
+            >
+              ₹{{ method.balance | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <!-- Inactive Label -->
+          <div *ngIf="!method.isActive" class="mt-1">
+            <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
+              Inactive
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selection Animation -->
+      <div 
+        *ngIf="selectedMethodId === method.id"
+        class="absolute inset-0 border-2 border-blue-500 rounded-2xl animate-pulse pointer-events-none"
+      ></div>
+    </div>
+  </div>
+</div>

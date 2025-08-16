@@ -15,7 +15,7 @@
           <div>
             <h3 class="text-sm font-semibold text-gray-600 mb-2">Total Spend</h3>
             <p class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              {{ formatCurrency(summary.totalSpend) }}
+              {{ formatCurrency(summary?.totalSpend || 0) }}
             </p>
           </div>
         </div>
@@ -27,15 +27,15 @@
         <div class="relative z-10">
           <div class="flex items-center justify-between mb-4">
             <div class="p-3 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200">
-              <span class="text-2xl">{{ summary.topCategory.category.emoji }}</span>
+              <span class="text-2xl">{{ summary?.topCategory?.category?.icon }}</span>
             </div>
-            <span class="text-sm font-medium text-gray-500">{{ summary.topCategory.transactionCount }} transactions</span>
+            <span class="text-sm font-medium text-gray-500">{{ summary?.topCategory?.transactionCount }} transactions</span>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-gray-600 mb-2">Top Category</h3>
-            <p class="text-lg font-bold text-gray-900 mb-1">{{ summary.topCategory.category.name }}</p>
+            <p class="text-lg font-bold text-gray-900 mb-1">{{ summary?.topCategory?.category?.name }}</p>
             <p class="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              {{ formatCurrency(summary.topCategory.amount) }}
+              {{ formatCurrency(summary?.topCategory?.amount || 0) }}
             </p>
           </div>
         </div>
@@ -46,21 +46,21 @@
         <div class="absolute inset-0 bg-gradient-to-r from-green-500/5 via-emerald-500/5 to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         <div class="relative z-10">
           <div class="flex items-center justify-between mb-4">
-            <div class="p-3 rounded-2xl" [style.background]="'linear-gradient(135deg, ' + summary.mostUsedCard.color + '20, ' + summary.mostUsedCard.color + '40)'">
-              <svg class="w-6 h-6" [style.color]="summary.mostUsedCard.color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="p-3 rounded-2xl" [style.background]="'linear-gradient(135deg, ' + summary?.mostUsedCard?.color + '20, ' + summary?.mostUsedCard?.color + '40)'">
+              <svg class="w-6 h-6" [style.color]="summary?.mostUsedCard?.color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
               </svg>
             </div>
-            <span class="text-xs font-medium px-2 py-1 rounded-full" [style.background-color]="summary.mostUsedCard.color + '20'" [style.color]="summary.mostUsedCard.color">
-              {{ summary.mostUsedCard.type | titlecase }}
+            <span class="text-xs font-medium px-2 py-1 rounded-full" [style.background-color]="summary?.mostUsedCard?.color + '20'" [style.color]="summary?.mostUsedCard?.color">
+              {{ summary?.mostUsedCard?.type | titlecase }}
             </span>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-gray-600 mb-2">Most Used Card</h3>
-            <p class="text-lg font-bold text-gray-900 mb-1">{{ summary.mostUsedCard.name }}</p>
-            <p class="text-sm text-gray-500 mb-2">•••• {{ summary.mostUsedCard.lastFour }}</p>
+            <p class="text-lg font-bold text-gray-900 mb-1">{{ summary?.mostUsedCard?.name }}</p>
+            <p class="text-sm text-gray-500 mb-2">•••• {{ summary?.mostUsedCard?.lastFour }}</p>
             <p class="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-              {{ formatCurrency(summary.mostUsedCard.amount) }}
+              {{ formatCurrency(summary?.mostUsedCard?.amount || 0) }}
             </p>
           </div>
         </div>
@@ -71,10 +71,10 @@
         <div class="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         <div class="relative z-10">
           <div class="flex items-center justify-between mb-4">
-            <div class="p-3 rounded-2xl" [ngClass]="summary.monthlyComparison.trend === 'increase' ? 'bg-gradient-to-br from-red-100 to-red-200' : 'bg-gradient-to-br from-green-100 to-green-200'">
-              <svg class="w-6 h-6" [ngClass]="summary.monthlyComparison.trend === 'increase' ? 'text-red-600' : 'text-green-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path *ngIf="summary.monthlyComparison.trend === 'increase'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
-                <path *ngIf="summary.monthlyComparison.trend === 'decrease'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            <div class="p-3 rounded-2xl" [ngClass]="summary?.monthlyComparison?.trend === 'increase' ? 'bg-gradient-to-br from-red-100 to-red-200' : 'bg-gradient-to-br from-green-100 to-green-200'">
+              <svg class="w-6 h-6" [ngClass]="summary?.monthlyComparison?.trend === 'increase' ? 'text-red-600' : 'text-green-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path *ngIf="summary?.monthlyComparison?.trend === 'increase'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                <path *ngIf="summary?.monthlyComparison?.trend === 'decrease'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
               </svg>
             </div>
             <span class="text-sm font-medium text-gray-500">vs Last Month</span>
@@ -82,15 +82,15 @@
           <div>
             <h3 class="text-sm font-semibold text-gray-600 mb-2">Monthly Comparison</h3>
             <div class="flex items-center space-x-2 mb-2">
-              <span class="text-2xl font-bold" [ngClass]="summary.monthlyComparison.trend === 'increase' ? 'text-red-600' : 'text-green-600'">
-                {{ summary.monthlyComparison.trend === 'increase' ? '+' : '-' }}{{ summary.monthlyComparison.percentage.toFixed(1) }}%
+              <span class="text-2xl font-bold" [ngClass]="summary?.monthlyComparison?.trend === 'increase' ? 'text-red-600' : 'text-green-600'">
+                {{ summary?.monthlyComparison?.trend === 'increase' ? '+' : '-' }}{{ summary?.monthlyComparison?.percentage?.toFixed(1) }}%
               </span>
               <span class="text-sm text-gray-500">
-                {{ summary.monthlyComparison.trend === 'increase' ? 'increase' : 'decrease' }}
+                {{ summary?.monthlyComparison?.trend === 'increase' ? 'increase' : 'decrease' }}
               </span>
             </div>
             <p class="text-sm text-gray-500">
-              Previous: {{ formatCurrency(summary.monthlyComparison.previousMonth) }}
+              Previous: {{ formatCurrency(summary?.monthlyComparison?.previousMonth || 0) }}
             </p>
           </div>
         </div>

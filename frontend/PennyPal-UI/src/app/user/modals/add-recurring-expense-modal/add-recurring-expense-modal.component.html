@@ -1,0 +1,174 @@
+<app-modal-overlay [isOpen]="isModalOpen" (close)="onClose()">
+  <!-- Modal Header -->
+  <div class="text-center mb-6">
+    <div class="mx-auto w-12 h-12 bg-gradient-to-br from-red-600 via-pink-600 to-red-800 rounded-full flex items-center justify-center mb-2 mt-5">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+    </div>
+    <h1 class="text-2xl font-bold bg-gradient-to-r from-red-600 via-pink-600 to-red-800 bg-clip-text text-transparent">
+      Add Recurring Expense
+    </h1>
+    <p class="text-gray-600 text-sm mt-1">Provide recurring expense details and schedule</p>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="px-6 pb-6">
+    <form (ngSubmit)="onSubmit()"   class="grid grid-cols-1 md:grid-cols-2 gap-5" #expenseForm="ngForm">
+
+  <!-- Amount -->
+  <div class="col-span-1">
+    <label class="block text-sm font-semibold text-gray-700 mb-1">Amount <span class="text-red-500">*</span></label>
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <span class="text-gray-500 text-lg font-medium">$</span>
+      </div>
+      <input
+        type="number"
+        [(ngModel)]="formData.amount"
+        name="amount"
+        placeholder="0.00"
+        required
+        #amount="ngModel"
+        class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 bg-gray-50 focus:bg-white"
+        [ngClass]="{'border-gray-300': !amount.invalid || !amount.touched, 'border-red-500': amount.invalid && amount.touched}"
+      />
+      <p *ngIf="amount.invalid && amount.touched" class="text-red-500 text-xs mt-1">Amount is required</p>
+    </div>
+  </div>
+
+  <!-- Category -->
+  <div class="col-span-1">
+    <label class="block text-sm font-semibold text-gray-700 mb-1">Category <span class="text-red-500">*</span></label>
+    <select
+      [(ngModel)]="formData.categoryId"
+      name="category"
+      required
+      #category="ngModel"
+      class="w-full px-4 py-2 border rounded-lg focus:ring-2 bg-gray-50 focus:bg-white"
+      [ngClass]="{'border-gray-300': !category.invalid || !category.touched, 'border-red-500': category.invalid && category.touched}"
+    >
+      <option value="" disabled>Select Category</option>
+      <option *ngFor="let category of categories" [ngValue]="category.categoryId">{{ category.name }}</option>
+    </select>
+    <p *ngIf="category.invalid && category.touched" class="text-red-500 text-xs mt-1">Category is required</p>
+  </div>
+
+  <!-- Expense details -->
+  <div class="col-span-1">
+    <label class="block text-sm font-semibold text-gray-700 mb-1">Expense details <span class="text-red-500">*</span></label>
+    <input
+      type="text"
+      [(ngModel)]="formData.title"
+      name="source"
+      placeholder="e.g. Car fuel, Groceries"
+      required
+      #source="ngModel"
+      class="w-full px-4 py-2 border rounded-lg focus:ring-2 bg-gray-50 focus:bg-white"
+      [ngClass]="{'border-gray-300': !source.invalid || !source.touched, 'border-red-500': source.invalid && source.touched}"
+    />
+    <p *ngIf="source.invalid && source.touched" class="text-red-500 text-xs mt-1">details are required</p>
+  </div>
+
+  <!-- Frequency -->
+  <div class="col-span-1">
+    <label class="block text-sm font-semibold text-gray-700 mb-1">Frequency <span class="text-red-500">*</span></label>
+    <select
+      [(ngModel)]="formData.frequency"
+      name="frequency"
+      required
+      #frequency="ngModel"
+      class="w-full px-4 py-2 border rounded-lg focus:ring-2 bg-gray-50 focus:bg-white"
+      [ngClass]="{'border-gray-300': !frequency.invalid || !frequency.touched, 'border-red-500': frequency.invalid && frequency.touched}"
+    >
+      <option value="" disabled>Select Frequency</option>
+      <option value="DAILY">Daily</option>
+      <option value="WEEKLY">Weekly</option>
+      <option value="MONTHLY">Monthly</option>
+      <option value="MONTHLY">Yearly</option>
+    </select>
+    <p *ngIf="frequency.invalid && frequency.touched" class="text-red-500 text-xs mt-1">Frequency is required</p>
+  </div>
+
+  <!-- Start Date -->
+  <div class="col-span-1">
+    <label class="block text-sm font-semibold text-gray-700 mb-1">Start Date <span class="text-red-500">*</span></label>
+    <input
+      type="date"
+      [(ngModel)]="formData.startDate"
+      name="startDate"
+      required
+      #startDate="ngModel"
+      class="w-full px-4 py-2 border rounded-lg focus:ring-2 bg-gray-50 focus:bg-white"
+      [ngClass]="{'border-gray-300': !startDate.invalid || !startDate.touched, 'border-red-500': startDate.invalid && startDate.touched}"
+    />
+    <p *ngIf="startDate.invalid && startDate.touched" class="text-red-500 text-xs mt-1">Start date is required</p>
+  </div>
+
+  <!-- End Date -->
+  <div class="col-span-1">
+    <label class="block text-sm font-semibold text-gray-700 mb-1">End Date <span class="text-red-500">*</span></label>
+    <input
+      type="date"
+      [(ngModel)]="formData.endDate"
+      name="endDate"
+      required
+      #endDate="ngModel"
+      class="w-full px-4 py-2 border rounded-lg focus:ring-2 bg-gray-50 focus:bg-white"
+      [ngClass]="{'border-gray-300': !endDate.invalid || !endDate.touched, 'border-red-500': endDate.invalid && endDate.touched}"
+    />
+    <p *ngIf="endDate.invalid && endDate.touched" class="text-red-500 text-xs mt-1">End date is required</p>
+    <p *ngIf="errors.endDateBeforeStart" class="text-red-500 text-xs mt-1">End date must be after start date</p>
+  </div>
+
+  <!-- Is Active -->
+  <!-- <div class="col-span-1 md:col-span-2 flex items-center space-x-3 mt-2">
+    <input
+      type="checkbox"
+      [(ngModel)]="formData.isActive"
+      name="isActive"
+      id="isActive"
+      class="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
+    />
+    <label for="isActive" class="text-sm font-medium text-gray-700">Active</label>
+  </div> -->
+
+  <!-- Notes -->
+  <div class="col-span-1 md:col-span-2">
+    <label class="block text-sm font-semibold text-gray-700 mb-1">Notes <span class="text-gray-400 text-xs">(Optional)</span></label>
+    <textarea
+      [(ngModel)]="formData.description"
+      name="notes"
+      rows="2"
+      placeholder="Add additional details..."
+      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 bg-gray-50 focus:bg-white resize-none"
+    ></textarea>
+  </div>
+
+  <!-- Buttons -->
+  <div class="col-span-1 md:col-span-2 flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-4">
+    <button
+      type="button"
+      (click)="close.emit()"
+      class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-gray-300"
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      [disabled]="isSubmitting || expenseForm.invalid"
+      class="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+    >
+      <svg *ngIf="isSubmitting" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+        <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+        </path>
+      </svg>
+      <span>{{ isSubmitting ? 'Adding Expense...' : 'Add Expense' }}</span>
+    </button>
+  </div>
+</form>
+
+  </div>
+</app-modal-overlay>

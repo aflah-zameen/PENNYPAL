@@ -1,5 +1,5 @@
 export interface UserResponse{
-    id : number,
+    id : string,
     name : string,
     email : string,
     phone : number,
@@ -9,4 +9,6 @@ export interface UserResponse{
     verified : boolean,
     active : boolean
     profileURL:string
+    coinBalance: number,
+    accessToken?: string
 }

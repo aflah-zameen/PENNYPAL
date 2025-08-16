@@ -1,0 +1,85 @@
+package com.application.pennypal.domain.shared.exception;
+
+public enum DomainErrorCode {
+
+    // Validation - Transaction
+    MISSING_TRANSACTION_ID("VAL_TRX_001"),
+    INVALID_AMOUNT("VAL_TRX_002"),
+    MISSING_TRANSACTION_DATE("VAL_TRX_003"),
+    MISSING_TRANSACTION_TYPE("VAL_TRX_004"),
+    MISSING_USER_ID_TRANSACTION("VAL_TRX_005"),
+    MISSING_PAYMENT_METHOD("VAL_TRX_006"),
+
+    // Validation - user
+    MISSING_USER_ID("VAL_USR_001"),
+    MISSING_EMAIL("VAL_USR_002"),
+    INVALID_EMAIL("VAL_USR_003"),
+    MISSING_PASSWORD("VAL_USR_004"),
+    INVALID_PASSWORD("VAL_USR_005"),
+    MISSING_NAME("VAL_USR_006"),
+    INVALID_NAME("VAL_USR_007"),
+    MISSING_ROLE("VAL_USR_008"),
+    INVALID_PHONE("VAL_USR_009"),
+    MISSING_PHONE("VAL_USR_010"),
+    MISSING_PROFILE_URL("VAL_USR_011"),
+    INVALID_URL("VAL_USR_012"),
+    INVALID_TOKEN_EXPIRY("VAL_USR_013"),
+
+
+
+
+    // Validation - Recurring
+    MISSING_RECURRING_ID("VAL_RCG_001"),
+    INVALID_RECURRING_TYPE("VAL_RCG_002"),
+
+    //Validation - shared
+    MISSING_CREATED_DATE("VAL_SHR_001"),
+
+
+    /// Business Rule - User
+    USER_ALREADY_ACTIVE("BUS_USR_001"),
+    USER_ALREADY_INACTIVE("BUS_USR_002"),
+    USER_ALREADY_VERIFIED("BUS_USR_003"),
+    USER_NOT_VERIFIED_FOR_ACTIVATION("BUS_USR_004"),
+    USER_MUST_HAVE_AT_LEAST_ONE_ROLE("BUS_USR_005"),
+    USER_ROLE_NOT_FOUND("BUS_USR_006"),
+    INVALID_TOKEN_EXCEPTION("BUS_USR_007"),
+    TRANSFER_USER_REQUIRED("BUS_USR_008"),
+
+    // Business Rule - Transaction
+    INVALID_TRANSFER("BUS_TRX_001"),
+    DUPLICATE_TRANSACTION("BUS_TRX_002"),
+    REQUIRED_RECURRING_ID_TRANSACTION("BUS_TRX_003"),
+    INVALID_DATE("BUS_TRX_004"),
+    INSUFFICIENT_BALANCE("BUS_TRX_005"),
+    UNSUPPORTED_PAYMENT_COMBINATION("BUS_TRX_006"),
+
+
+
+
+    // Business Rule - Recurring
+    INVALID_RECURRING_INTERVAL("BUS_RCG_002"),
+
+    // Business Rule - Category
+    REQUIRED_CATEG0RY_ID("BUS_CTG_001"),
+
+    // Domain Rule - Transaction
+    TRANSACTION_STATE_INVALID("DOM_TRX_001"),
+
+    // Authorization
+    USER_NOT_OWNER_OF_TRANSACTION("AUTH_TRX_001"),
+
+    // System / Infra
+    DATABASE_CONNECTION_FAILURE("SYS_DB_001");
+
+
+    private final String value;
+
+    DomainErrorCode(String value){
+        this.value = value;
+    }
+
+    public String value(){
+        return value;
+    }
+}

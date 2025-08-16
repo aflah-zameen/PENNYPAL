@@ -30,7 +30,7 @@ export class UserRowComponent {
          width: '400px',
         data: {
           title: 'Confirm Block',
-          message: `Are you sure you want to ${this.userData.active ? 'BLOCK':'UNBLOCK'} ${this.userData.name}?`,
+          message: `Are you sure you want to ${this.userData.active ? 'BLOCK':'UNBLOCK'} ${this.userData.userName}?`,
           confirmText: `${this.userData.active ? 'BLOCK':'UNBLOCK'}`,
           cancelText: 'Cancel'
         }

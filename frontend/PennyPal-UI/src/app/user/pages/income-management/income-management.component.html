@@ -9,21 +9,22 @@
             </h1>
             <p class="text-gray-600 text-lg">Track your income streams and manage payments</p>
           </div>
-
-          <!-- Add Income Button (Right-Aligned) -->
-          <button
-            (click)="isIncomeModalOpen = true"
-            class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center"
-          >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            Add Income
-          </button>
         </div>
 
         <!-- Top Stats Section -->
-        <div *ngIf="incomeSummary$ | async as summary" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div *ngIf="incomeSummary$ | async as summary" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
+            <!-- Add Income Card -->
+            <div class="bg-white rounded-3xl shadow-xl border border-dashed border-blue-300 hover:border-blue-500 transition-all duration-300 p-6 flex flex-col justify-center items-center hover:shadow-2xl cursor-pointer"
+                (click)="isIncomeModalOpen = true">
+              <div class="bg-blue-100 p-3 rounded-full mb-3">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+              </div>
+              <div class="text-lg font-semibold text-blue-600">Add Income</div>
+              <p class="text-sm text-gray-500 mt-1 text-center">Click to add a new income entry</p>
+            </div>
         <!-- Total Income Card -->
         <div class="bg-white rounded-3xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 p-6">
           <div class="flex items-center justify-between mb-4">
@@ -32,22 +33,22 @@
               <mat-icon style="color: green; font-size: 24px;">attach_money</mat-icon>
             </div>
           </div>
-          <div *ngIf="summary.totalIncomeSummary != null && summary.totalIncomeSummary.totalAmount! > 0; else noIncomeState" class="text-3xl font-bold text-gray-900 mb-2">
-            {{ getFormattedContent(summary.totalIncomeSummary.totalAmount) }}
+          <div class="text-3xl font-bold text-gray-900 mb-2">
+            {{ getFormattedContent(summary.totalTransactionSummary.totalAmount) }}
           </div>
-          <ng-template #noIncomeState>
+          <!-- <ng-template #noIncomeState>
             <div class="text-sm text-gray-500">No income recorded yet.</div>
             <div class="text-xs text-green-600 mt-1">Start by adding your first income source.</div>
-          </ng-template>
-          <div *ngIf="summary.totalIncomeSummary?.progressValue" class="flex items-center text-sm"
-              [ngClass]="summary.totalIncomeSummary.progressValue! > 0 ? 'text-green-600' : 'text-red-600'">
+          </ng-template> -->
+          <div *ngIf="summary.totalTransactionSummary?.progressValue" class="flex items-center text-sm"
+              [ngClass]="summary.totalTransactionSummary.progressValue! > 0 ? 'text-green-600' : 'text-red-600'">
             <svg class="w-4 h-4 mr-1" [attr.viewBox]="'0 0 24 24'" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path *ngIf="summary.totalIncomeSummary.progressValue! > 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              <path *ngIf="summary.totalTransactionSummary.progressValue! > 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-              <path *ngIf="summary.totalIncomeSummary.progressValue! <= 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              <path *ngIf="summary.totalTransactionSummary.progressValue! <= 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"/>
             </svg>
-            {{ summary.totalIncomeSummary.progressValue }}% vs last month
+            {{ summary.totalTransactionSummary.progressValue }}% vs last month
           </div>
         </div>
 
@@ -62,16 +63,16 @@
               </svg>
             </div>
           </div>
-          <div *ngIf="summary.pendingIncomeSummary?.totalAmount! > 0; else noPendingState" class="text-3xl font-bold text-gray-900 mb-2">
-            {{ getFormattedContent(summary.pendingIncomeSummary.totalAmount) }}
+          <div *ngIf="summary.pendingTransactionSummary?.totalAmount! > 0; else noPendingState" class="text-3xl font-bold text-gray-900 mb-2">
+            {{ getFormattedContent(summary.pendingTransactionSummary.totalAmount) }}
           </div>
           <ng-template #noPendingState>
             <div class="text-sm text-gray-500">No pending payments 🎉</div>
-            <div class="text-xs text-green-600 mt-1">All incomes have been collected.</div>
+            <div class="text-xs text-green-600 mt-1">All incomes have been collected for this month.</div>
           </ng-template>
-          <div *ngIf="summary.pendingIncomeSummary?.pendingIncomes! > 0"
+          <div *ngIf="summary.pendingTransactionSummary.pendingTransactions"
               class="flex items-center text-orange-600 text-sm">
-            {{ summary.pendingIncomeSummary.pendingIncomes }} payments pending
+            {{ summary.pendingTransactionSummary.pendingTransactions }} payments pending
           </div>
         </div>
 
@@ -86,14 +87,14 @@
               </svg>
             </div>
           </div>
-          <div *ngIf="summary.activeRecurringIncome?.count! > 0; else noStreamsState" class="text-3xl font-bold text-gray-900 mb-2">
-            {{ summary.activeRecurringIncome.count }}
+          <div *ngIf="summary.activeRecurringTransaction.count! > 0; else noStreamsState" class="text-3xl font-bold text-gray-900 mb-2">
+            {{ summary.activeRecurringTransaction.count }}
           </div>
           <ng-template #noStreamsState>
             <div class="text-sm text-gray-500">No active streams found.</div>
             <div class="text-xs text-blue-600 mt-1">Add a recurring income to start tracking.</div>
           </ng-template>
-          <div *ngIf="summary.activeRecurringIncome != null && summary.activeRecurringIncome.count! > 0"
+          <div *ngIf="summary.activeRecurringTransaction != null && summary.activeRecurringTransaction.count! > 0"
               class="flex items-center text-blue-600 text-sm">
             Recurring income sources
           </div>
@@ -122,7 +123,7 @@
             <ng-container *ngIf="recurringIncomes$ | async as recurringIncomes">
               <div class="space-y-4 max-h-96 overflow-y-auto pr-2">
                 <div
-                  *ngFor="let income of recurringIncomes?.recurringIncomeDTOS"
+                  *ngFor="let income of recurringIncomes.recurringTransactions"
                   class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl"
                 >
                   <div class="flex items-center space-x-3">
@@ -151,7 +152,7 @@
 
                     <!-- Delete icon -->
                     <button
-                      (click)="deleteRecurringIncome(income.id)"
+                      (click)="deleteRecurringIncome(income.recurringId)"
                       class="p-1 rounded-lg text-red-500 hover:bg-red-100"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,7 +163,7 @@
                 </div>
 
                 <!-- Empty state -->
-                <div *ngIf="recurringIncomes?.recurringIncomeDTOS?.length === 0" class="text-center text-gray-500 py-10">
+                <div *ngIf="recurringIncomes?.recurringTransactions?.length === 0" class="text-center text-gray-500 py-10">
                   <div class="mx-auto w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                     <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -174,18 +175,18 @@
               </div>
 
               <!-- Footer Summary moved outside scrollable list -->
-              <div *ngIf="recurringIncomes.recurringIncomeDTOS.length > 0" class="pt-4 border-t border-gray-200 mt-6">
+              <div *ngIf="recurringIncomes.recurringTransactions.length > 0" class="pt-4 border-t border-gray-200 mt-6">
                 <div class="flex justify-between items-center text-sm text-gray-700">
                   <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
                     <span>Total Sources:</span>
-                    <span class="font-semibold text-gray-900">{{ recurringIncomes.totalRecurring }}</span>
+                    <span class="font-semibold text-gray-900">{{ recurringIncomes.count }}</span>
                   </div>
                   <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                     <span>Monthly Total:</span>
                     <span class="font-bold text-base bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
-                      {{ recurringIncomes.monthlyTotal | currency:'USD':'symbol':'1.2-2' }}
+                      {{ recurringIncomes.totalAmount| currency:'USD':'symbol':'1.2-2' }}
                     </span>
                   </div>
                 </div>
@@ -268,7 +269,8 @@
         <!-- Modal -->
         <app-add-income
           [isModalOpen]="isIncomeModalOpen"
-          [categories]="categories"
+          [categories]="(categories$ | async) || []"
+          [paymentMethods]="(paymentMethods$ | async) || []"
           (close)="isIncomeModalOpen = false"
           (submitForm)="handleSubmitForm($event)"
         >
@@ -276,7 +278,7 @@
         <app-add-recurring-income
         [isModalOpen]="isRecurringModalOpen"
         (close)="isRecurringModalOpen = false"
-        [categories]="categories"
+        [categories]="(categories$ | async) || []"
         (submitForm)="handleRecurringIncomeSubmit($event)"
         >
         </app-add-recurring-income>

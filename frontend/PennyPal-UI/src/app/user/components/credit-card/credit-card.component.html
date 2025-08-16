@@ -1,0 +1,40 @@
+<div 
+  class="relative w-64 h-36 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 group"
+  [class]="card.gradient"
+  (click)="onCardSelect()"
+>
+  <!-- Contactless Payment Icon -->
+  <div class="absolute top-4 left-4">
+    <svg class="w-6 h-6 text-white opacity-80" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+    </svg>
+  </div>
+
+  <!-- Card Type -->
+  <div class="absolute top-4 right-4">
+    <span class="text-white font-semibold text-sm opacity-90">{{ card.type.toUpperCase() }}</span>
+  </div>
+
+  <!-- Card Number -->
+  <div class="absolute top-16 left-4">
+    <p class="text-white text-base font-mono tracking-wider">{{ card.number }}</p>
+  </div>
+
+  <!-- Card Holder and Expiry -->
+  <div class="absolute bottom-4 left-4 right-4 flex justify-between">
+    <div>
+      <p class="text-white text-xs opacity-70">Card Holder</p>
+      <p class="text-white text-sm font-medium">{{ card.holder }}</p>
+    </div>
+    <div class="text-right">
+      <p class="text-white text-xs opacity-70">Expires</p>
+      <p class="text-white text-sm font-medium">{{ card.expiry }}</p>
+    </div>
+  </div>
+
+  <!-- Selection Indicator -->
+  <div 
+    *ngIf="isSelected" 
+    class="absolute inset-0 rounded-2xl border-4 border-white shadow-xl"
+  ></div>
+</div>

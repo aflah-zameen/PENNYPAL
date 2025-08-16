@@ -7,7 +7,7 @@
       Pending Incomes
     </h2>
     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
-      {{ pendingIncomes?.totalCount }} pending
+      {{ pendingIncomes?.count }} pending
     </span>
   </div>
   <p class="text-sm text-gray-600 mb-6">Incomes awaiting collection</p>
@@ -24,9 +24,9 @@
   </div>
 
   <!-- Pending Incomes List -->
-  <div *ngIf="pendingIncomes != null && pendingIncomes.totalCount > 0" class="space-y-4 max-h-96 overflow-y-auto pr-2">
+  <div *ngIf="pendingIncomes != null && pendingIncomes.count" class="space-y-4 max-h-96 overflow-y-auto pr-2">
     <div
-      *ngFor="let income of pendingIncomes.pendingIncomeList"
+      *ngFor="let income of pendingIncomes.pendingTransactions"
       class="p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
     >
       <div class="flex items-start justify-between mb-3">
@@ -59,7 +59,7 @@
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          Due: {{ formatDate(income.incomeDate) }}
+          Due: {{ formatDate(income.transactionDate) }}
           <!-- <span *ngIf="isOverdue(income.dueDate)" class="ml-2 text-red-600 font-medium">(Overdue)</span> -->
         </div>
 
@@ -75,7 +75,7 @@
         </button>
       </div>
     </div>
-
+  </div>
     <!-- Total Summary -->
     <div class="pt-4 border-t border-gray-200" *ngIf="pendingIncomes != null">
       <div class="flex items-center justify-between text-sm">
@@ -85,5 +85,4 @@
         </span>
       </div>
     </div>
-  </div>
 </div>

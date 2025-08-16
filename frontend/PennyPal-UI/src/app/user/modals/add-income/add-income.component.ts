@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ModalOverlayComponent } from "../modal-overlay/modal-overlay.component";
 import { UserCategoryResponse } from '../../models/user-category.model';
 import { IncomeRequestModel } from '../../models/income.model';
+import { PaymentMethod, TransactionRequest } from '../../models/transaction.model';
 
 @Component({
   selector: 'app-add-income',
@@ -14,17 +15,23 @@ import { IncomeRequestModel } from '../../models/income.model';
 export class AddIncomeComponent {
   @Input() isModalOpen: boolean = false;  
   @Input() categories: UserCategoryResponse[] = [];
+  @Input() paymentMethods: PaymentMethod[] = [];
   @Output() close = new EventEmitter<void>();
-  @Output() submitForm = new EventEmitter<IncomeRequestModel>();
+  @Output() submitForm = new EventEmitter<TransactionRequest>();
+
+  isOpen: boolean = false;
+  selectedPaymentMethod: PaymentMethod | null = null;
 
 
-  formData: IncomeRequestModel = {
+  formData: TransactionRequest = {
     title: '',
     amount: null,
-    incomeDate: new Date().toISOString().split('T')[0], // Default to today
+    transactionDate: new Date().toISOString().split('T')[0], // Default to today
     description: '',
     categoryId : null,
-    isRecurring : false
+    transactionType: 'INCOME',
+    paymentMethod: 'card',
+    cardId:null
   };
 
   errors: any = {};
@@ -33,7 +40,17 @@ export class AddIncomeComponent {
   ngOnInit() {
     // Set default date to today
     const today = new Date().toISOString().split('T')[0];
-    this.formData.incomeDate = today;
+    this.formData.transactionDate = today;
+  }
+
+  toggleDropdown(): void {
+    this.isOpen = !this.isOpen;
+  }
+
+  selectCard(card: PaymentMethod): void {
+    this.selectedPaymentMethod = card;
+    this.formData.cardId = card.id; 
+    this.isOpen = false; // Close the dropdown after selection
   }
 
   validateForm(): boolean {
@@ -47,12 +64,16 @@ export class AddIncomeComponent {
       this.errors.sourceDetail = 'Source is required';
     }
 
-    if (!this.formData.incomeDate) {
+    if (!this.formData.transactionDate) {
       this.errors.income_date = 'Date is required';
     }
 
     if (!this.formData.categoryId) {
       this.errors.category = 'Category is required';
+    }
+
+     if (!this.formData.cardId) {
+      this.errors.paymentMethod = 'Payment Method is required';
     }
 
     return Object.keys(this.errors).length === 0;
@@ -74,9 +95,11 @@ export class AddIncomeComponent {
       title: '',
       categoryId: null,
       amount: null,
-      incomeDate: new Date().toISOString().split('T')[0], // Default to today
+      transactionDate: new Date().toISOString().split('T')[0], // Default to today
       description: '',
-      isRecurring : false
+      transactionType: 'INCOME',
+      paymentMethod: 'card',
+      cardId: null
   };
     this.errors = {};
   }
@@ -90,5 +113,8 @@ export class AddIncomeComponent {
   onClose(): void {   
     this.errors = {};
     this.close.emit();
-  }   
+  }  
+   getLastFourDigits(cardNumber: string): string {
+    return cardNumber ? cardNumber.slice(-4) : '';
+  } 
 }

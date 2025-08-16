@@ -1,25 +1,36 @@
-<nav class="h-full overflow-y-auto bg-white">     
-   <div class="flex flex-col items-start px-4 pt-9 pb-40 w-full bg-white shadow-[2px_2px_4px_rgba(0,0,0,0.25)]">
+<nav class="h-full overflow-y-auto bg-gradient-to-br from-blue-50 via-white to-purple-50 shadow-[2px_2px_4px_rgba(0,0,0,0.25)]">
+      <div class="flex flex-col items-start px-4 pt-4 pb-40 w-full">
         <app-logo></app-logo>
-
+        
         <app-nav-section title="Main menu" [isFirst]="true">
           <app-nav-item
             *ngFor="let item of navItems"
             [label]="item.label"
+            [icon]="item.icon"
+            [route]="item.route"
             [isActive]="isRouteActive(item.route)"
-            [routerLink]="item.route"  
-            >
-          </app-nav-item>
+            [paddingLeft]="item.paddingLeft || false"
+          ></app-nav-item>
         </app-nav-section>
 
         <app-nav-section title="Information">
-          <app-nav-item label="Messages" icon="https://cdn.builder.io/api/v1/image/assets/TEMP/68af2921647fb1fc3abe0b888a88da08dbd6a284?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9"></app-nav-item>
-          <app-nav-item label="Offers" icon="https://cdn.builder.io/api/v1/image/assets/TEMP/68147d96b115b7ae0d734141df97cbc834d28d42?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9"></app-nav-item>
+          <app-nav-item
+            *ngFor="let item of informationItems"
+            [label]="item.label"
+            [icon]="item.icon"
+            [route]="item.route"
+            [isActive]="isRouteActive(item.route)"
+          ></app-nav-item>
         </app-nav-section>
 
-        <app-nav-section title="others" [isLast]="true">
-          <app-nav-item label="Help & Support" icon="https://cdn.builder.io/api/v1/image/assets/TEMP/9dc7071acefb4b7c5138ffceb1900b660f249223?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9"></app-nav-item>
-          <app-nav-item label="Feedback" icon="https://cdn.builder.io/api/v1/image/assets/TEMP/03a6f658e54a883f1e77874e1dd6cb4239d03662?placeholderIfAbsent=true&apiKey=4ac0f753d4fc447b9df1161010df18d9"></app-nav-item>
+        <app-nav-section title="Others" [isLast]="true">
+          <app-nav-item
+            *ngFor="let item of otherItems"
+            [label]="item.label"
+            [icon]="item.icon"
+            [route]="item.route"
+            [isActive]="isRouteActive(item.route)"
+          ></app-nav-item>
         </app-nav-section>
       </div>
     </nav>

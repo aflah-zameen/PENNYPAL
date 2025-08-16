@@ -9,20 +9,22 @@
             </h1>
             <p class="text-gray-600 text-lg">Track your expenses and manage payments</p>
           </div>
-          <!-- Add Expense Button (Right-Aligned) -->
-          <button
-            (click)="isExpenseModalOpen = true"
-            class="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white px-8 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center"
-          >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            Add Expense
-          </button>
         </div>
 
         <!-- Top Stats Section -->
-        <div *ngIf="expenseSummary$ | async as summary" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div *ngIf="expenseSummary$ | async as summary" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+           <!-- Add Expense Card -->
+            <div class="bg-white rounded-3xl shadow-xl border border-dashed border-red-300 hover:border-red-500 transition-all duration-300 p-6 flex flex-col justify-center items-center hover:shadow-2xl cursor-pointer"
+                (click)="isExpenseModalOpen = true">
+              <div class="bg-red-100 p-3 rounded-full mb-3">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+              </div>
+              <div class="text-lg font-semibold text-red-600">Add Expense</div>
+              <p class="text-sm text-gray-500 mt-1 text-center">Click here to quickly add a new expense</p>
+            </div>
+
           <!-- Total Expenses Card -->
           <div class="bg-white rounded-3xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 p-6">
             <div class="flex items-center justify-between mb-4">
@@ -33,21 +35,31 @@
                 </svg>
               </div>
             </div>
-            <div *ngIf="summary.totalExpenseSummary.totalAmount > 0; else noExpenseState" class="text-3xl font-bold text-gray-900 mb-2">
-              {{ getFormattedContent(summary.totalExpenseSummary.totalAmount) }}
+            <div class="text-3xl font-bold text-gray-900 mb-2">
+              {{ getFormattedContent(summary.totalTransactionSummary.totalAmount) }}
             </div>
-            <ng-template #noExpenseState>
-              <div class="text-sm text-gray-500">No expenses recorded yet.</div>
-              <div class="text-xs text-blue-600 mt-1">Start by adding your first expense.</div>
-            </ng-template>
-            <div *ngIf="summary.totalExpenseSummary.progressValue !== 0" class="flex items-center text-sm"
-                 [ngClass]="summary.totalExpenseSummary.progressValue > 0 ? 'text-red-600' : 'text-green-600'">
-              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path *ngIf="summary.totalExpenseSummary.progressValue > 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"/>
-                <path *ngIf="summary.totalExpenseSummary.progressValue <= 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-              </svg>
-              {{ Math.abs(summary.totalExpenseSummary.progressValue) }}% vs last month
-            </div>
+            <div *ngIf="summary.totalTransactionSummary.progressValue !== null; else noPreviousExpense" class="flex items-center text-sm"
+              [ngClass]="summary.totalTransactionSummary.progressValue > 0 ? 'text-red-600' : 'text-green-600'">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <!-- 🔻 More expenses than last month → bad (red downward) -->
+              <path *ngIf="summary.totalTransactionSummary.progressValue > 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6" />
+              
+              <!-- 🔺 Less expenses than last month → good (green upward) -->
+              <path *ngIf="summary.totalTransactionSummary.progressValue < 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            <span>
+              {{ Math.abs(summary.totalTransactionSummary.progressValue) }}% 
+              <span class="ml-1">vs last month</span>
+            </span>
+          </div>
+
+          <ng-template #noPreviousExpense>
+            <div class="text-sm text-gray-500 italic">No expense recorded in the previous month</div>
+          </ng-template>
+
+
           </div>
 
           <!-- Pending Payments Card -->
@@ -60,15 +72,15 @@
                 </svg>
               </div>
             </div>
-            <div *ngIf="summary.pendingExpenseSummary.totalAmount > 0; else noPendingState" class="text-3xl font-bold text-gray-900 mb-2">
-              {{ getFormattedContent(summary.pendingExpenseSummary.totalAmount) }}
+            <div *ngIf="summary.pendingTransactionSummary.totalAmount > 0; else noPendingState" class="text-3xl font-bold text-gray-900 mb-2">
+              {{ getFormattedContent(summary.pendingTransactionSummary.totalAmount) }}
             </div>
             <ng-template #noPendingState>
               <div class="text-sm text-gray-500">No pending payments 🎉</div>
-              <div class="text-xs text-green-600 mt-1">All expenses are up to date.</div>
+              <div class="text-xs text-green-600 mt-1">All expenses in this month are up to date.</div>
             </ng-template>
-            <div *ngIf="summary.pendingExpenseSummary.pendingExpenses > 0" class="flex items-center text-orange-600 text-sm">
-              {{ summary.pendingExpenseSummary.pendingExpenses }} payments pending
+            <div *ngIf="summary.pendingTransactionSummary.pendingTransactions > 0" class="flex items-center text-orange-600 text-sm">
+              {{ summary.pendingTransactionSummary.pendingTransactions }} payments pending
             </div>
           </div>
 
@@ -82,14 +94,14 @@
                 </svg>
               </div>
             </div>
-            <div *ngIf="summary.activeRecurringExpense.count > 0; else noStreamsState" class="text-3xl font-bold text-gray-900 mb-2">
-              {{ summary.activeRecurringExpense.count }}
+            <div *ngIf="summary.activeRecurringTransaction.count > 0; else noStreamsState" class="text-3xl font-bold text-gray-900 mb-2">
+              {{ summary.activeRecurringTransaction.count }}
             </div>
             <ng-template #noStreamsState>
               <div class="text-sm text-gray-500">No active streams found.</div>
               <div class="text-xs text-purple-600 mt-1">Add a recurring expense to start tracking.</div>
             </ng-template>
-            <div *ngIf="summary.activeRecurringExpense.count > 0" class="flex items-center text-purple-600 text-sm">
+            <div *ngIf="summary.activeRecurringTransaction.count > 0" class="flex items-center text-purple-600 text-sm">
               Recurring expense sources
             </div>
           </div>
@@ -115,7 +127,7 @@
             <!-- Recurring Expenses List -->
             <ng-container *ngIf="recurringExpenses$ | async as recurringExpenses">
               <div class="space-y-4 max-h-96 overflow-y-auto pr-2">
-                <div *ngFor="let expense of recurringExpenses.recurringExpenseList" class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                <div *ngFor="let expense of recurringExpenses.recurringTransactions" class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
                   <div class="flex items-center space-x-3">
                     <div class="h-10 w-10 flex-shrink-0 rounded-lg flex items-center justify-center text-white font-semibold"
                          [style.background-color]="expense.category.color">
@@ -131,7 +143,7 @@
                     <!-- Toggle active/inactive -->
                     <button
                       (click)="toggleRecurringExpense(expense)"
-                      [class]="expense.recurrenceActive ? 'p-1 rounded-lg text-green-600 hover:bg-green-50' : 'p-1 rounded-lg text-gray-400 hover:bg-gray-100'"
+                      [class]="expense.active ? 'p-1 rounded-lg text-green-600 hover:bg-green-50' : 'p-1 rounded-lg text-gray-400 hover:bg-gray-100'"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -139,7 +151,7 @@
                     </button>
                     <!-- Delete icon -->
                     <button
-                      (click)="deleteRecurringExpense(expense)"
+                      (click)="deleteRecurringExpense(expense.recurringId)"
                       class="p-1 rounded-lg text-red-500 hover:bg-red-100"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,7 +162,7 @@
                 </div>
 
                 <!-- Empty state -->
-                <div *ngIf="recurringExpenses.recurringExpenseList.length === 0" class="text-center text-gray-500 py-10">
+                <div *ngIf="recurringExpenses.recurringTransactions.length === 0" class="text-center text-gray-500 py-10">
                   <div class="mx-auto w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                     <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -162,18 +174,18 @@
               </div>
 
               <!-- Footer Summary -->
-              <div *ngIf="recurringExpenses.recurringExpenseList.length > 0" class="pt-4 border-t border-gray-200 mt-6">
+              <div *ngIf="recurringExpenses.recurringTransactions.length > 0" class="pt-4 border-t border-gray-200 mt-6">
                 <div class="flex justify-between items-center text-sm text-gray-700">
                   <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 bg-red-400 rounded-full"></div>
                     <span>Total Sources:</span>
-                    <span class="font-semibold text-gray-900">{{ recurringExpenses.totalRecurring }}</span>
+                    <span class="font-semibold text-gray-900">{{ recurringExpenses.count }}</span>
                   </div>
                   <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></div>
                     <span>Monthly Total:</span>
                     <span class="font-bold text-base bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
-                      {{ getFormattedContent(recurringExpenses.monthlyTotal)}}
+                      {{ getFormattedContent(recurringExpenses.totalAmount)}}
                     </span>
                   </div>
                 </div>
@@ -183,7 +195,7 @@
 
           <!-- Pending Expenses Component -->
           <app-pending-expenses
-            [pendingExpenses]=" (allPendingExpenseSummary$ | async) || [] "
+            [pendingExpenses]=" allPendingExpenseSummary$ | async"
             (collectExpensePayment)="collectPendingPayment($event)"
           ></app-pending-expenses>
         </div>
@@ -244,6 +256,7 @@
         <app-add-expense-modal
           [isModalOpen]="isExpenseModalOpen"
           [categories]="(categories$ | async) || []"
+          [paymentMethods]="(paymentMethods$ | async) || []"
           (close)="isExpenseModalOpen = false"
           (submitForm)="handleSubmitForm($event)"
         ></app-add-expense-modal>
@@ -252,7 +265,7 @@
           [isModalOpen]="isRecurringModalOpen"
           (close)="isRecurringModalOpen = false"
           [categories]="(categories$ | async) || []"
-          (submitForm)="handleSubmitForm($event)"
+          (submitForm)="handleRecurringExpenseSubmit($event)"
         ></app-add-recurring-expense-modal>
       </div>
     </div>

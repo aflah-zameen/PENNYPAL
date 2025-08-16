@@ -1,9 +1,9 @@
 package com.application.pennypal.interfaces.rest.mappers;
 
-import com.application.pennypal.application.input.income.IncomeInputModel;
-import com.application.pennypal.application.output.income.AllPendingIncomeSummaryOutput;
-import com.application.pennypal.application.output.income.IncomeOutputModel;
-import com.application.pennypal.application.output.income.IncomeSummaryOutput;
+import com.application.pennypal.application.dto.input.income.IncomeInputModel;
+import com.application.pennypal.application.dto.output.income.AllPendingIncomeSummaryOutput;
+import com.application.pennypal.application.dto.output.income.IncomeOutputModel;
+import com.application.pennypal.application.dto.output.income.IncomeSummaryOutput;
 import com.application.pennypal.domain.valueObject.RecurrenceFrequency;
 import com.application.pennypal.interfaces.rest.dtos.income.*;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class IncomeDtoMapper {
 
     public static IncomeResponseDTO toResponse(IncomeOutputModel incomeOutputModel){
         return new IncomeResponseDTO(
-                incomeOutputModel.id(),
+                "incomeOutputModel.id()",
                 incomeOutputModel.amount(),
                 incomeOutputModel.title(),
                 CategoryDtoMapper.toResponse(incomeOutputModel.category()),
@@ -50,7 +50,7 @@ public class IncomeDtoMapper {
     public static IncomeSummaryResponseDTO toResponse(IncomeSummaryOutput incomeSummaryOutput){
         return new IncomeSummaryResponseDTO(
               new TotalIncomeSummaryDTO(
-                      incomeSummaryOutput.totalIncomeSummaryOutput().totalIncome(),
+                      incomeSummaryOutput.totalIncomeSummaryOutput().totalIncomes(),
                       incomeSummaryOutput.totalIncomeSummaryOutput().progressValue()
               ),
                 new PendingIncomeSummaryDTO(

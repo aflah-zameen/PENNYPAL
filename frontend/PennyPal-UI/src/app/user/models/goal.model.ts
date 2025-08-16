@@ -1,7 +1,7 @@
 import { UserCategoryResponse } from "./user-category.model";
 
 export interface Goal {
-  id: number;
+  id: string;
   title: string;
   currentAmount: number;
   targetAmount: number;
@@ -25,7 +25,7 @@ export interface GoalFormData {
   startDate: string;
   endDate: string;
   description?: string;
-  categoryId: number | null;
+  categoryId: string | null;
 }
 
 export interface GoalFormErrors {

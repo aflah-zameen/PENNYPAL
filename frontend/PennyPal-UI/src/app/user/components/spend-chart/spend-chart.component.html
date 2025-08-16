@@ -1,0 +1,25 @@
+ <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-bold text-gray-900">Spend Activity</h3>
+        <select
+          class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          [(ngModel)]="selectedRange"
+          (change)="onRangeChange($event)">
+          <option value="monthly">Month</option>
+          <option value="weekly">Week</option>
+          <option value="yearly">Year</option>
+        </select>
+      </div>
+
+      <div class="relative h-64">
+        <canvas baseChart
+          [data]="barChartData"
+          [options]="barChartOptions"
+          [type]="barChartType"
+          class="w-full h-full">
+        </canvas>
+      </div>
+       <div *ngIf="!spendData || spendData.amount.length === 0" class="text-center text-gray-500 py-6">
+        No data available for {{ selectedRange }}.
+       </div>
+    </div>

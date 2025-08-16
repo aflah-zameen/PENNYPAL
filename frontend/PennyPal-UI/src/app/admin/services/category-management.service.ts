@@ -16,7 +16,7 @@ import { environment } from "../../../environments/environment"
 })
 export class AdminCategoryService {
 
-  private apiURL = environment.apiBaseUrl+"/api/admin";
+  private apiURL = environment.apiBaseUrl+"/api/private/admin";
 
 
   private categoriesSubject = new BehaviorSubject<AdminCategory[]>([])

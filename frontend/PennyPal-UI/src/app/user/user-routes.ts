@@ -4,13 +4,14 @@ import { HomeComponent } from "./pages/home/home.component";
 import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
 import { IncomeManagementComponent } from "./pages/income-management/income-management.component";
 import { ExpenseManagementComponent } from "./pages/expense-management/expense-management.component";
+import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 
 export const userRoutes : Routes =[{
     path:'',
     component : UserLayoutComponent,
     children : [{
         path : '',
-        component : HomeComponent
+        component : DashboardComponent
     },{
         path : 'user-profile',
         component : UserProfileComponent
@@ -26,5 +27,14 @@ export const userRoutes : Routes =[{
     },{
         path : 'spend-activity',
         loadComponent: () => import('./pages/spend-activity/spend-activity.component').then(m => m.SpendActivityComponent)
+    },{
+        path : 'card-management',
+        loadComponent: () => import('./pages/card-management/card-management.component').then(m => m.CardManagementComponent)
+    },{
+        path : 'contacts',
+        loadComponent: () => import('./pages/contact-management/contact-management.component').then(m => m.ContactManagementComponent)
+    },{
+        path : 'wallet-management',
+        loadComponent : () => import('./pages/wallet-management/wallet-management.component').then(m => m.WalletManagementComponent)
     }]
 }]

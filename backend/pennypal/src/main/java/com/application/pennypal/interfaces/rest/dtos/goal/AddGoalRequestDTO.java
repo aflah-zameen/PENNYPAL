@@ -11,6 +11,6 @@ public record AddGoalRequestDTO(@NotBlank(message = "Title cannot be null") Stri
                                 @NotBlank(message = "Start date cannot be null") String startDate,
                                 @NotBlank(message = "End date cannot be null") String endDate,
                                 Integer priorityLevel,
-                                @NotNull(message = "Category cannot be null")Long categoryId
+                                @NotNull(message = "Category cannot be null")String categoryId
                                 ) {
 }

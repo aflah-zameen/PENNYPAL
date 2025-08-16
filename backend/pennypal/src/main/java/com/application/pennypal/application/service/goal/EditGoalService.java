@@ -1,11 +1,11 @@
 package com.application.pennypal.application.service.goal;
 
 import com.application.pennypal.application.exception.base.ApplicationBusinessException;
-import com.application.pennypal.application.input.goal.EditGoalInputModel;
+import com.application.pennypal.application.dto.input.goal.EditGoalInputModel;
 import com.application.pennypal.application.mappers.goal.GoalApplicationMapper;
-import com.application.pennypal.application.port.GoalRepositoryPort;
-import com.application.pennypal.application.usecases.goal.EditGoal;
-import com.application.pennypal.domain.entity.Goal;
+import com.application.pennypal.application.port.out.repository.GoalRepositoryPort;
+import com.application.pennypal.application.port.in.goal.EditGoal;
+import com.application.pennypal.domain.goal.entity.Goal;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Duration;
@@ -16,8 +16,8 @@ public class EditGoalService implements EditGoal {
     private final GoalRepositoryPort goalRepositoryPort;
     private final GoalApplicationMapper goalApplicationMapper;
     @Override
-    public void execute(Long userId, EditGoalInputModel editGoalInputModel) {
-        Goal goal = goalRepositoryPort.getGoalById(editGoalInputModel.id())
+    public void execute(String userId, EditGoalInputModel editGoalInputModel) {
+        Goal goal = goalRepositoryPort.getGoalById(editGoalInputModel.goalId())
                 .orElseThrow(() ->new ApplicationBusinessException("Goal is not found","NOT_FOUND"));
         if(goal.getUserId().equals(userId)){
             Duration duration = Duration.between(goal.getCreatedAt(),LocalDateTime.now());
@@ -28,11 +28,16 @@ public class EditGoalService implements EditGoal {
             Goal updatedGoal = goalApplicationMapper.toDomain(editGoalInputModel,userId);
             updatedGoal.setDeleted(goal.isDeleted());
             updatedGoal.setStatus(goal.getStatus());
-            updatedGoal.setCreatedAt(goal.getCreatedAt());
-            updatedGoal.setUpdatedAt(goal.getUpdatedAt());
             updatedGoal.setCurrentAmount(goal.getCurrentAmount());
+            updatedGoal.setCategoryId(goal.getCategoryId());
+            updatedGoal.setStartDate(goal.getStartDate());
+            updatedGoal.setEndDate(goal.getEndDate());
+            updatedGoal.setDescription(goal.getDescription());
+            updatedGoal.setTitle(goal.getTitle());
+            updatedGoal.setTargetAmount(goal.getTargetAmount());
+            updatedGoal.setPriorityLevel(goal.getPriorityLevel());
 
-            goalRepositoryPort.save(updatedGoal);
+            goalRepositoryPort.update(updatedGoal,userId);
         }else{
             throw new ApplicationBusinessException("User action is not authenticated","UNAUTHENTICATED_ACTION");
         }

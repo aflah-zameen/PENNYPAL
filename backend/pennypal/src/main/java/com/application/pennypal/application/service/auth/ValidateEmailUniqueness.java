@@ -1,8 +1,8 @@
 package com.application.pennypal.application.service.auth;
 
-import com.application.pennypal.application.port.UserRepositoryPort;
-import com.application.pennypal.domain.entity.User;
-import com.application.pennypal.shared.exception.DuplicateEmailException;
+import com.application.pennypal.application.exception.usecase.RegisterUser.DuplicateEmailApplicationException;
+import com.application.pennypal.application.port.out.repository.UserRepositoryPort;
+import com.application.pennypal.domain.user.entity.User;
 
 import java.util.Optional;
 
@@ -17,7 +17,7 @@ public class ValidateEmailUniqueness {
     public void validate(String email) {
         Optional<User> existingUser = userRepositoryPort.findByEmail(email);
         if (existingUser.isPresent()) {
-            throw new DuplicateEmailException("Email already in use");
+            throw new DuplicateEmailApplicationException("Email already in use");
         }
     }
 }

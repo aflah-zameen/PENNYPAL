@@ -1,0 +1,126 @@
+<div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100">
+      <!-- Header -->
+      <div class="flex items-center space-x-3 mb-6">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center"
+             [ngClass]="getScoreGradient()">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold text-gray-800">Financial Health</h3>
+          <p class="text-gray-600">Your overall financial wellness</p>
+        </div>
+      </div>
+
+      <!-- Score Display -->
+      <div class="text-center mb-6">
+        <div class="relative w-32 h-32 mx-auto mb-4">
+          <!-- Circular Progress -->
+          <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
+            <!-- Background Circle -->
+            <circle cx="60" cy="60" r="50" stroke="#E5E7EB" stroke-width="8" fill="none"></circle>
+            <!-- Progress Circle -->
+            <circle cx="60" cy="60" r="50" 
+                    [attr.stroke]="getScoreColor()" 
+                    stroke-width="8" 
+                    fill="none"
+                    stroke-linecap="round"
+                    [attr.stroke-dasharray]="314.16"
+                    [attr.stroke-dashoffset]="314.16 - (314.16 * healthData.score / 100)"
+                    class="transition-all duration-1000 ease-out">
+            </circle>
+          </svg>
+          
+          <!-- Score Text -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <div class="text-3xl font-bold" [ngClass]="getScoreTextColor()">
+                {{healthData.score}}
+              </div>
+              <div class="text-xs text-gray-500">out of 100</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Badge -->
+        <div class="flex items-center justify-center space-x-2 mb-4">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+               [ngClass]="getScoreTextColor()">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  [attr.d]="getStatusIcon()"></path>
+          </svg>
+          <span class="font-semibold" [ngClass]="getScoreTextColor()">
+            {{healthData.status}}
+          </span>
+        </div>
+
+        <!-- Score Description -->
+        <p class="text-sm text-gray-600 mb-6">{{getScoreDescription()}}</p>
+      </div>
+
+      <!-- Metrics Breakdown -->
+      <div class="space-y-4 mb-6">
+        <h4 class="font-semibold text-gray-800 mb-3">Health Factors</h4>
+        
+        <div *ngFor="let metric of healthData.metrics" 
+             class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+          
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                 [ngClass]="getMetricIconBg(metric.score)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                   [ngClass]="getMetricIconColor(metric.score)">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      [attr.d]="getTrendIcon(metric.trend)"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-800">{{metric.label}}</p>
+              <p class="text-xs text-gray-500">{{metric.description}}</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center space-x-3">
+            <!-- Progress Bar -->
+            <div class="w-16 bg-gray-200 rounded-full h-2">
+              <div class="h-2 rounded-full transition-all duration-500"
+                   [ngClass]="getMetricBarColor(metric.score)"
+                   [style.width.%]="metric.score">
+              </div>
+            </div>
+            <span class="text-sm font-bold text-gray-800 w-8 text-right">{{metric.score}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendations -->
+      <div class="p-4 rounded-2xl border border-blue-100"
+           [ngClass]="getRecommendationBg()">
+        <div class="flex items-start space-x-3">
+          <svg class="w-5 h-5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+               [ngClass]="getRecommendationIconColor()">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div class="flex-1">
+            <p class="text-sm font-medium mb-2" [ngClass]="getRecommendationTextColor()">
+              {{getRecommendationTitle()}}
+            </p>
+            <ul class="text-xs space-y-1" [ngClass]="getRecommendationTextColor()">
+              <li *ngFor="let recommendation of healthData.recommendations.slice(0, 2)">
+                • {{recommendation}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button class="w-full mt-4 bg-gradient-to-r hover:shadow-lg text-white py-2 px-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 active:scale-95"
+              [ngClass]="getScoreGradient()">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+        </svg>
+        <span>Improve Score</span>
+      </button>
+    </div>

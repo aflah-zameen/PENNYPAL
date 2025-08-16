@@ -1,7 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { SpendingCategory, Transaction } from '../../../models/spend-activity';
+import { SpendingCategory } from '../../../models/spend-activity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Transaction } from '../../../models/transaction.model';
+import { UserCategoryResponse } from '../../../models/user-category.model';
 
 @Component({
   selector: 'app-recent-spend-transaction',
@@ -11,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class RecentSpendTransactionComponent {
   @Input() transactions: Transaction[] = []
-  @Input() categories: SpendingCategory[] = []
+  @Input() categories: UserCategoryResponse[] = []
 
   searchQuery = ""
   selectedCategory = ""
@@ -26,11 +28,11 @@ export class RecentSpendTransactionComponent {
     this.applyFilters()
   }
 
-  ngOnChanges() {
+  ngOnChanges() {    
     this.applyFilters()
   }
 
-  trackByTransaction(index: number, transaction: Transaction): number {
+  trackByTransaction(index: number, transaction: Transaction): string {
     return transaction.id
   }
 
@@ -43,7 +45,7 @@ export class RecentSpendTransactionComponent {
       filtered = filtered.filter(
         (t) =>
           t.description.toLowerCase().includes(query) ||
-          t.merchant?.toLowerCase().includes(query) ||
+          t.title?.toLowerCase().includes(query) ||
           t.category.name.toLowerCase().includes(query),
       )
     }
@@ -61,7 +63,7 @@ export class RecentSpendTransactionComponent {
         case "category":
           return a.category.name.localeCompare(b.category.name)
         default:
-          return new Date(b.date).getTime() - new Date(a.date).getTime()
+          return new Date(b.transactionDate).getTime() - new Date(a.transactionDate).getTime()
       }
     })
 

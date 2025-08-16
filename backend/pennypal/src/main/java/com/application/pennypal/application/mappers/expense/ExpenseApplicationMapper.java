@@ -2,10 +2,10 @@ package com.application.pennypal.application.mappers.expense;
 
 import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.mappers.category.CategoryApplicationMapper;
-import com.application.pennypal.application.output.category.CategoryUserOutput;
-import com.application.pennypal.application.output.expense.ExpenseOutputModel;
-import com.application.pennypal.application.port.CategoryManagementRepositoryPort;
-import com.application.pennypal.domain.entity.Category;
+import com.application.pennypal.application.dto.output.category.CategoryUserOutput;
+import com.application.pennypal.application.dto.output.expense.ExpenseOutputModel;
+import com.application.pennypal.application.port.out.repository.CategoryManagementRepositoryPort;
+import com.application.pennypal.domain.catgeory.entity.Category;
 import com.application.pennypal.domain.entity.Expense;
 import lombok.RequiredArgsConstructor;
 

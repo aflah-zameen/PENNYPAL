@@ -9,11 +9,25 @@ import { Router } from '@angular/router';
   styleUrl: './nav-item.component.css'
 })
 export class NavItemComponent {
-  @Input() icon?: string;
-  @Input() label!: string;
-  @Input() isActive = false;
-  @Input() routerLink : string = '';
-  @Input() paddingLeft = false;
+  @Input() label = ""
+  @Input() icon = ""
+  @Input() route = ""
+  @Input() isActive = false
+  @Input() paddingLeft = false
 
-  constructor(protected router: Router) {}
+  constructor(private router: Router) {}
+
+  get iconClasses(): string {
+    const baseClasses = "transition-all duration-300"
+    const sizeClasses = "w-5 h-5"
+    const colorClasses = this.isActive ? "text-white" : "text-gray-500 group-hover:text-blue-600"
+
+    return `${baseClasses} ${sizeClasses} ${colorClasses}`
+  }
+
+  navigate(): void {
+    if (this.route) {
+      this.router.navigate([this.route])
+    }
+  }
 }

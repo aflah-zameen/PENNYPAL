@@ -1,105 +1,115 @@
 package com.application.pennypal.interfaces.rest.controllers;
 
-import com.application.pennypal.application.output.auth.LoginResponseOutput;
+import com.application.pennypal.application.dto.output.auth.LoginResponseOutput;
+import com.application.pennypal.application.dto.output.user.RegisterOutputModel;
+import com.application.pennypal.application.dto.output.user.UserOutputModel;
+import com.application.pennypal.application.port.in.auth.ResetPasswordVerification;
+import com.application.pennypal.application.port.in.auth.SendVerificationEmail;
+import com.application.pennypal.application.port.in.auth.VerifyEmailWithToken;
+import com.application.pennypal.application.port.in.user.*;
 import com.application.pennypal.application.service.auth.ValidateEmailUniqueness;
-import com.application.pennypal.application.usecases.user.*;
 import com.application.pennypal.domain.valueObject.TokenPairDTO;
 import com.application.pennypal.domain.valueObject.UserDomainDTO;
 import com.application.pennypal.interfaces.rest.dtos.*;
 import com.application.pennypal.interfaces.rest.dtos.auth.*;
+import com.application.pennypal.interfaces.rest.exception.auth.TokenNotFoundInterfaceException;
+import com.application.pennypal.interfaces.rest.mappers.UserDtoMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/public/auth")
+@RequiredArgsConstructor
 public class AuthController {
     private final LoginUser loginUser;
     private final RefreshAccessToken refreshAccessToken;
     private final CreateUser createUser;
-    private final SendOtp sendOtp;
+    private final ReSendOtp sendOtp;
     private final VerifyOtp verifyOtp;
     private final GetUser getUser;
-    private final UpdatePassword updatePassword;
+    private final ResetPassword resetPassword;
     private final LogoutUser logoutUser;
     private final ValidateEmailUniqueness validateEmailUniqueness;
+    private final VerifyEmailWithToken verifyEmailWithToken;
+    private final SendVerificationEmail sendVerificationEmail;
+    private final ResetPasswordVerification resetPasswordVerification;
 
-    AuthController(LoginUser loginUser,
-                   RefreshAccessToken refreshAccessToken,
-                   CreateUser createUser,
-                   SendOtp sendOtp,
-                   VerifyOtp verifyOtp,
-                   GetUser getUser,
-                   UpdatePassword updatePassword,
-                   LogoutUser logoutUser,
-                   ValidateEmailUniqueness validateEmailUniqueness){
-    this.loginUser = loginUser;
-    this.refreshAccessToken = refreshAccessToken;
-    this.createUser = createUser;
-    this.sendOtp = sendOtp;
-    this.verifyOtp = verifyOtp;
-    this.getUser  = getUser;
-    this.updatePassword = updatePassword;
-    this.logoutUser = logoutUser;
-    this.validateEmailUniqueness = validateEmailUniqueness;
+    /// Admin email verification
+    @PatchMapping("/admin/verify-email-token")
+    public ResponseEntity<ApiResponse<String>> verifyAdminEmail(@RequestParam(name = "token") String token){
+        if(token == null || token.trim().isBlank())
+            throw new TokenNotFoundInterfaceException("Token must not be empty");
+        verifyEmailWithToken.execute(token);
+        return ResponseEntity.ok(new ApiResponse<>(true,"Admin verified successfully","Completed"));
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<RegisterResponse> register(@Valid @ModelAttribute RegisterRequest request, BindingResult result) {
-            if(result.hasErrors()){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RegisterResponse(false,"Given arguments are not valid."));
-            }
-            createUser.execute(request.getName(),request.getEmail(),request.getPassword(),
-                    request.getPhone(),"USER",request.getProfilePicture());
-            return ResponseEntity.ok(new RegisterResponse(true, "User Registered Successfully."));
+    @PostMapping("/user-register")
+    public ResponseEntity<RegisterResponse> registerUser(@Valid @ModelAttribute RegisterRequestDTO requestDTO) {
+            RegisterOutputModel outputModel = createUser.execute(UserDtoMapper.toInput(requestDTO));
+            return ResponseEntity.ok(new RegisterResponse(true,outputModel, "User Registered Successfully."));
     }
 
-    @PostMapping("/sent-otp")
-    public ResponseEntity<ApiResponse<OtpDTO>> sendOtp(@RequestParam String email){
-        LocalDateTime expiresAt = sendOtp.send(email);
-        OtpDTO otpDTO = new OtpDTO(expiresAt);
-        return ResponseEntity.ok(new OtpResponse(true,otpDTO,"OTP sent successfully"));
-    }
+
     @PostMapping("/verify-otp")
     public ResponseEntity<ApiResponse<OtpDTO>> verifyOtp(@Valid @RequestBody OtpRequest otpRequest,HttpServletRequest request,HttpServletResponse response){
-        verifyOtp.verify(otpRequest.getEmail(),otpRequest.getOtp(),otpRequest.getContext());
-        return ResponseEntity.ok(
-                new OtpResponse(true,null,"OTP Verified successfully")
+        verifyOtp.verify(otpRequest.getEmail(),otpRequest.getOtp());
+        return ResponseEntity.ok(new OtpResponse(true,null,"OTP Verified successfully")
         );
     }
 
-    @PatchMapping("/update-password")
-    public ResponseEntity<ApiResponse<String>> updatePassword(@RequestParam String password,@RequestParam String email){
-        updatePassword.update(email,password);
+    @PatchMapping("/reset-password")
+    public ResponseEntity<ApiResponse<?>> resetPassword(@Valid @RequestBody ResetPasswordRequestDTO requestDTO){
+        resetPassword.reset(requestDTO.email(),requestDTO.password(),requestDTO.verificationToken());
         return ResponseEntity.ok(new ApiResponse<>(true,null,"Password updated successfully"));
     }
 
+    @PostMapping("/forget-password")
+    public ResponseEntity<ApiResponse<?>> forgetPassword(@RequestParam("email") String email){
+        resetPasswordVerification.execute(email);
+        return ResponseEntity.ok(new ApiResponse<>(true,null,"Verification mail is send to your email"));
+    }
+
     @PostMapping("/resend-otp")
-    public ResponseEntity<ApiResponse<OtpDTO>> resendOtp(@Valid @RequestBody ResendOtpRequest request){
-            LocalDateTime expiresAt = sendOtp.resend(request.getEmail());
-            OtpDTO otpDTO = new OtpDTO(expiresAt);
-            return ResponseEntity.ok(new OtpResponse(true,otpDTO,"OTP resend successfully"));
+    public ResponseEntity<ApiResponse<Object>> resendOtp(@RequestParam("email") String email){
+           sendOtp.send(email);
+            return ResponseEntity.ok(new ApiResponse<>(true,null,"OTP resend successfully"));
+    }
+
+    @PostMapping("/admin/resend-verification-email")
+    public ResponseEntity<ApiResponse<Object>> resendVerificationEmail(@RequestParam("email") String email){
+        sendVerificationEmail.execute(email);
+        return ResponseEntity.ok(new ApiResponse<>(true,null,"Verification mail send successfully"));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<UserDomainDTO>> login(@Valid @RequestBody LoginRequest request, HttpServletRequest httpServletRequest, HttpServletResponse response){
+    public ResponseEntity<ApiResponse<UserResponseDTO>> login(@Valid @RequestBody LoginRequest request, HttpServletRequest httpServletRequest, HttpServletResponse response){
 
         LoginResponseOutput loginResponseOutput = loginUser.execute(request.getEmail(), request.getPassword(),httpServletRequest.getRemoteAddr());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         setAccessTokenCookie(loginResponseOutput.accessToken(), response);
         setRefreshTokenCookie(loginResponseOutput.refreshToken(), response);
-        return ResponseEntity.ok(new LoginResponse(true, loginResponseOutput.user(),"Successfully Login"));
+        UserResponseDTO responseDTO = new UserResponseDTO(
+                loginResponseOutput.user().userId(),
+                loginResponseOutput.user().name(),
+                loginResponseOutput.user().email(),
+                loginResponseOutput.user().roles(),
+                loginResponseOutput.user().phone(),
+                loginResponseOutput.user().active(),
+                loginResponseOutput.user().verified(),
+                loginResponseOutput.user().created(),
+                loginResponseOutput.user().profileURL(),
+                loginResponseOutput.accessToken()
+        );
+        return ResponseEntity.ok(new LoginResponse(true, responseDTO,"Successfully Login"));
     }
 
     @PostMapping("/refresh-token")
@@ -133,31 +143,38 @@ public class AuthController {
                 .filter(cookie -> cookie.getName().equals("refreshToken"))
                 .findFirst().orElseThrow(() -> new RuntimeException("Refresh token is not available"))
                 .getValue();
+        Cookie accessTokenCookie = Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals("accessToken"))
+                .findFirst().orElse(null);
+        String accessToken = null;
+        if(accessTokenCookie != null){
+            accessToken = accessTokenCookie.getValue();
+        }
         if (refreshToken != null) {
-            logoutUser.execute(refreshToken);
+            logoutUser.execute(refreshToken,accessToken);
         }
 
         // Clear access token cookie
-        ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", "")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(0)
-                .build();
-
-        // Clear refresh token cookie
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(0)
-                .build();
-
-        // Add cleared cookies to response
-        response.addHeader("Set-Cookie", accessTokenCookie.toString());
-        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
+//        ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", "")
+//                .httpOnly(true)
+//                .secure(true)
+//                .sameSite("Strict")
+//                .path("/")
+//                .maxAge(0)
+//                .build();
+//
+//        // Clear refresh token cookie
+//        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", "")
+//                .httpOnly(true)
+//                .secure(true)
+//                .sameSite("Strict")
+//                .path("/")
+//                .maxAge(0)
+//                .build();
+//
+//        // Add cleared cookies to response
+//        response.addHeader("Set-Cookie", accessTokenCookie.toString());
+//        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseEntity.ok().body(new ApiResponse<>(true,null,"Logout successfully"));
     }

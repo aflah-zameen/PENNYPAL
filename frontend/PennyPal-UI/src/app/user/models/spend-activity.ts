@@ -1,3 +1,5 @@
+import { UserCategoryResponse } from "./user-category.model"
+
 export interface Transaction {
   id: number
   description: string
@@ -25,16 +27,16 @@ export interface BankCard {
 }
 
 export interface CategorySpending {
-  category: SpendingCategory
+  category: UserCategoryResponse
   amount: number
-  percentage: number
+  // percentage: number
   transactionCount: number
 }
 
 export interface SpendingSummary {
   totalSpend: number
-  topCategory: CategorySpending
-  mostUsedCard: BankCard & { amount: number }
+  topCategory: CategorySpending | null
+  mostUsedCard: BankCard & { amount: number } | null
   monthlyComparison: {
     currentMonth: number
     previousMonth: number

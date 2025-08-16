@@ -1,0 +1,110 @@
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold text-gray-900">Filters</h3>
+    <button 
+      (click)="clearFilters()"
+      class="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+    >
+      Clear All
+    </button>
+  </div>
+
+  <form [formGroup]="filterForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+    <!-- User ID Search -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">User Search</label>
+      <input 
+        type="text"
+        formControlName="keyword"
+        placeholder="User ID, name, or email..."
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+      />
+    </div>
+
+    <!-- Status Filter -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Status</label>
+      <select 
+        formControlName="status"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+      >
+        <option value="">All Statuses</option>
+        <option *ngFor="let status of goalStatuses" [value]="status">{{status}}</option>
+      </select>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Category</label>
+      <select 
+        formControlName="category"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+      >
+        <option value="">All Categories</option>
+        <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+      </select>
+    </div>
+
+    <!-- Date From -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">From Date</label>
+      <input 
+        type="date"
+        formControlName="dateFrom"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+      />
+    </div>
+
+    <!-- Date To -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">To Date</label>
+      <input 
+        type="date"
+        formControlName="dateTo"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+      />
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Quick Filter</label>
+      <select 
+        (change)="applyQuickFilter($event)"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+      >
+        <option value="">Select...</option>
+        <option value="active">Active Goals</option>
+        <option value="completed">Completed Goals</option>
+        <option value="pending_withdrawals">With Pending Withdrawals</option>
+        <option value="high_progress">High Progress (&gt;80%)</option>
+        <option value="low_progress">Low Progress (&lt;20%)</option>
+      </select>
+    </div>
+
+    <!-- Amount Range -->
+    <div class="col-span-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700">Min Target Amount</label>
+        <input 
+          type="number"
+          formControlName="minAmount"
+          placeholder="0"
+          min="0"
+          step="100"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+        />
+      </div>
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700">Max Target Amount</label>
+        <input 
+          type="number"
+          formControlName="maxAmount"
+          placeholder="100000"
+          min="0"
+          step="100"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+        />
+      </div>
+    </div>
+  </form>
+</div>

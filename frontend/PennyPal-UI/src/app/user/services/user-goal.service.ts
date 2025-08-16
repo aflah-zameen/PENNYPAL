@@ -10,8 +10,9 @@ import { ContributionFormData } from "../models/contribution-form-date.model";
     providedIn : 'root'
 })
 export class UserGoalService{
+    
 
-    private apiURL = environment.apiBaseUrl+"/api/user"
+    private apiURL = environment.apiBaseUrl+"/api/private/user"
     private addGoalSubject = new Subject<void>();
     allGoals = new BehaviorSubject<Goal[]>([]);
     goalStats = new BehaviorSubject<GoalStats|null>(null)
@@ -54,7 +55,7 @@ export class UserGoalService{
     }
 
     // Edit goals
-    editGoal(data : {id: number , data : GoalFormData}){
+    editGoal(data : {id: string , data : GoalFormData}){
       const requestData = {
         goalId : data.id,
         title : data.data.title,
@@ -73,7 +74,7 @@ export class UserGoalService{
     }
 
     //Delete goals
-    deleteGoal(goalId : number):Observable<void>{
+    deleteGoal(goalId : string):Observable<void>{
       return this.https.delete<void>(`${this.apiURL}/goal/delete-goal`,{withCredentials : true,params:{id : goalId}}).pipe(
         tap(()=>{
           this.changeCycle.next();
@@ -87,6 +88,14 @@ export class UserGoalService{
         map(res=> res.data),
         tap((stats) => this.goalStats.next(stats)),
       )
+    }
+    // withdraw from goal
+    withdrawFromGoal(id: string) {
+      return this.https.post<ApiResponse<string>>(`${this.apiURL}/goal/withdraw-money`,{},{withCredentials:true,params:{goalId : id}}).pipe(
+        tap(() => {
+          this.changeCycle.next();
+        })
+      );
     }
 
 

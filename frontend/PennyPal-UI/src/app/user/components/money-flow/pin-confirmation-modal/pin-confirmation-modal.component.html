@@ -1,0 +1,96 @@
+<app-modal-overlay [isOpen]="isOpen" (close)="onClose()">
+    <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white p-6 rounded-t-3xl">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-2xl font-bold">Confirm Transfer</h2>
+          </div>
+          
+          <!-- Transfer Summary -->
+          <div *ngIf="recipient && paymentMethod" class="bg-white bg-opacity-20 backdrop-blur rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-blue-400">Sending to</span>
+              <span class="font-semibold text-blue-400">{{ recipient.name }}</span>
+            </div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-blue-400">Amount</span>
+              <span class="text-2xl font-bold text-blue-500">₹{{ amount | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-blue-400">From</span>
+              <span class="font-semibold text-blue-400">{{ paymentMethod.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN Input Content -->
+        <div class="p-6">
+           <div class="text-center mb-8">
+             <div class="w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+               <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                 </path>
+                 </svg> 
+                </div>
+                 <h3 class="text-xl font-bold text-gray-800 mb-2">Enter Your PIN</h3>
+                  <p class="text-gray-600">Please enter your 4-digit PIN to confirm this transfer</p>
+                 </div>
+                  <!-- PIN Input Boxes -->
+                    <div class="flex justify-center space-x-4 mb-6">
+                       @for (item of pinDigits; let i = $index ; track $index) {
+                        <input
+                        #pinInput
+                        type="password" 
+                        inputmode="numeric"
+                        maxlength="1" 
+                        pattern="[0-9]*" 
+                        [(ngModel)]="pinDigits[i]"
+                        [value]="pinDigits[i]" 
+                        (input)="onPinInput(i, $event)" 
+                        (keydown)="onKeyDown(i, $event)" 
+                        class="w-14 h-14 text-center text-2xl font-bold border-2
+                         rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500
+                          focus:border-transparent transition-all duration-300" 
+                        [class.border-red-300]="pinError" 
+                        [class.border-green-300]="isComplete() && !pinError" 
+                        [class.border-gray-200]="!pinError && !isComplete()"
+                          /> 
+                       }
+                        </div> 
+                        <p *ngIf="pinError" 
+                        class="text-red-500 text-sm text-center mb-4 animate-slideDown">
+                        {{ pinError }}
+                      </p>
+
+          <!-- Action Buttons -->
+          <div class="flex space-x-3 mb-4">
+            <button 
+              (click)="onClose()"
+              class="flex-1 bg-gray-100 text-gray-700 px-6 py-4 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-300 active:scale-95"
+            >
+              Cancel
+            </button>
+            <button 
+              (click)="onConfirm()"
+              [disabled]="!isComplete() || isProcessing"
+              class="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              <svg *ngIf="isProcessing" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              {{ isProcessing ? 'Processing...' : 'Confirm Transfer' }}
+            </button>
+          </div>
+
+          <!-- Additional Options -->
+          <div class="text-center space-y-2">
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-200">
+              Forgot PIN?
+            </button>
+            <br>
+            <button class="text-gray-500 hover:text-gray-700 text-sm transition-colors duration-200">
+              Use Biometric Authentication
+            </button>
+          </div>
+        </div>
+</app-modal-overlay>

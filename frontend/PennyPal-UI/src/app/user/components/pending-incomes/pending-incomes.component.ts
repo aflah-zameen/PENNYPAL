@@ -1,14 +1,7 @@
 import { CommonModule, CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AllPendingIncomesSummary, PendingIncomesModel } from '../../models/income-summary-model';
-interface PendingIncome {
-  id: number
-  source: string
-  amount: number
-  dueDate: string
-  status: "pending" | "overdue"|string
-  client: string
-}
+import { PendingTransaction, PendingTransactionTotalSummary } from '../../models/transaction.model';
 
 @Component({
   selector: 'app-pending-incomes',
@@ -18,10 +11,15 @@ interface PendingIncome {
   providers : [CurrencyPipe]
 })
 export class PendingIncomesComponent {
- @Input() pendingIncomes: AllPendingIncomesSummary|null = null
-  @Output() collectIncomePayment = new EventEmitter<PendingIncomesModel>()
+ @Input() pendingIncomes!: PendingTransactionTotalSummary | null
+  @Output() collectIncomePayment = new EventEmitter<PendingTransaction>()
 
   constructor(private currencyPipe : CurrencyPipe){}
+
+  ngOnInit() {
+    console.log("pending incomes :"+ this.pendingIncomes);
+    
+  }
 
   getStatusBadgeClass(status: string): string {
     switch (status) {
@@ -65,7 +63,7 @@ export class PendingIncomesComponent {
    getFormattedContent(content : number): string {
       return this.currencyPipe.transform(content, 'USD', 'symbol', '1.2-2') || '$0.00';
   }
-  onCollectPendingIncome(income : PendingIncomesModel ){
+  onCollectPendingIncome(income : PendingTransaction ){
     if(income != null)
       this.collectIncomePayment.emit(income);
   }

@@ -1,0 +1,128 @@
+<div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-800">Messages</h3>
+            <p class="text-gray-600 text-sm">Latest conversations</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <span *ngIf="getUnreadCount() > 0" 
+                class="bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
+            {{getUnreadCount()}}
+          </span>
+          <button class="p-1 text-gray-400 hover:text-blue-600 transition-colors duration-200">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Latest Message Preview -->
+      <div *ngIf="latestMessage" 
+           class="p-4 rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300 mb-4"
+           [ngClass]="!latestMessage.isRead ? 'bg-blue-50 border-blue-200' : ''">
+        
+        <div class="flex items-start space-x-3">
+          <!-- Avatar -->
+          <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+               [ngClass]="getAvatarClasses(latestMessage.messageType)">
+            <span class="text-white text-sm font-medium">
+              {{getInitials(latestMessage.senderName)}}
+            </span>
+          </div>
+          
+          <!-- Message Content -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between mb-1">
+              <h4 class="font-semibold text-gray-800 truncate">{{latestMessage.senderName}}</h4>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs px-2 py-1 rounded-full font-medium"
+                      [ngClass]="getMessageTypeClasses(latestMessage.messageType)">
+                  {{latestMessage.messageType | titlecase}}
+                </span>
+                <span class="text-xs text-gray-500">{{latestMessage.timestamp}}</span>
+              </div>
+            </div>
+            
+            <p class="text-gray-700 text-sm mb-2 line-clamp-2">{{latestMessage.message}}</p>
+            
+            <!-- Amount Display for Financial Messages -->
+            <div *ngIf="latestMessage.amount" 
+                 class="flex items-center space-x-2 mt-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                   [ngClass]="latestMessage.messageType === 'lending' ? 'text-green-600' : 'text-blue-600'">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+              <span class="text-sm font-semibold"
+                    [ngClass]="latestMessage.messageType === 'lending' ? 'text-green-600' : 'text-blue-600'">
+                \${{latestMessage.amount | number:'1.2-2'}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Messages List -->
+      <div class="space-y-2 mb-4 max-h-32 overflow-y-auto">
+        <div *ngFor="let message of getRecentMessages()" 
+             class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
+          
+          <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+               [ngClass]="getAvatarClasses(message.messageType)">
+            <span class="text-white text-xs font-medium">
+              {{getInitials(message.senderName)}}
+            </span>
+          </div>
+          
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-gray-800 truncate">{{message.senderName}}</span>
+              <span class="text-xs text-gray-500">{{message.timestamp}}</span>
+            </div>
+            <p class="text-xs text-gray-600 truncate">{{message.message}}</p>
+          </div>
+          
+          <div *ngIf="!message.isRead" class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-2">
+        <button class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-2 px-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          <span>View All Messages</span>
+        </button>
+        
+        <button class="w-full border border-gray-200 hover:border-gray-300 text-gray-700 py-2 px-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          <span>New Message</span>
+        </button>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="mt-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
+        <div class="grid grid-cols-2 gap-4 text-center">
+          <div>
+            <p class="text-xs text-blue-700 font-medium">Pending Requests</p>
+            <p class="text-lg font-bold text-blue-800">{{getPendingRequests()}}</p>
+          </div>
+          <div>
+            <p class="text-xs text-purple-700 font-medium">Active Loans</p>
+            <p class="text-lg font-bold text-purple-800">{{getActiveLoans()}}</p>
+          </div>
+        </div>
+      </div>
+    </div>

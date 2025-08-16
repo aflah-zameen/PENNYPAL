@@ -16,7 +16,7 @@ export class EditGoalModalComponent {
   @Input() goal: Goal | null = null;
   @Input() categories :UserCategoryResponse[] =[]
   @Output() close = new EventEmitter<void>();
-  @Output() goalUpdated = new EventEmitter<{ id: number; data: GoalFormData }>();
+  @Output() goalUpdated = new EventEmitter<{ id: string; data: GoalFormData }>();
 
   formData: GoalFormData = {
     title: '',
@@ -48,7 +48,7 @@ export class EditGoalModalComponent {
       startDate: this.goal.startDate,
       endDate: this.goal.endDate,
       description: '', // If your goal has description, use this.goal.description
-      categoryId: this.goal.category.id,
+      categoryId: this.goal.category.categoryId,
     };
     
     this.formData = { ...data };

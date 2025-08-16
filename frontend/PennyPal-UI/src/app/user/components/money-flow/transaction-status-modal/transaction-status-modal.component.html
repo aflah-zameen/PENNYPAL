@@ -1,0 +1,146 @@
+<app-modal-overlay [isOpen]="isOpen" (close)="onClose()">
+  <!-- Processing State -->
+        <div *ngIf="status === 'processing'" class="p-8 text-center">
+          <div class="w-20 h-20 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-blue-600 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Processing Transfer</h2>
+          <p class="text-gray-600 mb-4">Please wait while we process your transfer...</p>
+          <div class="flex items-center justify-center space-x-2">
+            <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+            <div class="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+            <div class="w-2 h-2 bg-blue-800 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+          </div>
+        </div>
+
+        <!-- Success State -->
+        <div *ngIf="status === 'success'" class="p-8 text-center">
+          <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-checkmark">
+            <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Transfer Successful!</h2>
+          <p class="text-gray-600 mb-6">Your money has been sent successfully</p>
+          
+          <!-- Transaction Details -->
+          <div class="bg-gray-50 rounded-2xl p-6 mb-6 text-left">
+            <div class="flex items-center mb-4">
+              <img 
+                [src]="recipient?.profileURL" 
+                [alt]="recipient?.name"
+                class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-lg mr-4"
+              />
+              <div>
+                <h3 class="font-semibold text-gray-800">{{ recipient?.name }}</h3>
+                <p class="text-gray-500 text-sm">{{ recipient?.email }}</p>
+              </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="bg-gray-50 rounded-2xl p-4 mb-6">
+              <h4 class="font-semibold text-gray-800 mb-3">Payment Method</h4>
+              <div class="flex items-center">
+                <div 
+                  class="w-10 h-10 rounded-lg flex items-center justify-center mr-3"
+                  [ngClass]="getPaymentMethodBackground()"
+                >
+                  <ng-container [ngSwitch]="paymentMethod?.type">
+                    <svg *ngSwitchCase="'wallet'" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                    <svg *ngSwitchCase="'card'" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                    <svg *ngSwitchCase="'bank'" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                  </ng-container>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-800">{{ paymentMethod?.name }}</p>
+                  <p class="text-gray-500 text-sm">
+                    <span *ngIf="paymentMethod?.type === 'card'">•••• {{ paymentMethod?.cardNumber?.slice(-4) }}</span>
+                    <span *ngIf="paymentMethod?.type !== 'card'">{{ paymentMethod?.name }}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-gray-600">Amount Sent</span>
+                <span class="font-bold text-green-600">₹{{ transaction?.amount | number:'1.2-2' }}</span>
+              </div>
+              <div *ngIf="transaction?.note" class="flex justify-between">
+                <span class="text-gray-600">Note</span>
+                <span class="font-medium text-gray-800">{{ transaction?.note }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Transaction ID</span>
+                <span class="font-mono text-sm text-gray-800">{{ transaction?.id }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Date & Time</span>
+                <span class="text-gray-800">{{ transaction?.date| date:'medium' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex space-x-3">
+            <button 
+              (click)="onViewReceipt()"
+              class="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-300 active:scale-95"
+            >
+              View Receipt
+            </button>
+            <button 
+              (click)="onDone()"
+              class="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 active:scale-95"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+
+        <!-- Failed State -->
+        <div *ngIf="status === 'failed'" class="p-8 text-center">
+          <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-shake">
+            <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Transfer Failed</h2>
+          <p class="text-gray-600 mb-4">{{ failureReason || 'Something went wrong with your transfer' }}</p>
+          
+          <!-- Failed Transaction Details -->
+          <div class="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6">
+            <div class="flex items-center justify-between">
+              <span class="text-red-600 font-medium">Amount</span>
+              <span class="font-bold text-red-600">₹{{ transaction?.amount | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-red-600 font-medium">To</span>
+              <span class="text-red-800">{{ recipient?.name }}</span>
+            </div>
+          </div>
+
+          <div class="flex space-x-3">
+            <button 
+              (click)="onClose()"
+              class="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-300 active:scale-95"
+            >
+              Cancel
+            </button>
+            <button 
+              (click)="onRetry()"
+              class="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white px-6 py-3 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 active:scale-95"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+</app-modal-overlay>

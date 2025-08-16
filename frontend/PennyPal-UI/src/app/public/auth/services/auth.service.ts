@@ -9,6 +9,9 @@ import { Roles } from "../../../models/Roles";
 import { UserResponse } from "../../../models/UserResponse";
 import { UserMapper } from "../../../mapper/UserMapper";
 import { ApiResponse } from "../../../models/ApiResponse";
+import { PresenceService } from "../../../user/services/websocket/presence-service";
+import { NotificationService } from "../../../external-service/notification.service";
+import { WebsocketService } from "../../../external-service/websocket.service";
 
 
 
@@ -159,9 +162,10 @@ export class AuthService{
 
   constructor(private https : HttpClient,
     private router : Router,
-    private userMapper : UserMapper
+    private userMapper : UserMapper,
+    private presenceService: PresenceService,
   ){
-    this.apiURL = `${environment.apiBaseUrl}/api/auth`;
+    this.apiURL = `${environment.apiBaseUrl}/api/public/auth`;
     this.userSubject = new BehaviorSubject<User|null>(null);
     this.otpTimerSubject = new BehaviorSubject<Date | null>(null);
     this.user$ = this.userSubject.asObservable();
@@ -206,14 +210,20 @@ export class AuthService{
   login(loginData : LoginRequest):Observable<User>{
     return this.https.post<ApiResponse<UserResponse>>(`${this.apiURL}/login`,loginData,{withCredentials : true})
     .pipe(
+      tap(res => {
+        sessionStorage.setItem('accessToken', res.data.accessToken || '');
+      }),
       map((res) => this.userMapper.toEntity(res.data)),
-      tap(user =>this.userSubject.next(user)),
+      tap(user =>{
+        this.userSubject.next(user);
+        // this.presenceService.connect(user.id); // Connect to presence service
+      }),
       catchError((this.handleError))
     )
   }
 
   //register user
-  signup(signupData : SignupRequest):Observable<string>{
+  signup(signupData : SignupRequest):Observable<{id : string, email : string , expiry: string}>{
     const formData = new FormData();
     formData.append('name',signupData.name);
     formData.append('email',signupData.email);
@@ -221,9 +231,9 @@ export class AuthService{
     formData.append('password',signupData.password);
     formData.append('profilePicture',signupData.profilePicture);
     // formData.append('profilePicture',signupData.profilePicture)
-    return this.https.post<ApiResponse<null>>(`${this.apiURL}/signup`,formData)
+    return this.https.post<ApiResponse<{id : string, email : string , expiry: string}>>(`${this.apiURL}/user-register`,formData)
     .pipe(
-      map(res => res.message),
+      map(res => res.data),
       catchError((this.handleError))
     );
   }
@@ -235,6 +245,7 @@ export class AuthService{
       map(res => res.message),
       tap(() => {
         this.userSubject.next(null);
+        this.presenceService.close(); // Close presence service connection
       }),
       catchError(this.handleError)
     );
@@ -268,8 +279,8 @@ export class AuthService{
   }
 
   //verify-otp
-  verifyOtp(email : string , otp : string, context : string):Observable<string>{
-    return this.https.post<ApiResponse<null>>(`${this.apiURL}/verify-otp`,{email : email,otp : otp,context : context},{withCredentials:true})
+  verifyOtp(email : string , otp : string):Observable<string>{
+    return this.https.post<ApiResponse<null>>(`${this.apiURL}/verify-otp`,{email : email,otp : otp},{withCredentials:true})
     .pipe(
       map(res => res.message),
       catchError(this.handleError)

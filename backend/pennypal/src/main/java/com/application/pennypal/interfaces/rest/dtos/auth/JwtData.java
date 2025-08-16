@@ -1,6 +1,6 @@
 package com.application.pennypal.interfaces.rest.dtos.auth;
 
-import com.application.pennypal.domain.entity.User;
+import com.application.pennypal.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

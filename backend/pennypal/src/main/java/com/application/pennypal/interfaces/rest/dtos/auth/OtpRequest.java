@@ -15,7 +15,7 @@ public class OtpRequest {
     @Pattern(regexp = "\\d{6}",message = "OTP must be 6 digit number")
     private String otp;
 
-    @NotBlank(message = "Context is required")
-    private String context;
+//    @NotBlank(message = "Context is required")
+//    private String context;
 
 }

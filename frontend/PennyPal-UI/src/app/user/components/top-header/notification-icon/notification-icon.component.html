@@ -7,17 +7,17 @@
         </svg>
         
         <!-- Notification Badge -->
-        <div *ngIf="count > 0" class="absolute -top-1 -right-1 min-w-[20px] h-5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate-pulse">
+        <div *ngIf="count && count > 0" class="absolute -top-1 -right-1 min-w-[20px] h-5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate-pulse">
           <span>{{ count > 99 ? '99+' : count }}</span>
         </div>
         
         <!-- Pulse animation for new notifications -->
-        <div *ngIf="count > 0" class="absolute -top-1 -right-1 w-5 h-5 bg-red-400 rounded-full animate-ping opacity-75"></div>
+        <div *ngIf="count && count > 0" class="absolute -top-1 -right-1 w-5 h-5 bg-red-400 rounded-full animate-ping opacity-75"></div>
       </button>
       
       <!-- Hover tooltip -->
       <div class="absolute top-full right-0 mt-2 px-3 py-1 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-        {{ count > 0 ? count + ' new notifications' : 'No new notifications' }}
+        {{count && count > 0 ? count + ' new notifications' : 'No new notifications' }}
         <div class="absolute bottom-full right-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
       </div>
     </div>

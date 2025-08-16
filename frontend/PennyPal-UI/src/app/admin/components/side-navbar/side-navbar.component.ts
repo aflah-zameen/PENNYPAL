@@ -44,7 +44,7 @@ export class SideNavbarComponent {
     {
       text: "Transaction Management",
       icon: "credit-card",
-      route: "/admin/transactions",
+      route: "/admin/transaction-management/",
     },
     {
       text: "Lending & Borrowing",
@@ -61,11 +61,6 @@ export class SideNavbarComponent {
       text: "Category Management",
       icon: "folder",
       route: "/admin/category-management",
-    },
-    {
-      text: "Offers & Promotions",
-      icon: "megaphone",
-      route: "/admin/offers",
     },
     {
       text: "Reports & Analytics",
@@ -95,7 +90,7 @@ export class SideNavbarComponent {
     {
       text: "Goals Dashboard",
       icon: "target",
-      route: "/admin/goals",
+      route: "/admin/goal-management",
     },
   ]
 

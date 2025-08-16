@@ -19,7 +19,7 @@
         </div>
 
         <!-- Loading State -->
-        <div *ngIf="isLoading" class="space-y-8">
+        <!-- <div *ngIf="isLoading" class="space-y-8">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div *ngFor="let i of [1,2,3,4]" class="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
               <div class="animate-pulse">
@@ -37,28 +37,28 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Content -->
-        <div *ngIf="!isLoading">
+        <div >
           <!-- Summary Cards -->
-          <app-spend-summary-card [summary]="spendingSummary">
+          <app-spend-summary-card [summary]="spendingSummary$ | async">
           </app-spend-summary-card>
 
           <!-- Category Chart - Full Width -->
-          <div class="mb-8">
+          <!-- <div class="mb-8">
             <app-spend-category-chart 
-              [categories]="categorySpending"
+              [categories]="(categorySpending$ | async) || []"
               [viewMode]="chartViewMode"
               (viewModeChange)="onChartViewModeChange($event)"
             ></app-spend-category-chart>
-          </div>
+          </div> -->
 
           <!-- Recent Transactions - Full Width -->
           <div>
             <app-recent-spend-transaction 
-              [transactions]="transactions"
-              [categories]="categories"
+              [transactions]="(transactions$ | async) || [] "
+              [categories]="(categories$ | async) || []"
             ></app-recent-spend-transaction>
           </div>
         </div>

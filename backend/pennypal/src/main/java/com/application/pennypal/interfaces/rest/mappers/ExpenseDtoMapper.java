@@ -1,9 +1,9 @@
 package com.application.pennypal.interfaces.rest.mappers;
 
-import com.application.pennypal.application.input.expense.ExpenseInputModel;
-import com.application.pennypal.application.output.expense.AllPendingExpenseSummaryOutput;
-import com.application.pennypal.application.output.expense.ExpenseOutputModel;
-import com.application.pennypal.application.output.expense.ExpenseSummaryOutput;
+import com.application.pennypal.application.dto.input.expense.ExpenseInputModel;
+import com.application.pennypal.application.dto.output.expense.AllPendingExpenseSummaryOutput;
+import com.application.pennypal.application.dto.output.expense.ExpenseOutputModel;
+import com.application.pennypal.application.dto.output.expense.ExpenseSummaryOutput;
 import com.application.pennypal.domain.valueObject.RecurrenceFrequency;
 import com.application.pennypal.interfaces.rest.dtos.Expense.*;
 
@@ -48,7 +48,7 @@ public class ExpenseDtoMapper {
     public static ExpenseSummaryResponseDTO toResponse(ExpenseSummaryOutput expenseSummaryOutput){
         return new ExpenseSummaryResponseDTO(
                 new TotalExpenseSummaryDTO(
-                        expenseSummaryOutput.totalExpenseSummaryOutput().totalAmount(),
+                        expenseSummaryOutput.totalExpenseSummaryOutput().totalExpenses(),
                         expenseSummaryOutput.totalExpenseSummaryOutput().progressValue()
                 ),
                 new PendingExpenseSummaryDTO(

@@ -139,7 +139,7 @@ export class UserProfileComponent implements OnInit {
 verifyOtp() {
   if (!this.newEmail || !this.otp) return;
   this.spinner.show();
-  this.authService.verifyOtp(this.newEmail, this.otp,"EmailProfileUpdate").subscribe({
+  this.authService.verifyOtp(this.newEmail, this.otp).subscribe({
     next: (verified) => {
       if (verified) {
         this.emailVerified = true;

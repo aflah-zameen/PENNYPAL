@@ -50,22 +50,22 @@
         >
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center space-x-3">
-              <span class="text-2xl">{{ category.category.emoji }}</span>
+              <span class="text-2xl">{{ category.category.icon }}</span>
               <div>
                 <span class="font-semibold text-gray-900">{{ category.category.name }}</span>
                 <span class="text-sm text-gray-500 ml-2">{{ category.transactionCount }} transactions</span>
               </div>
             </div>
-            <div class="text-right">
+            <!-- <div class="text-right">
               <div class="font-bold text-lg" [style.color]="category.category.color">
                 {{ formatCurrency(category.amount) }}
               </div>
               <div class="text-sm text-gray-500">{{ category.percentage.toFixed(1) }}%</div>
-            </div>
+            </div> -->
           </div>
           
           <!-- Animated Progress Bar -->
-          <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+          <!-- <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
             <div 
               class="h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden group-hover:scale-105"
               [style.width.%]="category.percentage"
@@ -73,7 +73,7 @@
             >
               <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-pulse"></div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -95,7 +95,7 @@
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
               />
               <!-- Progress circle -->
-              <path
+              <!-- <path
                 [attr.stroke]="category.category.color"
                 stroke-width="3"
                 fill="none"
@@ -103,11 +103,11 @@
                 [attr.stroke-dasharray]="category.percentage + ', 100'"
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 class="transition-all duration-1000 ease-out"
-              />
+              /> -->
             </svg>
-            <!-- Center emoji -->
+            <!-- Center icon -->
             <div class="absolute inset-0 flex items-center justify-center">
-              <span class="text-2xl">{{ category.category.emoji }}</span>
+              <span class="text-2xl">{{ category.category.icon }}</span>
             </div>
           </div>
           
@@ -117,7 +117,7 @@
             <p class="font-bold text-lg" [style.color]="category.category.color">
               {{ formatCurrency(category.amount) }}
             </p>
-            <p class="text-xs text-gray-500">{{ category.percentage.toFixed(1) }}%</p>
+            <!-- <p class="text-xs text-gray-500">{{ category.percentage.toFixed(1) }}%</p> -->
           </div>
         </div>
       </div>

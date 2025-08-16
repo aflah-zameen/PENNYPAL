@@ -10,7 +10,7 @@ export class UserMapper{
     toEntity(user : UserResponse):User{
         return {
                   id : user.id,
-                  name : user.name,
+                  userName : user.name,
                   email : user.email,
                   phone : user.phone,
                   roles : new Set(
@@ -20,7 +20,8 @@ export class UserMapper{
                   updatedAt : user.updatedAt,
                   verified : user.verified,
                   active : user.active,
-                  profileURL : user.profileURL
+                  profileURL : user.profileURL,
+                  coinBalance : user.coinBalance
                   };
     }
 } 

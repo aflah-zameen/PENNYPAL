@@ -13,15 +13,17 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../services/user.service';
 import { UserGoalService } from '../../services/user-goal.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ContributionFormData } from '../../models/contribution-form-date.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { environment } from '../../../../environments/environment';
+import { PaymentMethod } from '../../models/transaction.model';
+import { UserCardService } from '../../services/user-card.service';
 
 @Component({
   selector: 'app-goal-management',
-  imports: [ StatsCardComponent, SectionHeaderComponent, GoalCardComponent, CommonModule, AddGoalModalComponent, EditGoalModalComponent, FeatureButtonComponent],
+  imports: [ StatsCardComponent, SectionHeaderComponent, GoalCardComponent, CommonModule, AddGoalModalComponent, EditGoalModalComponent],
   templateUrl: './goal-management.component.html',
   styleUrl: './goal-management.component.css'
 })
@@ -47,9 +49,11 @@ stats: GoalStats = {
   allGoals$ : Observable<Goal[]>;
   allGoals: Goal[] = [];
 
+  paymentMethods$!: Observable<PaymentMethod[]>;
+
   constructor(private spinner : NgxSpinnerService,private toastr : ToastrService ,
     private userService :UserService,private goalService : UserGoalService,
-    private dialog : MatDialog
+    private dialog : MatDialog,private cardService : UserCardService
   ){
       this.allGoals$= goalService.allGoals.asObservable();
       this.allGoals$.subscribe({
@@ -81,6 +85,13 @@ stats: GoalStats = {
     this.loadCatgories();
     this.loadAllGoals();
     this.loadGoalSummary();
+    this.paymentMethods$ = this.cardService.getCardsSummary().pipe(
+       map(cards => cards.map(card => ({
+        id: card.id,
+        name: card.name,
+        cardNumber: card.number
+      } as PaymentMethod)))
+    )
   }
 
 
@@ -195,7 +206,7 @@ stats: GoalStats = {
     });
   }
 
-  onGoalUpdated(event: { id: number; data: GoalFormData }): void {
+  onGoalUpdated(event: { id: string; data: GoalFormData }): void {
     this.spinner.show();
     this.goalService.editGoal(event).subscribe({
       next:(res)=>{
@@ -289,7 +300,7 @@ stats: GoalStats = {
     return !!(this.filterOptions.category || this.filterOptions.progress || this.filterOptions.sort !== "recent")
   }
 
-  trackByGoal(index: number, goal: Goal): number {
+  trackByGoal(index: number, goal: Goal): string {
     return goal.id
   }
 
@@ -349,8 +360,7 @@ stats: GoalStats = {
     return parts.join(", ") || "showing all goals"
   }
 
-  addContribution(contribution : ContributionFormData){
-      
+  addContribution(contribution : ContributionFormData){ 
       this.spinner.show();
       this.goalService.addContribution(contribution).subscribe({
         next:()=>{
@@ -365,6 +375,37 @@ stats: GoalStats = {
       })
   }
 
+  onWithdraw(goal: Goal): void {
+    const message = `<b>Are you sure you want to withdraw from this goal?</b><br><br>
+<strong>• Title:</strong> ${goal.title}<br>
+<strong>• Target Amount:</strong> ${this.formatCurrency(goal.targetAmount)}<br>
+<strong>• Category:</strong> ${goal.category.name}<br>
+<strong>• Status:</strong> ${goal.status}<br><br>
+This action will stop all contributions and withdraw your current balance.`;  
+this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Withdraw from Goal?',
+          message: message,
+          confirmText: 'Withdraw',
+          cancelText: 'Cancel'
+        }
+      }).afterClosed().subscribe({
+        next: (confirmed) => {
+          if (confirmed) {
+            this.spinner.show();
+            this.goalService.withdrawFromGoal(goal.id).subscribe({
+              next: () => {
+                this.spinner.hide();
+              },
+              error: (err) => {
+                this.toastr.error(`Failed to withdraw from goal: ${err.errorCode}`);
+                this.spinner.hide();
+              }
+            });
+          }
+        }
+      });
   
-
+    }
 }

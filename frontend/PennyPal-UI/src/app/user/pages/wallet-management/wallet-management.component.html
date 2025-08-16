@@ -1,0 +1,50 @@
+<div class="w-full h-full p-6 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div class="max-w-7xl mx-auto ">
+        
+        <div class="flex flex-col mb-12">
+          <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-4">
+                Digital Wallet
+          </h1>
+          <p class="text-gray-600 text-lg">Manage your digital wallet, add money, and track all your transactions in one secure place.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-1">
+                 <app-wallet-balance
+                 (addMoneyClicked)="isAddMoneyModalOpen = true"
+                 ></app-wallet-balance>
+            </div>
+            
+            <div class="md:col-span-2">
+                 <app-wallet-transaction-list></app-wallet-transaction-list>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<app-send-money-modal 
+  [isOpen]="isAddMoneyModalOpen"
+  [paymentMethods]="paymentMethods"
+  (continue)="onAmountConfirmed($event)"
+  (close)="closeAddMoneyModal()">
+</app-send-money-modal>
+
+<app-pin-confirmation-modal 
+  [isOpen]="isPinConfirmationOpen"
+  [amount]="amount"
+  [paymentMethod]="selectedPaymentMethod"
+  (close)="isPinConfirmationOpen=false"
+  (confirm)="onPinConfirmed($event)"
+>
+</app-pin-confirmation-modal>
+
+<div *ngIf="showSuccessToast"  
+     class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300">
+  <div class="flex items-center space-x-2">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <span>Money added successfully!</span>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">Income vs Expenses</h3>
+          <p class="text-gray-600">Daily comparison for this month</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+            <span class="text-sm text-gray-600">Income</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+            <span class="text-sm text-gray-600">Expenses</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="relative h-80">
+        <canvas #chartCanvas></canvas>
+      </div>
+      
+      <div class="mt-4 grid grid-cols-2 gap-4">
+        <div class="text-center p-3 bg-green-50 rounded-xl">
+          <p class="text-sm text-green-600 font-medium">Total Income</p>
+          <p class="text-xl font-bold text-green-700">${{getTotalIncome() | number:'1.2-2'}}</p>
+        </div>
+        <div class="text-center p-3 bg-red-50 rounded-xl">
+          <p class="text-sm text-red-600 font-medium">Total Expenses</p>
+          <p class="text-xl font-bold text-red-700">${{getTotalExpenses() | number:'1.2-2'}}</p>
+        </div>
+      </div>
+    </div>

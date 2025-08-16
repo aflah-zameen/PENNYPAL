@@ -1,0 +1,96 @@
+<div class="min-h-screen bg-gray-50">
+      <!-- Header -->
+      <div class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="py-6">
+            <div class="mt-4">
+              <h1 class="text-3xl font-bold text-gray-900">Goal Dashboard</h1>
+              <p class="mt-1 text-sm text-gray-500">Monitor and manage user savings goals</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <app-goal-stats class="w-full"></app-goal-stats>
+            <app-goal-alert class="w-full"></app-goal-alert>
+        </div>
+
+        <!-- Filters -->
+        <app-goal-filters
+          [categories]="categories"
+        >
+        </app-goal-filters>
+
+        <!-- Goals Table -->
+        <app-goal-table 
+          (goalSelected)="onGoalSelected($event)"
+          (withdrawalReview)="onWithdrawalReview($event)">
+        </app-goal-table>
+      </div>
+    </div>
+
+    <!-- Goal Details Modal (placeholder) -->
+    <div *ngIf="selectedGoal" 
+         class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+      <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-medium text-gray-900">Goal Details</h3>
+          <button (click)="closeGoalDetails()"
+                  class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Goal Name</label>
+              <p class="mt-1 text-sm text-gray-900">{{selectedGoal.goalName}}</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Category</label>
+              <p class="mt-1 text-sm text-gray-900">{{selectedGoal.category}}</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Target Amount</label>
+              <p class="mt-1 text-sm text-gray-900">{{formatCurrency(selectedGoal.targetAmount)}}</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Contributed</label>
+              <p class="mt-1 text-sm text-gray-900">{{formatCurrency(selectedGoal.contributedAmount)}}</p>
+            </div>
+          </div>
+          
+          <div *ngIf="selectedGoal.description">
+            <label class="block text-sm font-medium text-gray-700">Description</label>
+            <p class="mt-1 text-sm text-gray-900">{{selectedGoal.description}}</p>
+          </div>
+          
+          <!-- <div *ngIf="selectedGoal.withdrawalRequests.length > 0">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Withdrawal Requests</label>
+            <div class="space-y-2">
+              <div *ngFor="let request of selectedGoal.withdrawalRequests" 
+                   class="p-3 border border-gray-200 rounded-md">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <p class="text-sm font-medium text-gray-900">{{formatCurrency(request.amount)}}</p>
+                    <p class="text-sm text-gray-500">{{request.reason}}</p>
+                    <p class="text-xs text-gray-400">{{formatDateTime(request.requestDate)}}</p>
+                  </div>
+                  <span [class]="getWithdrawalStatusClass(request.status)"
+                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full">
+                    {{request.status}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>

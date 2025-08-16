@@ -1,0 +1,48 @@
+ <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-bold text-gray-900">Recent Transactions</h3>
+        <button class="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-300">
+          see all
+        </button>
+      </div>
+      
+      <div class="overflow-hidden">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-gray-100">
+              <th class="text-left py-3 text-gray-600 font-medium">Name</th>
+              <th class="text-left py-3 text-gray-600 font-medium">Category</th>
+              <th class="text-left py-3 text-gray-600 font-medium">Date</th>
+              <th class="text-right py-3 text-gray-600 font-medium">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr 
+              *ngFor="let transaction of transactions" 
+              class="border-b border-gray-50 hover:bg-gray-50 transition-colors duration-200"
+            >
+              <td class="py-4 font-medium text-gray-900">{{ transaction.name }}</td>
+              <td class="py-4 text-gray-600">{{ transaction.category }}</td>
+              <td class="py-4 text-gray-600 text-sm">{{ transaction.date }}</td>
+              <td 
+                class="py-4 text-right font-semibold"
+                [class]="transaction.type === 'income' ? 'text-green-600' : 'text-red-600'"
+              >
+                {{ transaction.type === 'income' ? '+' : '-' }}${{ Math.abs(transaction.amount) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <!-- Empty State -->
+        <div *ngIf="transactions.length === 0" class="text-center py-12">
+          <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+          </div>
+          <p class="text-gray-500 font-medium">No transactions found</p>
+          <p class="text-gray-400 text-sm">Transactions will appear here once you start using your card</p>
+        </div>
+      </div>
+    </div>

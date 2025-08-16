@@ -1,7 +1,7 @@
 import { CategoryUsageType } from "../../admin/models/category-management.model";
 
 export interface UserCategoryResponse {
-    id: number;
+    categoryId: string;
     name: string;
     usageTypes : CategoryUsageType[]; 
     active : true;

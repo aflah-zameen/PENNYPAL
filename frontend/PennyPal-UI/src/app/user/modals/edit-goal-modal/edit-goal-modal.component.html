@@ -52,7 +52,7 @@
                         [class.border-red-500]="errors.category"
                       >
                         <option value="" disabled>Select Category</option>
-                        <option *ngFor="let category of categories" [value]="category.id">
+                        <option *ngFor="let category of categories" [value]="category.categoryId">
                           {{ category.name }}
                         </option>
                       </select>

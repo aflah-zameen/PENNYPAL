@@ -1,50 +1,36 @@
 package com.application.pennypal.application.service.auth;
 
-import com.application.pennypal.application.port.RefreshTokenServicePort;
-import com.application.pennypal.application.port.TokenServicePort;
-import com.application.pennypal.application.port.UserRepositoryPort;
-import com.application.pennypal.application.usecases.user.RefreshAccessToken;
-import com.application.pennypal.domain.entity.User;
-import com.application.pennypal.domain.valueObject.RefreshTokenInfo;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
+import com.application.pennypal.application.port.out.service.TokenServicePort;
+import com.application.pennypal.application.port.out.repository.UserRepositoryPort;
+import com.application.pennypal.application.port.in.user.RefreshAccessToken;
+import com.application.pennypal.domain.user.entity.User;
 import com.application.pennypal.domain.valueObject.TokenPairDTO;
-import com.application.pennypal.shared.exception.InvalidRefreshTokenException;
-import com.application.pennypal.shared.exception.IpAddressMismatchException;
-import com.application.pennypal.shared.exception.RefreshTokenExpiredException;
-import com.application.pennypal.shared.exception.UserNotFoundException;
+import com.application.pennypal.infrastructure.exception.base.InfrastructureException;
+import com.application.pennypal.interfaces.rest.exception.auth.UnauthorizedAccessException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
-
-import java.time.Instant;
 
 @RequiredArgsConstructor
 public class RefreshAccessTokenService implements RefreshAccessToken {
 
-    private final RefreshTokenServicePort refreshTokenServicePort;
-    private final UserRepositoryPort userRepositoryPort;
+    private final HybridRefreshTokenService hybridRefreshTokenService;
     private final TokenServicePort tokenServicePort;
+    private final GenerateRefreshTokenPort generateRefreshTokenPort;
+    private final UserRepositoryPort userRepositoryPort;
 
     @Override
     public TokenPairDTO execute(String refreshToken, String ipAddress) {
-        RefreshTokenInfo refreshTokenInfo = refreshTokenServicePort.findByToken(refreshToken)
-                .orElseThrow(()->new InvalidRefreshTokenException("User in the refresh token is invalid."));
-        if(refreshTokenInfo.expiryDate().isBefore(Instant.now())){
-            throw new RefreshTokenExpiredException("Refresh token has expired");
+        String userId = hybridRefreshTokenService.findUserIdByToken(refreshToken)
+                .orElseThrow(()->new ApplicationBusinessException("User in the refresh token is invalid.","TOKEN_INVALID"));
+        if(!hybridRefreshTokenService.isValid(userId,refreshToken,ipAddress)){
+            throw new UnauthorizedAccessException("Refresh token doesn't match");
         }
-        if(!refreshTokenInfo.ipAddress().equals(ipAddress.trim())){
-            throw new IpAddressMismatchException("Ip address is mismatched.");
-        }
-        User user = userRepositoryPort.findById(refreshTokenInfo.userId())
-                .orElseThrow(()-> new UserNotFoundException("User not found"));
-        if(!user.isActive()){
-            throw new LockedException("User is not a active");
-        }
-        if(!user.isVerified()){
-            throw new DisabledException("User is not verified");
-        }
-
-        String newRefreshToken = refreshTokenServicePort.generateRefreshToken(refreshTokenInfo.userId(),ipAddress);
+        String newRefreshToken = generateRefreshTokenPort.get();
+        User user = userRepositoryPort.findByUserId(userId)
+                .orElseThrow(() -> new InfrastructureException("User not found","NOT_FOUND"));
         String newAccessToken =  tokenServicePort.generateAccessToken(user);
+
+        hybridRefreshTokenService.save(userId,newRefreshToken,ipAddress);
         return new TokenPairDTO(newRefreshToken,newAccessToken);
     }
 }

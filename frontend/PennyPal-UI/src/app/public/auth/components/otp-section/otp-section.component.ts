@@ -92,9 +92,15 @@ export class OtpSectionComponent implements OnInit{
     }
 
 
-    this.authService.verifyOtp(this.email,this.otpValue,this.context!
+    this.authService.verifyOtp(this.email,this.otpValue
     ).subscribe({
       next: (response: any) => {
+        this.spinner.hide();
+        this.otpValue = '';
+        this.isOtpComplete.next(false);
+        this.resendDisableFlag.next(true);
+        this.otpInputComponent.clearOtp();
+        this.authService.otpTimerSubject.next(null);
         this.toastr.success(response.message || 'OTP verified successfully', 'Success');
         if(this.context === 'register'){
           this.router.navigate(['/login']);

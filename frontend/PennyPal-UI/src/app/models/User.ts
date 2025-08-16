@@ -1,8 +1,8 @@
 import { Roles } from "./Roles";
 
 export interface User{
-    id : number,
-    name : string,
+    id : string,
+    userName : string,
     email : string,
     phone : number,
     roles: Set<Roles>,
@@ -11,4 +11,5 @@ export interface User{
     active : boolean,
     verified : boolean
     profileURL : string
+    coinBalance : number
 }

@@ -1,0 +1,82 @@
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+          <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM12 17h.01M12 3v9a4 4 0 004 4h1"></path>
+          </svg>
+          Alerts & Notifications
+        </h3>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+          <!-- {{unreadAlerts$ | async}} unread -->
+        </span>
+      </div>
+
+      <div class="space-y-3 max-h-64 overflow-y-auto">
+        <div *ngFor="let request of requests$ | async; trackBy: trackByAlertId" 
+             class="border-l-4"
+             class="p-4 rounded-lg border transition-all duration-200 hover:shadow-md cursor-pointer"
+           >
+          
+          <div class="flex items-start space-x-3">
+            <!-- Alert Icon -->
+            <div class="bg-yellow-100 text-yellow-600 flex-shrink-0 p-2 rounded-full">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+            </div>
+
+            <!-- Alert Content -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h4 class="text-gray-900 font-semibold" class="text-sm">
+                  Goal Withdrawal Request
+                </h4>
+                <div class="flex items-center space-x-2">
+                  <!-- <span class="bg-yellow-100 text-yellow-800 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium">
+                    {{alert.priority | titlecase}}
+                  </span> -->
+                  <span class="text-xs text-gray-500">
+                    {{goalDashboardService.formatDateTime(request.requestDate)}}
+                  </span>
+                </div>
+              </div>
+              <p class="text-gray-700 text-sm mt-1">
+                {{request.user.userName}} has requested a withdrawal of 
+                {{goalDashboardService.formatCurrency(request.amount)}} for the goal Id : "{{request.goalId}}".    
+              </p>
+              
+              <!-- Action Buttons for Withdrawal Requests -->
+              <div class="flex space-x-2 mt-3">
+                <button (click)="approveWithdrawal(request.id)"
+                        class="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded-md hover:bg-green-700 transition-colors">
+                  Approve
+                </button>
+                <button (click)="rejectWithdrawal(request.id)"
+                        class="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-md hover:bg-red-700 transition-colors">
+                  Reject
+                </button>
+                <button (click)="viewGoalDetails(request.id)"
+                        class="px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded-md hover:bg-blue-700 transition-colors">
+                  View Goal
+                </button>
+              </div>
+            </div>
+
+            <!-- Unread Indicator -->
+            <!-- <div *ngIf="!alert.isRead" class="flex-shrink-0">
+              <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+            </div> -->
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="(requests$ | async)?.length === 0" 
+             class="text-center py-8">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No alerts</h3>
+          <p class="mt-1 text-sm text-gray-500">All systems are running smoothly.</p>
+        </div>
+      </div>
+    </div>

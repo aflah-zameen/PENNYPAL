@@ -1,26 +1,25 @@
 package com.application.pennypal.application.service.category;
 
-import com.application.pennypal.application.output.category.CategoryUserOutput;
-import com.application.pennypal.application.port.CategoryManagementRepositoryPort;
-import com.application.pennypal.application.usecases.category.*;
-import com.application.pennypal.application.usecases.expense.GetUserCategories;
-import com.application.pennypal.domain.entity.Category;
-import com.application.pennypal.shared.exception.ApplicationException;
-import com.application.pennypal.shared.exception.DuplicateException;
-import com.application.pennypal.shared.exception.UserNotFoundException;
+import com.application.pennypal.application.dto.output.category.CategoryUserOutput;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
+import com.application.pennypal.application.exception.usecase.user.UserNotFoundApplicationException;
+import com.application.pennypal.application.port.out.repository.CategoryManagementRepositoryPort;
+import com.application.pennypal.application.port.in.category.*;
+import com.application.pennypal.application.port.in.expense.GetUserCategories;
+import com.application.pennypal.domain.catgeory.entity.Category;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class CategoryManagementService implements CreateCategory,GetCategories,UpdateCategory,
-        ToggleCategoryStatus, DeleteCategory, GetUserCategories,GetCategoryById {
+public class CategoryManagementService implements CreateCategory,GetCategories, UpdateCategory,
+        ToggleCategoryStatus, DeleteCategory, GetUserCategories, GetCategoryById {
     private final CategoryManagementRepositoryPort categoryManagementRepositoryPort;
     @Override
-    public Category execute(Category category, Long userId) {
+    public Category execute(Category category, String userId) {
         if(categoryManagementRepositoryPort.findByName(category.getName()).isPresent()){
-            throw new DuplicateException("Category already exist.");
+            throw new ApplicationBusinessException("Category already exist.","DUPLICATE_EXIST");
         }
         return categoryManagementRepositoryPort.save(category,userId);
     }
@@ -31,9 +30,9 @@ public class CategoryManagementService implements CreateCategory,GetCategories,U
     }
 
     @Override
-    public Category update(Category category,Long categoryId,Long userId){
-        Category oldCategory = categoryManagementRepositoryPort.findById(categoryId)
-                .orElseThrow(() -> new UserNotFoundException("Category not found"));
+    public Category update(Category category,String categoryId,String userId){
+        Category oldCategory = categoryManagementRepositoryPort.findByCategoryId(categoryId)
+                .orElseThrow(() -> new UserNotFoundApplicationException("Category not found"));
         oldCategory.setName(category.getName());
         oldCategory.setColor(category.getColor());
         oldCategory.setIcon(category.getIcon());
@@ -49,17 +48,17 @@ public class CategoryManagementService implements CreateCategory,GetCategories,U
     }
 
     @Override
-    public Category toggle(Long categoryId,Long userId) {
-        Category category =  categoryManagementRepositoryPort.findById(categoryId)
-                .orElseThrow(() -> new ApplicationException("Category cannot be found.","NOT_FOUND"));
+    public Category toggle(String categoryId,String userId) {
+        Category category =  categoryManagementRepositoryPort.findByCategoryId(categoryId)
+                .orElseThrow(() -> new ApplicationBusinessException("Category cannot be found.","NOT_FOUND"));
         category.setActive(!category.isActive());
         category.setUpdatedAt(LocalDateTime.now());
         return categoryManagementRepositoryPort.save(category,userId);
     }
 
     @Override
-    public void delete(Long categoryId) {
-        this.categoryManagementRepositoryPort.deleteById(categoryId);
+    public void delete(String categoryId) {
+        this.categoryManagementRepositoryPort.deleteByCategoryId(categoryId);
     }
 
     @Override
@@ -68,10 +67,10 @@ public class CategoryManagementService implements CreateCategory,GetCategories,U
     }
 
     @Override
-    public CategoryUserOutput get(Long categoryId) {
-        Category category = categoryManagementRepositoryPort.findById(categoryId)
-                .orElseThrow(() -> new ApplicationException("Category not found","NOT_FOUND"));
-        return new CategoryUserOutput(category.getId(),category.getName(),category.getUsageTypes(),
+    public CategoryUserOutput get(String categoryId) {
+        Category category = categoryManagementRepositoryPort.findByCategoryId(categoryId)
+                .orElseThrow(() -> new ApplicationBusinessException("Category not found","NOT_FOUND"));
+        return new CategoryUserOutput(category.getCategoryId(),category.getName(),category.getUsageTypes(),
                 category.isActive(),category.isDefault(),category.getSortOrder(),category.getColor(),category.getIcon());
     }
 }

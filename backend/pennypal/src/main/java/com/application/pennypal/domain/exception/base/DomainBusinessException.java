@@ -1,9 +1,0 @@
-package com.application.pennypal.domain.exception.base;
-
-import com.application.pennypal.domain.exception.DomainErrorCode;
-
-public class DomainBusinessException extends DomainException {
-    public DomainBusinessException(String message, DomainErrorCode code) {
-        super(message,code);
-    }
-}

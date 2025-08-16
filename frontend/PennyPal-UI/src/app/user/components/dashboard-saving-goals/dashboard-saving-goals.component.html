@@ -1,0 +1,134 @@
+ <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-600 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold text-gray-800">Savings Goals</h3>
+            <p class="text-gray-600">Track your financial targets</p>
+          </div>
+        </div>
+        
+        <button class="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white px-4 py-2 rounded-xl transition-all duration-300 flex items-center space-x-2 active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          <span>New Goal</span>
+        </button>
+      </div>
+
+      <!-- Goals List -->
+      <div class="space-y-6">
+        <div *ngFor="let goal of goals" 
+             class="p-5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-300"
+             [ngClass]="goal.isCompleted ? 'bg-green-50 border-green-200' : ''">
+          
+          <!-- Goal Header -->
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+                   [ngClass]="getGoalIconClasses(goal)">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     [ngClass]="goal.isCompleted ? 'text-green-600' : 'text-blue-600'">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        [attr.d]="goal.isCompleted ? 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' : 'M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z'"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">{{goal.name}}</h4>
+                <div class="flex items-center space-x-3 mt-1">
+                  <span class="text-xs px-2 py-1 rounded-full font-medium"
+                        [ngClass]="getPriorityClasses(goal.priority)">
+                    {{goal.priority | titlecase}}
+                  </span>
+                  <span class="text-xs text-gray-500">{{goal.category}}</span>
+                  <span class="text-xs text-gray-500">Target: {{goal.targetDate | date:'MMM yyyy'}}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-right">
+              <div class="flex items-center space-x-2 mb-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     [ngClass]="getProgressIconClasses(goal.progress)">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                <span class="text-sm font-bold" [ngClass]="getProgressTextClasses(goal.progress)">
+                  {{goal.progress}}%
+                </span>
+              </div>
+              <p class="text-xs text-gray-500">
+                \${{getRemainingAmount(goal) | number:'1.2-2'}} remaining
+              </p>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="mb-4">
+            <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500 ease-out"
+                   [ngClass]="getProgressBarClasses(goal.progress)"
+                   [style.width.%]="goal.progress">
+              </div>
+            </div>
+          </div>
+
+          <!-- Goal Details -->
+          <div class="grid grid-cols-3 gap-4 text-center">
+            <div class="p-3 bg-gray-50 rounded-xl">
+              <p class="text-xs text-gray-500 mb-1">Current</p>
+              <p class="font-bold text-gray-800">\${{goal.currentAmount | number:'1.2-2'}}</p>
+            </div>
+            <div class="p-3 bg-blue-50 rounded-xl">
+              <p class="text-xs text-blue-600 mb-1">Target</p>
+              <p class="font-bold text-blue-700">\${{goal.targetAmount | number:'1.2-2'}}</p>
+            </div>
+            <div class="p-3 bg-purple-50 rounded-xl" *ngIf="goal.monthlyContribution">
+              <p class="text-xs text-purple-600 mb-1">Monthly</p>
+              <p class="font-bold text-purple-700">\${{goal.monthlyContribution | number:'1.2-2'}}</p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+            <button class="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200">
+              Add Money
+            </button>
+            <div class="flex items-center space-x-2">
+              <button class="p-2 text-gray-400 hover:text-blue-600 transition-colors duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </button>
+              <button class="p-2 text-gray-400 hover:text-red-600 transition-colors duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="mt-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl border border-green-100">
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <p class="text-sm text-green-700 font-medium">Total Saved</p>
+            <p class="text-xl font-bold text-green-800">\${{getTotalSaved() | number:'1.2-2'}}</p>
+          </div>
+          <div>
+            <p class="text-sm text-blue-700 font-medium">Total Target</p>
+            <p class="text-xl font-bold text-blue-800">\${{getTotalTarget() | number:'1.2-2'}}</p>
+          </div>
+          <div>
+            <p class="text-sm text-purple-700 font-medium">Avg Progress</p>
+            <p class="text-xl font-bold text-purple-800">{{getAverageProgress()}}%</p>
+          </div>
+        </div>
+      </div>
+    </div>

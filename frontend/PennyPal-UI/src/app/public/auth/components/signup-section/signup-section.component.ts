@@ -86,22 +86,18 @@ onProfileSelected(file: File) {
 
   this.spinner.show();
   this.authService.signup(signupRequest).subscribe({
-    next: (response: any) => {
-      this.toastr.success(response.message || 'Registration completed', 'Success');
-      this.authService.sentOtp(signupRequest.email).subscribe({
-        next: (expiresAt) => {
-          this.spinner.hide();
-          this.authService.otpTimerSubject.next(expiresAt);
-          this.toastr.success("OTP sent successfully. Please verify.");
-          this.router.navigate(['/otp-section'], {
+    next: (response:{
+        id: string;
+        email: string;
+        expiry: string;
+    }) => {
+      this.spinner.hide();
+      this.toastr.success('Registration completed', 'Success');
+      if(response?.expiry != null)
+        this.authService.otpTimerSubject.next(new Date(response.expiry));
+      this.router.navigate(['/otp-section'], {
             queryParams: { email: signupRequest.email, context: 'register' }
           });
-        },
-        error: (err) => {
-          this.spinner.hide();
-          this.toastr.error(err.message || "Error sending OTP");
-        }
-      });
     },
     error: (err) => {
       this.spinner.hide();

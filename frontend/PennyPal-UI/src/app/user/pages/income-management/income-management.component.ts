@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { AddIncomeComponent } from "../../modals/add-income/add-income.component";
-import { UserIncomeService } from '../../services/user-income.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { catchError, finalize, Observable, of, Subscription } from 'rxjs';
+import { catchError, finalize, map, Observable, of, Subscription, tap } from 'rxjs';
 import { UserCategoryResponse } from '../../models/user-category.model';
 import { UserService } from '../../services/user.service';
 import { RecurringIncomesModel } from '../../models/recurring-income.model';
@@ -15,7 +14,9 @@ import{MatIconModule} from "@angular/material/icon"
 import { AddRecurringIncomeComponent } from "../../modals/add-recurring-income/add-recurring-income.component";
 import { IncomeRequestModel, IncomeResponseModel,} from '../../models/income.model';
 import { AllPendingIncomesSummary, IncomeSummary, PendingIncomesModel, PendingIncomeSummary } from '../../models/income-summary-model';
-import { Transaction } from '../../models/transaction.model';
+import { PaymentMethod, PendingTransaction, PendingTransactionTotalSummary, RecurringTransactionRequest, RecurringTransactionResponse, RecurringTransactionSummary, Transaction, TransactionRequest, TransactionSummaryResponseDTO } from '../../models/transaction.model';
+import { UserTransactionService } from '../../services/user-transactions.service';
+import { UserCardService } from '../../services/user-card.service';
 
 @Component({
   selector: 'app-income-management',
@@ -29,38 +30,39 @@ export class IncomeManagementComponent implements OnInit,OnDestroy{
 
   // private incomeAddedSubscritpion : Subscription | null = null; 
 
-  incomeSummary$! : Observable<IncomeSummary>; 
-  recentIncomeTransactions$ : Observable<Transaction[]|null>;
-  allPendingIncomeSummary$! : Observable<AllPendingIncomesSummary|null>;
+  incomeSummary$! : Observable<TransactionSummaryResponseDTO>; 
+  recentIncomeTransactions$! : Observable<Transaction[]|null>;
+  recurringIncomes$! : Observable<RecurringTransactionSummary|null>;
+  allPendingIncomeSummary$! : Observable<PendingTransactionTotalSummary|null>;
   incomeAddedSubscritpion: Subscription | null = null;
   sizeOfRecentIncomes : number = 5; 
-  categories: UserCategoryResponse[] = [];
+  categories$!: Observable<UserCategoryResponse[]> ;
+  paymentMethods$!: Observable<PaymentMethod[]> ;
+  
 
 
 
   isIncomeModalOpen = false
   isRecurringModalOpen = false;
 
-  incomes: IncomeResponseModel[] = []
-  recurringIncomes$: Observable<RecurringIncomesModel|null>;
   // pendingIncomes$ : Observable<> 
 
-  constructor(private incomeService : UserIncomeService,
+  constructor(private transactionService : UserTransactionService,
     private spinner : NgxSpinnerService,private userService : UserService,
-    private dialog : MatDialog,private toastr : ToastrService,private currencyPipe : CurrencyPipe
+    private dialog : MatDialog,private toastr : ToastrService,private currencyPipe : CurrencyPipe,
+    private cardService : UserCardService
   ){
-    this.recentIncomeTransactions$ = this.incomeService.recentIncomeTransaction$;
-    this.recurringIncomes$ = this.incomeService.recurringIncome$
-    this.allPendingIncomeSummary$ = this.incomeService.allPendingIncomeSummary$;
+
   }
 
   ngOnInit(): void {
-      this.loadRecurringIncomes();
-      this.loadCategories();
-      this.loadIncomeSummary();
-      this.loadRecentIncomeTransactions();
-      this.loadAllPendingIncomeSummary();
-      this.incomeAddedSubscritpion = this.incomeService.incomeAdded$.subscribe({
+    this.loadCategories();
+    this.incomeSummary$ = this.transactionService.getTransactionSummary('INCOME');
+    this.recentIncomeTransactions$ = this.transactionService.getRecentTransactions('INCOME', this.sizeOfRecentIncomes);
+    this.recurringIncomes$ = this.transactionService.getRecurringTransactions('INCOME');
+    this.allPendingIncomeSummary$ = this.transactionService.getPendingTransactionSummary('INCOME');
+    
+    this.incomeAddedSubscritpion = this.transactionService.reload$.subscribe({
         next :()=>{
           this.loadIncomeSummary();
           this.loadRecentIncomeTransactions();
@@ -68,6 +70,14 @@ export class IncomeManagementComponent implements OnInit,OnDestroy{
           this.loadAllPendingIncomeSummary();
         }
       })
+
+    this.paymentMethods$ = this.cardService.getCardsSummary().pipe(
+      map(cards => cards.map(card => ({
+        id: card.id,
+        name: card.name,
+        cardNumber: card.number
+      } as PaymentMethod))),
+    );  
 
   }
 
@@ -85,12 +95,11 @@ export class IncomeManagementComponent implements OnInit,OnDestroy{
   // }
 
 
-  handleSubmitForm(formData : IncomeRequestModel){
+  handleSubmitForm(formData : TransactionRequest){
     this.spinner.show()
-    this.incomeService.addIncome(formData).subscribe({
+    this.transactionService.addTransaction(formData).subscribe({
       next : (data)=>{
         this.toastr.success('Income added successfully!');
-        this.incomes.unshift(data)
         this.spinner.hide();
       },
       error : (err)=>{
@@ -100,7 +109,7 @@ export class IncomeManagementComponent implements OnInit,OnDestroy{
     })
   }
 
-  toggleRecurringIncome(income : IncomeResponseModel): void {
+  toggleRecurringIncome(income : RecurringTransactionResponse): void {
     const action = income.active ? 'Deactivate' : 'Activate';
     const message = `Are you sure you want to ${action.toLowerCase()} this recurring income?`;
     this.dialog.open(ConfirmDialogComponent,{
@@ -115,7 +124,7 @@ export class IncomeManagementComponent implements OnInit,OnDestroy{
       next: (confirmed) => {
         if (confirmed) {
           this.spinner.show();
-          this.incomeService.toggleRecurringIncome(income.id).subscribe({
+          this.transactionService.toggleRecurringTransactionStatus(income.recurringId).subscribe({
             next: (recurringIncome) => {
               this.spinner.hide();
               this.toastr.success(`${action}d recurring income successfully!`);
@@ -132,7 +141,7 @@ export class IncomeManagementComponent implements OnInit,OnDestroy{
     }); 
   }
 
-  deleteRecurringIncome(incomeId: number): void {
+  deleteRecurringIncome(incomeId: string): void {
         const message = `Are you sure you want to delete this recurring income?`;
         this.dialog.open(ConfirmDialogComponent, {
           width: '400px',
@@ -147,7 +156,7 @@ export class IncomeManagementComponent implements OnInit,OnDestroy{
            if(confirmed){
              this.spinner.show();
             if (confirmed) {
-              this.incomeService.deleteRecurringIncome(incomeId).subscribe({
+              this.transactionService.deleteRecurringTransaction(incomeId).subscribe({
                 next: () => {
                   this.spinner.hide();
                   this.toastr.success('Deleted recurring income successfully!');
@@ -167,58 +176,52 @@ export class IncomeManagementComponent implements OnInit,OnDestroy{
 
 
    loadIncomeSummary(){
-      this.spinner.show();
-      this.incomeSummary$ = this.incomeService.getIncomeSummary().pipe(
-        finalize(() => this.spinner.hide()), // Always hide spinner on success/fail
-        catchError(err => {
-          this.toastr.error(err.message || 'Something went wrong')
-          return of({totalIncomeSummary : {totalAmount :0, progressValue : null},
-                      pendingIncomeSummary : {totalAmount : 0, pendingIncomes : 0},
-                      activeRecurringIncome :{count : 0}});
-        })
-      );
+     this.spinner.show();
+        this.incomeSummary$ = this.transactionService.getTransactionSummary("INCOME").pipe(
+          finalize(() => this.spinner.hide()),
+          catchError(err => {
+            this.toastr.error(err.message || 'Something went wrong');
+            return of({} as TransactionSummaryResponseDTO);
+          })
+        );
     }
   loadRecentIncomeTransactions(){
     this.spinner.show();
-    this.recentIncomeTransactions$ = this.incomeService.getRecentIncomeTransactions(this.sizeOfRecentIncomes).pipe(
-      finalize(() => this.spinner.hide()),
-      catchError(err => {
-          this.toastr.error(err.message || 'Something went wrong')
-          return of([]);
-        })
-    )
+      this.recentIncomeTransactions$ = this.transactionService.getRecentTransactions("INCOME", this.sizeOfRecentIncomes).pipe(
+        finalize(() => this.spinner.hide()),
+        catchError(err => {
+            this.toastr.error(err.message || 'Something went wrong')
+            return of([]);
+          })
+      )
   }
 
-  loadCategories(): void {
-    this.spinner.show();
-    this.userService.getCategories().subscribe({
-      next: (categories: UserCategoryResponse[]) => {
-        this.categories = categories.filter(category => category.usageTypes.includes('INCOME') || category.usageTypes.includes('SHARED'));
-        this.spinner.hide();
-      },
-      error: (error) => {
-        this.spinner.hide();
-        console.error('Error loading categories:', error);
+   loadCategories(): void {
+        this.spinner.show();
+        this.categories$ = this.userService.getCategories().pipe(
+          map(categories => categories.filter(cat  => cat.usageTypes.includes('INCOME') || cat.usageTypes.includes('SHARED'))),
+          finalize(() => this.spinner.hide()),
+          catchError(err => {
+            this.toastr.error(err.message || 'Something went wrong');
+            return of([]);
+          })
+        );
       }
-    });
-}
 
 loadRecurringIncomes(): void {
   this.spinner.show();
-  this.incomeService.getRecurringIncomes().subscribe({
-    next: (recurringIncomes) => {
-        this.spinner.hide();
-    },
-    error: (error) => {
-      this.spinner.hide();
-      console.error('Error loading recurring incomes:', error);
-    }
-  });
+    this.recurringIncomes$ = this.transactionService.getRecurringTransactions("INCOME").pipe(
+      finalize(() => this.spinner.hide()),
+      catchError(err => {
+        this.toastr.error(err.message || 'Something went wrong');
+        return of(null as RecurringTransactionSummary | null);
+      })
+    );
 }
 
-handleRecurringIncomeSubmit(formData: IncomeRequestModel){
+handleRecurringIncomeSubmit(formData: RecurringTransactionRequest) {
   this.spinner.show();
-    this.incomeService.addIncome(formData).subscribe({
+    this.transactionService.addRecurringTransaction(formData).subscribe({
       next : (data)=>{
         this.spinner.hide();
         this.toastr.success('Income added successfully!');
@@ -232,15 +235,13 @@ handleRecurringIncomeSubmit(formData: IncomeRequestModel){
 
 loadAllPendingIncomeSummary(){
   this.spinner.show();
-  this.incomeService.getAllPendingIncomesSummary().subscribe({
-    next : ()=>{
-      this.spinner.hide();
-    },
-    error:(err)=>{
-      this.spinner.hide();
-      this.toastr.error(`Failed to load pending incomes: ${err.errorCode}`);
-    }
-  })
+    this.allPendingIncomeSummary$ = this.transactionService.getPendingTransactionSummary("INCOME").pipe(
+      finalize(() => this.spinner.hide()),
+      catchError(err => {
+        this.toastr.error(err.message || 'Something went wrong');
+        return of(null as PendingTransactionTotalSummary | null);
+      })
+    );
 }
 
 
@@ -250,12 +251,12 @@ loadAllPendingIncomeSummary(){
   }
 
   // Collect Pending payments
-  collectPendingPayment(income : PendingIncomesModel){
+  collectPendingPayment(income : PendingTransaction){
     const message = `
     <b>You are about to add the following income to your tracker:</b><br><br>
     <strong>• Title:</strong> ${income.title}<br>
     <strong>• Amount:</strong> ${this.getFormattedContent(income.amount)}<br>
-    <strong>• Date:</strong> ${income.incomeDate}<br>
+    <strong>• Date:</strong> ${income.transactionDate}<br>
     <strong>• Category:</strong> ${income.category.name}<br><br>
     Do you want to proceed?
     `;
@@ -273,7 +274,7 @@ loadAllPendingIncomeSummary(){
       next : (confirmed)=>{
         if(confirmed){
           this.spinner.show();
-          this.incomeService.collectPendingIcomes(income).subscribe({
+          this.transactionService.collectPendingTransaction(income.transactionId).subscribe({
             next : ()=>{
               this.toastr.success("Income added successfully");
               this.loadAllPendingIncomeSummary();

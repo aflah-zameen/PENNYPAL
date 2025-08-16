@@ -7,7 +7,8 @@ public enum TransactionType {
     INCOME("INCOME"),
     EXPENSE("EXPENSE"),
     GOAL("GOAL"),
-    TRANSFER("TRANSFER");
+    TRANSFER("TRANSFER"),
+    WALLET("WALLET");
     private final String value;
     TransactionType(String value){
         this.value = value;

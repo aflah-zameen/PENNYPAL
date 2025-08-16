@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './spend-summary-card.component.css'
 })
 export class SpendSummaryCardComponent {
-  @Input() summary!: SpendingSummary
+  @Input() summary!: SpendingSummary | null
 
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat("en-US", {

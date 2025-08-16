@@ -1,7 +1,7 @@
 package com.application.pennypal.infrastructure.security.details;
 
-import com.application.pennypal.domain.entity.User;
-import com.application.pennypal.domain.valueObject.Roles;
+import com.application.pennypal.domain.user.entity.User;
+import com.application.pennypal.domain.user.valueObject.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

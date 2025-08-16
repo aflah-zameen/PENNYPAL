@@ -12,7 +12,7 @@ import { FiltersDTO } from "../../models/FiltersDTO";
 })
 export class UserManagementService{
 
-    private apiURL = `${environment.apiBaseUrl}/api`;
+    private apiURL = `${environment.apiBaseUrl}/api/private`;
 
     constructor(private http : HttpClient){}
     public fetchUsers(params: {
