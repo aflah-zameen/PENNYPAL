@@ -69,14 +69,7 @@ public class WebSocketMessageController {
                 false
         );
         notificationRepositoryPort.save(notification);
-        messageBrokerPort.notifyPrivateUser(new NotificationOutputModel(
-                notification.getId(),
-                notification.getMessage(),
-                notification.isRead(),
-                notification.getTimeStamp(),
-                notification.getType(),
-                notification.getActionURL()
-        ), cmd.receiverId());
+        messageBrokerPort.notifyPrivateUser(notification, cmd.receiverId());
 
     }
 

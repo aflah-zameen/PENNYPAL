@@ -62,33 +62,26 @@ public class GoalWithdrawRequestService implements GoalWithdrawRequest {
                 "Your withdrawal request for ₹%,.2f from goal \"%s\" is pending approval.",
                 goalWithdraw.getAmount(), goal.getTitle()
         );
-        notificationRepositoryPort.save(Notification.create(
+        Notification adminNotification = Notification.create(
                 null,
                 adminMessage,
                 NotificationType.GOAL_WITHDRAW,
                 null,
                 true
-        ));
-        Notification notification = notificationRepositoryPort.save(Notification.create(
+        );
+        Notification userNotification = Notification.create(
                 user.getUserId(),
                 userMessage,
                 NotificationType.GOAL_WITHDRAW,
                 null,
                 false
-        ));
+        );
 
         /// Notify admin
-        messageBrokerPort.publishAdmin(goalWithdraw,adminMessage);
+        messageBrokerPort.publishGoalWithdrawAdmin(adminNotification ,goalWithdraw);
 
         /// Notify User
-        messageBrokerPort.notifyPrivateUser(new NotificationOutputModel(
-                notification.getId(),
-                notification.getMessage(),
-                notification.isRead(),
-                notification.getTimeStamp(),
-                notification.getType(),
-                notification.getActionURL()
-        ),user.getUserId());
+        messageBrokerPort.notifyPrivateUser(userNotification,user.getUserId());
 
     }
 }

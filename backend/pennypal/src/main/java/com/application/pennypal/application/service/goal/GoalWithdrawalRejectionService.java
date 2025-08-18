@@ -50,13 +50,6 @@ public class GoalWithdrawalRejectionService implements GoalWithdrawalRejection {
         /// notify user
         User user = userRepositoryPort.findByUserId(goal.getUserId())
                 .orElseThrow(() -> new ApplicationBusinessException("User not found","USER_NOT_FOUND"));
-        messageBrokerPort.notifyPrivateUser(new NotificationOutputModel(
-                notification.getId(),
-                notification.getMessage(),
-                false,
-                notification.getTimeStamp(),
-                notification.getType(),
-                notification.getActionURL()
-        ),user.getEmail());
+        messageBrokerPort.notifyPrivateUser(notification,user.getEmail());
     }
 }
