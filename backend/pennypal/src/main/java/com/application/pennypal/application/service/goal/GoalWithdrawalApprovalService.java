@@ -78,14 +78,14 @@ public class GoalWithdrawalApprovalService implements GoalWithdrawalApproval {
         /// Notify user about the approval
         User user = userRepositoryPort.findByUserId(goal.getUserId())
                 .orElseThrow(() -> new ApplicationBusinessException("User not found","USER_NOT_FOUND"));
-        messageBrokerPort.notifyGoalWithdrawalApproval(new NotificationOutputModel(
+        messageBrokerPort.notifyPrivateUser(new NotificationOutputModel(
                 notification.getId(),
                 notification.getMessage(),
                 false,
                 notification.getTimeStamp(),
                 notification.getType(),
                 notification.getActionURL()
-        ),user.getEmail());
+        ),user.getUserId());
 
     }
 }

@@ -1,5 +1,6 @@
 package com.application.pennypal.infrastructure.external.websocket.config;
 
+import com.application.pennypal.application.port.out.repository.UserRepositoryPort;
 import com.application.pennypal.application.port.out.service.TokenServicePort;
 import com.application.pennypal.infrastructure.external.websocket.handler.CustomHandshakeHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfigurer {
     private final TokenServicePort tokenServicePort;
-
+    private final UserRepositoryPort userRepositoryPort;
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config){
         config.enableSimpleBroker("/topic", "/queue");
@@ -37,7 +38,7 @@ public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfi
     public void registerStompEndpoints(StompEndpointRegistry registry){
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("http://localhost:4200")
-                .setHandshakeHandler(new CustomHandshakeHandler(tokenServicePort))
+                .setHandshakeHandler(new CustomHandshakeHandler(tokenServicePort,userRepositoryPort))
                 .withSockJS()
                 .setSessionCookieNeeded(true);
     }

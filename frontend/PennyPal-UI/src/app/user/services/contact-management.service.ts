@@ -4,6 +4,7 @@ import { map, Observable, Subject } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Contact, PaymentMethod, Transaction } from "../models/money-flow.model";
 import { ApiResponse } from "../../models/ApiResponse";
+import { ChatMessageDto } from "../models/chat.model";
 
 @Injectable({ providedIn: 'root' })
 export class ContactManagementService {
@@ -38,14 +39,15 @@ private apiURL = `${environment.apiBaseUrl}/api/private/user`
       note,
       pin,
       paymentMethodId
-    };
-
-    console.log("Transfer Request:", transferRequest);
-    
+    };    
 
     return this.http.post<ApiResponse<Transaction>>(`${this.apiURL}/transfer`, transferRequest, { withCredentials: true }).pipe(
       map(response => response.data)
     );
+  }
+
+  getMessageHistory(otherUserId : string){
+    return this.http.get<ChatMessageDto[]>(`${this.apiURL}/chat/history/${otherUserId}`,{withCredentials:true,params:{}});
   }
 
 

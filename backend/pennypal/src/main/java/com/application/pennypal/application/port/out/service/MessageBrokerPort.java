@@ -6,8 +6,7 @@ import com.application.pennypal.domain.goal.entity.GoalWithdraw;
 import java.math.BigDecimal;
 
 public interface MessageBrokerPort {
-    void notifyWithdrawRequestUser(NotificationOutputModel outputModel,String email);
-    void notifyWithdrawRequestAdmin(GoalWithdraw goalWithdraw,String message);
-
-    void notifyGoalWithdrawalApproval(NotificationOutputModel outputModel,String email);
+    void notifyPrivateUser(NotificationOutputModel outputModel,String userId);
+    void publishAdmin(GoalWithdraw goalWithdraw,String message);
+//    void notifyGoalWithdrawalApproval(NotificationOutputModel outputModel,String email);
 }

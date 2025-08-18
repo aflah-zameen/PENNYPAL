@@ -16,9 +16,6 @@ export interface Transaction {
 }
 
 export interface ChatMessage {
-  id: string
-  contactId: string
+  receiverId: string
   message: string
-  timestamp: Date
-  isFromUser: boolean
 }

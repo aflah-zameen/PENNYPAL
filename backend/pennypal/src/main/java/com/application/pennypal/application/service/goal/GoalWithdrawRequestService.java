@@ -78,17 +78,17 @@ public class GoalWithdrawRequestService implements GoalWithdrawRequest {
         ));
 
         /// Notify admin
-        messageBrokerPort.notifyWithdrawRequestAdmin(goalWithdraw,adminMessage);
+        messageBrokerPort.publishAdmin(goalWithdraw,adminMessage);
 
         /// Notify User
-        messageBrokerPort.notifyWithdrawRequestUser(new NotificationOutputModel(
+        messageBrokerPort.notifyPrivateUser(new NotificationOutputModel(
                 notification.getId(),
                 notification.getMessage(),
                 notification.isRead(),
                 notification.getTimeStamp(),
                 notification.getType(),
                 notification.getActionURL()
-        ),user.getEmail());
+        ),user.getUserId());
 
     }
 }

@@ -42,7 +42,7 @@
                 'bg-white text-gray-800 border border-gray-200': !message.isFromUser
               }"
             >
-              <p class="text-sm">{{ message.message }}</p>
+              <p class="text-sm">{{ message.content }}</p>
               <p 
                 class="text-xs mt-1 opacity-70"
                 [ngClass]="{
@@ -50,7 +50,7 @@
                   'text-gray-500': !message.isFromUser
                 }"
               >
-                {{ message.timestamp | date:'short' }}
+                {{ message.sentAt | date:'short' }}
               </p>
             </div>
           </div>

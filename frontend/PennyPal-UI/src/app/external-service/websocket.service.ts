@@ -1,11 +1,12 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Client, IMessage, Stomp } from '@stomp/stompjs';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import SockJS from 'sockjs-client';
 import { NotificationMessageDto } from '../models/notification';
 import { AuthService } from '../public/auth/services/auth.service';
 import { User } from '../models/User';
 import { Roles } from '../models/Roles';
+import { ChatMessageDto } from '../user/models/chat.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,10 @@ export class WebsocketService{
 private stompClient!: Client ;
 private connected = false;
 private notificationsSubject = new Subject<NotificationMessageDto>();
+private chatMessageSubject = new Subject<ChatMessageDto>();
 public notifications$ = this.notificationsSubject.asObservable();
+public chatMessages$ = this.chatMessageSubject.asObservable();
+
 private user: User | null = null;
 
   constructor(private authService: AuthService) {
@@ -53,6 +57,12 @@ private user: User | null = null;
           console.log('📩 User Notification:', notification);
           this.notificationsSubject.next(notification);
         });
+
+        this.stompClient.subscribe(`/user/queue/messages`,(msg : IMessage)=>{
+          const message: ChatMessageDto = JSON.parse(msg.body);
+          this.chatMessageSubject.next(message);
+          console.log('📩 User Notification:', message);
+        })
       }
     };
 
@@ -69,5 +79,28 @@ private user: User | null = null;
       });
     }
   }
+
+  sendChatMessage(receiverId: string, content: string): void {
+  if (this.stompClient?.active) {
+    const payload = {
+      receiverId,
+      content,
+    };
+
+    this.stompClient.publish({
+      destination: '/app/chat.send',
+      body: JSON.stringify(payload),
+    });
+
+    console.log('📤 Chat message sent:', payload);
+  } else {
+    console.warn('⚠️ STOMP client not active. Message not sent.');
+  }
+}
+
+getMessage(){
+  return this.chatMessages$;
+}
+
 
 }
