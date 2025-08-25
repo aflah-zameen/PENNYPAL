@@ -1,0 +1,4 @@
+package com.application.pennypal.application.port.in.subscription;
+
+public interface AddSubscriptionPlan {
+}
