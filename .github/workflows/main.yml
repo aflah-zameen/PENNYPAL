@@ -65,7 +65,31 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/pennypal-frontend:latest
 
       # ---------------------------
-      # Deploy to Azure VM
+      # Prepare Azure VM
+      # ---------------------------
+      - name: Create deployment directory on Azure VM
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.AZURE_HOST }}
+          username: ${{ secrets.AZURE_USER }}
+          key: ${{ secrets.AZURE_SSH_KEY }}
+          script: |
+            mkdir -p /home/azureuser/pennypal
+
+      # ---------------------------
+      # Copy docker-compose.yml to Azure VM
+      # ---------------------------
+      - name: Copy docker-compose.yml
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          host: ${{ secrets.AZURE_HOST }}
+          username: ${{ secrets.AZURE_USER }}
+          key: ${{ secrets.AZURE_SSH_KEY }}
+          source: "docker-compose.yml"    # adjust if in a subfolder
+          target: "/home/azureuser/pennypal/docker-compose.yml"
+
+      # ---------------------------
+      # Deploy on Azure VM
       # ---------------------------
       - name: Deploy on Azure VM
         uses: appleboy/ssh-action@v0.1.10
@@ -74,7 +98,6 @@ jobs:
           username: ${{ secrets.AZURE_USER }}
           key: ${{ secrets.AZURE_SSH_KEY }}
           script: |
-            mkdir -p /home/azureuser/pennypal
             cd /home/azureuser/pennypal
 
             echo "Pulling latest Docker images..."
