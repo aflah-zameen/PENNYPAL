@@ -85,10 +85,9 @@ public class GoalBeanConfig {
                                                          GoalWithdrawRepositoryPort goalWithdrawRepositoryPort,
                                                          WalletRepositoryPort walletRepositoryPort,
                                                          MessageBrokerPort messageBrokerPort,
-                                                         NotificationRepositoryPort notificationRepositoryPort,
                                                          UserRepositoryPort userRepositoryPort,
                                                          TransactionRepositoryPort transactionRepositoryPort){
-        return new GoalWithdrawalApprovalService(goalWithdrawRepositoryPort,goalRepositoryPort,walletRepositoryPort,messageBrokerPort,notificationRepositoryPort,userRepositoryPort,transactionRepositoryPort);
+        return new GoalWithdrawalApprovalService(goalWithdrawRepositoryPort,goalRepositoryPort,walletRepositoryPort,messageBrokerPort,userRepositoryPort,transactionRepositoryPort);
     }
 
     @Bean
