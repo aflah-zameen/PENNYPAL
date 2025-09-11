@@ -74,6 +74,9 @@ jobs:
           username: ${{ secrets.AZURE_USER }}
           key: ${{ secrets.AZURE_SSH_KEY }}
           script: |
+            mkdir -p /home/azureuser/pennypal
+            cd /home/azureuser/pennypal
+
             echo "Pulling latest Docker images..."
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/pennypal-backend:latest
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/pennypal-frontend:latest
@@ -84,7 +87,7 @@ jobs:
             docker-compose down || true
 
             echo "Creating .env file dynamically..."
-            cat > ~/pennypal.env <<EOF
+            cat > pennypal.env <<EOF
             SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pennypal
             SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
             SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
@@ -102,4 +105,4 @@ jobs:
             EOF
 
             echo "Starting all containers..."
-            docker-compose --env-file ~/pennypal.env up -d
+            docker-compose --env-file pennypal.env up -d
