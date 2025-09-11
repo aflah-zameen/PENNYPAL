@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - pennypal.env
+      - ./pennypal.env
     depends_on:
       db:
         condition: service_healthy

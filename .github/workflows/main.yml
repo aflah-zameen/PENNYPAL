@@ -111,6 +111,7 @@ jobs:
 
             echo "Creating .env file dynamically..."
             cat > pennypal.env <<EOF
+            DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
             SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pennypal
             SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
             SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
@@ -128,4 +129,4 @@ jobs:
             EOF
 
             echo "Starting all containers..."
-            docker-compose --env-file pennypal.env up -d
+            docker-compose up -d
