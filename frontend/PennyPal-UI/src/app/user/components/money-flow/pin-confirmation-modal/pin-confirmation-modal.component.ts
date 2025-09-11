@@ -35,27 +35,39 @@ export class PinConfirmationModalComponent implements OnInit {
   }
 
   onPinInput(index: number, event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = input.value;
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
 
-    if (value && !/^[0-9]$/.test(value)) {
-      input.value = '';
-      this.pinDigits[index] = '';
-      return;
-    }
-     if (value && index < 5) {
-      this.pinInputs.toArray()[index + 1].nativeElement.focus();
-    }
+  if (value && !/^[0-9]$/.test(value)) {
+    input.value = '';
+    this.pinDigits[index] = '';
+    return;
   }
+
+  this.pinDigits[index] = value;
+
+  // Delay focus to next input to ensure pinInputs is populated
+  if (value && index < this.pinDigits.length - 1) {
+    setTimeout(() => {
+      const nextInput = this.pinInputs.toArray()[index + 1];
+      nextInput?.nativeElement?.focus();
+    }, 0);
+  }
+}
+
 
 
 
   onKeyDown(index: number, event: KeyboardEvent) {
-    const input = event.target as HTMLInputElement;
-    if (event.key === 'Backspace' && !input.value && index > 0) {
-      this.pinInputs.toArray()[index - 1].nativeElement.focus();
-    }
+  const input = event.target as HTMLInputElement;
+  if (event.key === 'Backspace' && !input.value && index > 0) {
+    setTimeout(() => {
+      const prevInput = this.pinInputs.toArray()[index - 1];
+      prevInput?.nativeElement?.focus();
+    }, 0);
   }
+}
+
   
 
   isComplete(): boolean {

@@ -1,0 +1,22 @@
+<div class="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-6 border border-gray-100 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-r from-{{color}}-500/5 via-{{color}}-400/5 to-{{color}}-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+  <div class="relative z-10">
+    <div class="flex items-center justify-between mb-4">
+      <div class="p-3 rounded-2xl bg-gradient-to-br from-{{color}}-100 to-{{color}}-200">
+        <svg class="w-6 h-6 text-{{color}}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <ng-container [ngSwitch]="icon">
+            <path *ngSwitchCase="'plus'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            <path *ngSwitchCase="'arrow-down'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            <path *ngSwitchCase="'warning'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            <path *ngSwitchCase="'clock'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </ng-container>
+        </svg>
+      </div>
+      <span class="text-sm font-medium text-gray-500">{{ label }}</span>
+    </div>
+    <div>
+      <h3 class="text-sm font-semibold text-gray-600 mb-2">{{ title }}</h3>
+      <p class="text-3xl font-bold bg-gradient-to-r from-{{color}}-600 to-{{color}}-500 bg-clip-text text-transparent">{{ value }}</p>
+    </div>
+  </div>
+</div>

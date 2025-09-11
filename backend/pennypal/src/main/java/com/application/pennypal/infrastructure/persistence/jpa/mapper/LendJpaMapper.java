@@ -15,7 +15,8 @@ public class LendJpaMapper {
                 entity.getAcceptedDeadline(),
                 entity.getStatus(),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getLoan() != null ? LoanJpaMapper.toDomain(entity.getLoan()) : null
         );
     }
 
@@ -28,7 +29,6 @@ public class LendJpaMapper {
                 lendingRequest.getMessage(),
                 lendingRequest.getProposedDeadline(),
                 lendingRequest.getAcceptedDeadline(),
-                lendingRequest.getStatus()
-        );
+                lendingRequest.getStatus());
     }
 }

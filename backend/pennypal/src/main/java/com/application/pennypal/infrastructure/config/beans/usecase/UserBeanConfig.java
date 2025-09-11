@@ -2,6 +2,7 @@ package com.application.pennypal.infrastructure.config.beans.usecase;
 
 import com.application.pennypal.application.port.in.transaction.DashboardIncomeExpenseChart;
 import com.application.pennypal.application.port.in.transaction.GetExpenseChart;
+import com.application.pennypal.application.port.in.user.CheckUserIsSuspended;
 import com.application.pennypal.application.port.in.user.GetContacts;
 import com.application.pennypal.application.port.in.user.GetDashboardSummary;
 import com.application.pennypal.application.port.out.repository.TransactionRepositoryPort;
@@ -9,6 +10,7 @@ import com.application.pennypal.application.port.out.repository.UserRepositoryPo
 import com.application.pennypal.application.port.out.service.UpdateUserPort;
 import com.application.pennypal.application.service.transaction.DashboardIncomeExpenseChartService;
 import com.application.pennypal.application.service.transaction.GetExpenseChartService;
+import com.application.pennypal.application.service.user.CheckUserIsSuspendedService;
 import com.application.pennypal.application.service.user.GetContactsService;
 import com.application.pennypal.application.service.user.GetDashboardSummaryService;
 import com.application.pennypal.application.service.user.UpdateUserService;
@@ -43,5 +45,10 @@ public class UserBeanConfig {
     @Bean
     public GetExpenseChart getExpenseChart(TransactionRepositoryPort transactionRepositoryPort){
         return new GetExpenseChartService(transactionRepositoryPort);
+    }
+
+    @Bean
+    public CheckUserIsSuspended checkUserIsSuspended(UserRepositoryPort userRepositoryPort){
+        return new CheckUserIsSuspendedService(userRepositoryPort);
     }
 }

@@ -1,0 +1,78 @@
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900">Subscription Breakdown</h3>
+          <p class="text-sm text-gray-500">Distribution by plan type</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center">
+        <!-- Donut Chart -->
+        <div class="relative">
+          <svg width="200" height="200" viewBox="0 0 200 200" class="transform -rotate-90">
+            <circle
+              cx="100"
+              cy="100"
+              r="80"
+              fill="none"
+              stroke="#f3f4f6"
+              stroke-width="20"
+            />
+            
+            <circle
+              *ngFor="let segment of chartSegments; let i = index"
+              cx="100"
+              cy="100"
+              r="80"
+              fill="none"
+              [attr.stroke]="segment.color"
+              stroke-width="20"
+              [attr.stroke-dasharray]="segment.dashArray"
+              [attr.stroke-dashoffset]="segment.dashOffset"
+              class="transition-all duration-500 hover:stroke-width-24 cursor-pointer"
+              (mouseenter)="showTooltip(segment, $event)"
+              (mouseleave)="hideTooltip()"
+            />
+          </svg>
+          
+          <!-- Center Text -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-gray-900">{{ totalSubscriptions | number }}</div>
+              <div class="text-sm text-gray-500">Total</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="ml-8 space-y-4">
+          <div *ngFor="let item of breakdownData" class="flex items-center">
+            <div
+              class="w-4 h-4 rounded-full mr-3"
+              [style.background-color]="item.color"
+            ></div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-500">{{ item.percentage }}%</span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-xs text-gray-500">{{ item.count | number }} subscribers</span>
+                <span class="text-xs font-medium text-gray-900">{{ item.revenue | currency:'USD':'symbol':'1.0-0' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tooltip -->
+      <div
+        *ngIf="tooltip.show"
+        class="absolute bg-gray-900 text-white px-3 py-2 rounded-lg shadow-lg text-sm pointer-events-none z-10"
+        [style.left.px]="tooltip.x"
+        [style.top.px]="tooltip.y"
+      >
+        <div class="font-medium">{{ tooltip.title }}</div>
+        <div>{{ tooltip.count | number }} subscribers</div>
+        <div>{{ tooltip.revenue | currency:'USD':'symbol':'1.0-0' }}</div>
+      </div>
+    </div>

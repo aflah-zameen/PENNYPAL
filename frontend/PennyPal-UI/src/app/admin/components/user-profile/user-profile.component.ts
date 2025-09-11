@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AdminUser } from '../../models/admin.model';
 import { CommonModule } from '@angular/common';
+import { User } from '../../../models/User';
+import { Roles } from '../../../models/Roles';
 
 @Component({
   selector: 'app-user-profile',
@@ -9,7 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent {
-  @Input() user!: AdminUser
+  @Input() user! : User | null
   @Output() logout = new EventEmitter<void>()
   @Output() profileClick = new EventEmitter<void>()
   @Output() settingsClick = new EventEmitter<void>()
@@ -57,30 +59,16 @@ export class UserProfileComponent {
   }
 
   getStatusClass(): string {
-    switch (this.user.status) {
-      case "online":
+
         return "bg-green-400"
-      case "away":
-        return "bg-yellow-400"
-      case "offline":
-        return "bg-gray-400"
-      default:
-        return "bg-gray-400"
-    }
+      }
+
+  getRoles(roles: Set<Roles>): string {
+  if (!roles || roles.size === 0) {
+    return 'No roles assigned';
   }
 
-  formatLastLogin(): string {
-    const date = new Date(this.user.lastLogin)
-    const now = new Date()
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
+  return Array.from(roles).join(', ');
+}
 
-    if (diffInHours < 1) {
-      return "Just now"
-    } else if (diffInHours < 24) {
-      return `${diffInHours}h ago`
-    } else {
-      const diffInDays = Math.floor(diffInHours / 24)
-      return `${diffInDays}d ago`
-    }
-  }
 }

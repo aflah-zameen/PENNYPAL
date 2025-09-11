@@ -7,6 +7,7 @@ import com.application.pennypal.application.port.in.user.GetUser;
 import com.application.pennypal.domain.valueObject.UserDomainDTO;
 import com.application.pennypal.interfaces.rest.dtos.auth.RegisterRequestDTO;
 import com.application.pennypal.interfaces.rest.dtos.auth.RegisterResponse;
+import com.application.pennypal.interfaces.rest.dtos.auth.RegisterResponseDTO;
 import com.application.pennypal.interfaces.rest.mappers.UserDtoMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneOffset;
 import java.util.Arrays;
 
 @RestController
@@ -34,7 +36,12 @@ public class SuperAdminController {
         String token =  extractTokenFromCookie(servletRequest,"accessToken");
         UserDomainDTO user = getUser.get(token);
         RegisterOutputModel outputModel = createAdmin.execute(UserDtoMapper.toInput(requestDTO), user.userId());
-        return ResponseEntity.ok(new RegisterResponse(true,outputModel,"Admin registered successfully"));
+        RegisterResponseDTO responseDTO = new RegisterResponseDTO(
+                outputModel.id(),
+                outputModel.email(),
+                outputModel.expiry().toInstant(ZoneOffset.UTC)
+        );
+        return ResponseEntity.ok(new RegisterResponse(true,responseDTO,"Admin registered successfully"));
     }
 
 

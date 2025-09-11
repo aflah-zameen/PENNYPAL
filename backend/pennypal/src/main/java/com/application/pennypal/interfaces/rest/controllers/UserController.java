@@ -327,8 +327,8 @@ public class UserController {
                 output.contributionId(),
                 output.amount(),
                 output.date(),
-                output.notes()
-
+                output.notes(),
+                output.coins()
         );
         return ResponseEntity.ok(new ApiResponse<>(true,responseDTO,"Success"));
     }

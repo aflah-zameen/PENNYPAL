@@ -4,15 +4,17 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record LendingRequestOutputModel(
-        String requestId,
-        String requestedBy,
-        String requestedTo,
+        String id,
+        String senderId,
+        String senderName,
+        String recipientId,
+        String recipientName,
         BigDecimal amount,
         String message,
-        LocalDateTime proposedDeadline,
+        LocalDateTime repaymentDeadline,
         LocalDateTime acceptedDeadline,
         String status,
-        LocalDateTime requestedDate,
-        LocalDateTime lastModified
+        LocalDateTime requestDate,
+        LocalDateTime updatedAt
 ) {
 }

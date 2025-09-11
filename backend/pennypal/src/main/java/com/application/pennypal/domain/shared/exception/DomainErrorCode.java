@@ -45,6 +45,7 @@ public enum DomainErrorCode {
     USER_ROLE_NOT_FOUND("BUS_USR_006"),
     INVALID_TOKEN_EXCEPTION("BUS_USR_007"),
     TRANSFER_USER_REQUIRED("BUS_USR_008"),
+    ILLEGAL_STATE("BUS_GEN_001"),
 
     // Business Rule - Transaction
     INVALID_TRANSFER("BUS_TRX_001"),

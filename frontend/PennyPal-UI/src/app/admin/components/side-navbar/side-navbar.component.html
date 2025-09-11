@@ -16,8 +16,8 @@
 
       <!-- User Profile Section -->
       <app-user-profile 
-        *ngIf="currentUser"
-        [user]="currentUser"
+        *ngIf="(currentUser$ | async) != null"
+        [user]="currentUser$ | async"
         (logout)="userLogout()"
         (profileClick)="onProfileClick()"
         (settingsClick)="onSettingsClick()"

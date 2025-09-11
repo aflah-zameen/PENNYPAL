@@ -35,9 +35,9 @@ export class ProfileUploadComponent {
       return;
     }
 
-    if (file.size > 2 * 1024 * 1024) {
+    if (file.size > 2 * 1024 * 1024) {  
       this.errorMessage = 'File size must be under 2MB.';
-      this.control?.setErrors({maxsize : true});
+      this.control?.setErrors({maxSize : true});
       return;
     }
 
@@ -61,8 +61,10 @@ export class ProfileUploadComponent {
         this.control?.setValue(file);
         this.control?.markAsTouched();
         this.control?.setErrors(null);
+        this.errorMessage = '';
       })
       .catch(err =>{
+        this.errorMessage = 'Error processing image. Try again.';
         this.control?.setErrors({ processingError: true });
       })
     }
@@ -71,8 +73,11 @@ export class ProfileUploadComponent {
   cancelCrop(): void {
     this.imageChangedEvent = null;
     this.croppedImagePreview = '';
-      this.control?.reset();
-
+    this.croppedImage = '';
+    this.errorMessage = 'Profile picture is required.';
+    this.control?.setValue(null);
+    this.control?.markAsTouched();
+    this.control?.setErrors({ required: true });
   }
 
   private async blobUrlToFile(blobUrl: string, fileName: string): Promise<File> {

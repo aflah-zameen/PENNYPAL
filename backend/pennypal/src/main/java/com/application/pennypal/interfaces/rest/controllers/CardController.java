@@ -8,6 +8,7 @@ import com.application.pennypal.application.dto.output.transaction.TransactionOu
 import com.application.pennypal.application.port.in.card.*;
 import com.application.pennypal.application.port.in.user.GetUser;
 import com.application.pennypal.domain.card.valueObject.CardType;
+import com.application.pennypal.domain.valueObject.TransactionType;
 import com.application.pennypal.domain.valueObject.UserDomainDTO;
 import com.application.pennypal.interfaces.rest.dtos.ApiResponse;
 import com.application.pennypal.interfaces.rest.dtos.card.AddCardRequestDTO;
@@ -28,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/private/user")
@@ -91,13 +93,17 @@ public class CardController {
         List<TransactionOutputModel> outputModels = getCardTransaction.getRecent(cardId,size);
         List<CardTransactionResponseDTO> responseDTOS = outputModels.stream()
                 .map(output -> {
+                    boolean isCredit = output.transactionType() == TransactionType.INCOME
+                            || Objects.equals(output.receiverCardId(), cardId);
                     return new CardTransactionResponseDTO(
                             output.transactionId(),
                             output.title(),
-                            output.category() != null ?output.category().name() : null,
+                            output.category() != null ? output.category().name() : null,
                             output.transactionDate(),
                             output.amount(),
-                            output.transactionType().getValue().toLowerCase());
+                            output.transactionType().getValue().toLowerCase(),
+                            isCredit
+                    );
                 })
                 .toList();
         return ResponseEntity.ok(new ApiResponse<>(true,responseDTOS,"Transaction fetched successfully"));

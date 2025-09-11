@@ -2,6 +2,7 @@ package com.application.pennypal.interfaces.rest.exception.handler;
 
 import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.exception.base.ApplicationValidationException;
+import com.application.pennypal.application.exception.usecase.auth.UserSuspendedApplicationException;
 import com.application.pennypal.domain.shared.exception.base.DomainBusinessException;
 import com.application.pennypal.domain.shared.exception.base.DomainException;
 import com.application.pennypal.domain.shared.exception.base.DomainValidationException;
@@ -77,6 +78,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApplicationBusinessException.class)
     public ResponseEntity<ApiErrorResponse> handleAppBusiness(ApplicationBusinessException ex, HttpServletRequest request) {
         return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.CONFLICT, request,null);
+    }
+
+    @ExceptionHandler(UserSuspendedApplicationException.class)
+    public ResponseEntity<ApiErrorResponse> handleSuspensionException(UserSuspendedApplicationException ex , HttpServletRequest servletRequest){
+        return buildResponse(ex.getErrorCode(),ex.getMessage(),HttpStatus.FORBIDDEN,servletRequest,null);
     }
 
 //    @ExceptionHandler(ApplicationException.class)

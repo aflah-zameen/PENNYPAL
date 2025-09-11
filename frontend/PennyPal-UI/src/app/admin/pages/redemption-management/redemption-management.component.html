@@ -1,0 +1,68 @@
+<div class="min-h-screen bg-gray-50">
+      <!-- Header -->
+      <div class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="py-6">
+            <div class="md:flex md:items-center md:justify-between">
+              <div class="flex-1 min-w-0">
+                <h1 class="text-3xl font-bold text-gray-900">Redemption Request Management</h1>
+                <p class="mt-2 text-sm text-gray-500">Review and process user redemption requests</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Stats Cards -->
+        <app-admin-redemption-stats [stats]="stats"></app-admin-redemption-stats>
+
+        <!-- Filters -->
+        <app-admin-redemption-filters (filterChange)="onFilterChange($event)"></app-admin-redemption-filters>
+
+        <!-- Table -->
+        <app-admin-redemption-table
+          [requests]="requests"
+          [loading]="loading"
+          (approve)="onApproveRequest($event)"
+          (reject)="onRejectRequest($event)"
+        ></app-admin-redemption-table>
+
+        <!-- Pagination -->
+        <app-admin-redemption-pagination
+          [pagination]="pagination"
+          (pageChange)="onPageChange($event)"
+        ></app-admin-redemption-pagination>
+      </div>
+
+      <!-- Rejection Modal -->
+      <app-admin-rejection-modal
+        [isOpen]="showRejectionModal"
+        [isProcessing]="processingRejection"
+        (close)="closeRejectionModal()"
+        (confirm)="confirmRejection($event)"
+      ></app-admin-rejection-modal>
+
+      <!-- Success Toast -->
+      <div
+        *ngIf="showSuccessToast"
+        class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2"
+      >
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        <span>{{ successMessage }}</span>
+      </div>
+
+      <!-- Error Toast -->
+      <div
+        *ngIf="showErrorToast"
+        class="fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2"
+      >
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+    </div>

@@ -20,7 +20,10 @@ public class GetConversationService implements GetConversation {
                         m.getContent(),
                         m.getSentAt(),
                         m.getStatus().getValue(),
-                        m.getSenderId().equals(userA)
+                        m.getSenderId().equals(userA),
+                        m.getReplyToMessageId(),
+                        m.getMediaUrl(),
+                        m.isDeleted()
                 ))
                 .toList();
     }

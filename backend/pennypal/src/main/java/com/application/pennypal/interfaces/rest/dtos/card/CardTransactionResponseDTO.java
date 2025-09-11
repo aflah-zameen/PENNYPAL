@@ -10,6 +10,7 @@ public record CardTransactionResponseDTO(
         String category,
         LocalDate date,
         BigDecimal amount,
-        String type
+        String type,
+        boolean isCredit
 ) {
 }

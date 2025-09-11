@@ -32,6 +32,7 @@ public class TransactionApplicationMapper {
                 transaction.getTransactionId(),
                 transaction.getUserId(),
                 category != null ? CategoryApplicationMapper.toOutput(category) : null,
+                transaction.getPlanId().orElse(null),
                 card != null ?CardApplicationMapper.toOutput(card) : null,
                 transaction.getAmount(),
                 transaction.getType(),
@@ -43,6 +44,7 @@ public class TransactionApplicationMapper {
                 transaction.getRecurringTransactionId().orElse(null),
                 transaction.getTransferFromUserId().orElse(null),
                 transaction.getTransferToUserId().orElse(null),
+                transaction.getReceiverCardId().orElse(null),
                 transaction.getTransactionStatus(),
                 transaction.getCreatedAt()
         );

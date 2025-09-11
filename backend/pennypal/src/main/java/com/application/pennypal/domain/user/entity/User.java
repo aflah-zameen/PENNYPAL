@@ -25,13 +25,14 @@ public class User{
     private Set<Roles> roles;
     private boolean verified;
     private boolean active;
+    private boolean isSuspended;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private String profileURL;
 
     // Private constructor to enforce domain rules
     private User(String userId, String name, String email, String password, String phone,
-                 Set<Roles> roles, boolean active, boolean verified,
+                 Set<Roles> roles, boolean active, boolean verified,boolean isSuspended,
                  LocalDateTime createdAt, LocalDateTime updatedAt, String profileURL) {
 
         validate(name, email, password, phone, roles,profileURL);
@@ -44,6 +45,7 @@ public class User{
         this.roles = Set.copyOf(roles);
         this.active = active;
         this.verified = verified;
+        this.isSuspended = isSuspended;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.profileURL = profileURL;
@@ -62,6 +64,7 @@ public class User{
                 roles,
                 false,
                 false,
+                false,
                 null, /// createdAt set by JPA
                 null,          /// updatedAt set by JPA
                 profileURL
@@ -71,12 +74,12 @@ public class User{
     // Factory method to reconstruct from persistence (e.g. database)
     public static User reconstruct(String userId, String name, String email, String password,
                                    String phone, Set<Roles> roles, boolean active,
-                                   boolean verified, LocalDateTime createdAt, LocalDateTime updatedAt,
+                                   boolean verified,boolean isSuspended, LocalDateTime createdAt, LocalDateTime updatedAt,
                                    String profileURL) {
 
         return new User(
                 userId, name, email, password, phone,
-                roles, active, verified, createdAt, updatedAt, profileURL
+                roles, active, verified,isSuspended, createdAt, updatedAt, profileURL
         );
     }
 
@@ -165,6 +168,17 @@ public class User{
         return this;
     }
 
+    public User markSuspended(){
+        this.isSuspended = true;
+        return this;
+    }
+
+    public User releaseSuspension(){
+        this.isSuspended = false;
+        return this;
+    }
+
+
     // Getters
     public String getUserId() { return userId; }
     public String getName() { return name; }
@@ -173,6 +187,7 @@ public class User{
     public String getPhone() { return phone; }
     public Set<Roles> getRoles() { return Set.copyOf(roles); }
     public boolean isVerified() { return verified; }
+    public boolean isSuspended() { return  isSuspended;}
     public boolean isActive() { return active; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public Optional<LocalDateTime> getUpdatedAt() { return Optional.ofNullable(updatedAt); }

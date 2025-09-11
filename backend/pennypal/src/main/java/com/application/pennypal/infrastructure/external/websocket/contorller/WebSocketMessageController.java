@@ -1,10 +1,13 @@
 package com.application.pennypal.infrastructure.external.websocket.contorller;
 
+import com.application.pennypal.application.dto.input.chat.DeleteMessageCommand;
 import com.application.pennypal.application.dto.input.chat.SendMessageCommand;
 import com.application.pennypal.application.dto.output.chat.ChatMessageOutputModel;
 import com.application.pennypal.application.dto.output.notification.NotificationOutputModel;
+import com.application.pennypal.application.port.in.chat.DeleteMessage;
 import com.application.pennypal.application.port.in.chat.SendPrivateMessage;
 import com.application.pennypal.application.port.out.repository.NotificationRepositoryPort;
+import com.application.pennypal.application.port.out.service.FileUploadPort;
 import com.application.pennypal.application.port.out.service.MessageBrokerPort;
 import com.application.pennypal.domain.notification.Notification;
 import com.application.pennypal.domain.notification.NotificationType;
@@ -23,7 +26,7 @@ public class WebSocketMessageController {
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageBrokerPort messageBrokerPort;
     private final NotificationRepositoryPort notificationRepositoryPort;
-
+    private final DeleteMessage deleteMessage;
     /// Client sends to /app/chat.send
     @MessageMapping("/chat.send")
     public void send(SendMessageCommand cmd,Principal principal){
@@ -49,7 +52,10 @@ public class WebSocketMessageController {
                 outputModel.content(),
                 outputModel.sentAt(),
                 outputModel.status(),
-                true
+                true,
+                outputModel.replyToMessageId(),
+                outputModel.mediaUrl(),
+                outputModel.deleted()
         );
         /// Optionally echo back to sender (to update their UI immediately)
         messagingTemplate.convertAndSendToUser(
@@ -72,5 +78,18 @@ public class WebSocketMessageController {
         messageBrokerPort.notifyPrivateUser(notification, cmd.receiverId());
 
     }
+
+
+    @MessageMapping("/chat.delete")
+    public void deleteMessage(DeleteMessageCommand cmd, Principal principal) {
+        String userId = principal.getName();
+        ChatMessageOutputModel deletedMessage = deleteMessage.execute(userId, cmd.messageId());
+
+        // Notify both sender & receiver
+        messagingTemplate.convertAndSendToUser(deletedMessage.senderId(), "/queue/messages", deletedMessage);
+        messagingTemplate.convertAndSendToUser(deletedMessage.receiverId(), "/queue/messages", deletedMessage);
+    }
+
+
 
 }

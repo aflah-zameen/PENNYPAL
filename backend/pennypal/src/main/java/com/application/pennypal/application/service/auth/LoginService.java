@@ -1,6 +1,8 @@
 package com.application.pennypal.application.service.auth;
 
 import com.application.pennypal.application.dto.output.auth.LoginResponseOutput;
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
+import com.application.pennypal.application.exception.usecase.auth.UserSuspendedApplicationException;
 import com.application.pennypal.application.exception.usecase.user.UserNotFoundApplicationException;
 import com.application.pennypal.application.port.out.service.TokenServicePort;
 import com.application.pennypal.application.port.out.service.UserAuthenticationPort;
@@ -30,6 +32,10 @@ public class LoginService implements LoginUser {
         userAuthenticationPort.authenticate(email,password);
         User user = userRepositoryPort.findByEmail(email)
                 .orElseThrow(()->new UserNotFoundApplicationException("User not found"));
+
+        if(user.isSuspended()){
+            throw new UserSuspendedApplicationException("User account has been suspended");
+        }
 
         /// Generate tokens
         String accessToken =  tokenServicePort.generateAccessToken(user);

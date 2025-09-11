@@ -2,6 +2,7 @@ package com.application.pennypal.interfaces.rest.dtos.auth;
 
 import com.application.pennypal.domain.user.valueObject.Roles;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ public record UserResponseDTO(String id,
                               String email,
                               Set<Roles> roles,
                               String phone,
+                              BigDecimal coinBalance,
                               boolean active,
                               boolean verified,
                               LocalDateTime created,

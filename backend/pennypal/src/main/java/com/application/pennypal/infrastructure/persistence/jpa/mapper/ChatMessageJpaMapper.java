@@ -11,7 +11,9 @@ public class ChatMessageJpaMapper {
                 chatMessage.getReceiverId(),
                 chatMessage.getContent(),
                 chatMessage.getSentAt(),
-                chatMessage.getStatus()
+                chatMessage.getStatus(),
+                chatMessage.getReplyToMessageId(),
+                chatMessage.getMediaUrl()
         );
     }
 
@@ -22,7 +24,10 @@ public class ChatMessageJpaMapper {
                 chatMessageEntity.getReceiverId(),
                 chatMessageEntity.getContent(),
                 chatMessageEntity.getSentAt(),
-                chatMessageEntity.getStatus()
+                chatMessageEntity.getStatus(),
+                chatMessageEntity.getReplyToMessageId(),
+                chatMessageEntity.getMediaUrl(),
+                chatMessageEntity.isDeleted()
         );
     }
 }

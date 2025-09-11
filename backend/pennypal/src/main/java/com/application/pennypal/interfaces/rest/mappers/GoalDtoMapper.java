@@ -29,7 +29,7 @@ public class GoalDtoMapper {
                 goalResponseOutput.createdAt(),
                 goalResponseOutput.updatedAt(),
                 goalResponseOutput.contributions().stream()
-                        .map(contribution -> new GoalContributionResponseDTO(contribution.contributionId(),contribution.amount(),contribution.date(),contribution.notes()))
+                        .map(contribution -> new GoalContributionResponseDTO(contribution.contributionId(),contribution.amount(),contribution.date(),contribution.notes(),contribution.coins()))
                         .toList()
         );
     }

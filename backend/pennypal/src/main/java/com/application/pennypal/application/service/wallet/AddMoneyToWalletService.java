@@ -41,6 +41,7 @@ public class AddMoneyToWalletService implements AddMoneyToWallet {
                 wallet.getUserId(),
                 null,
                 inputModel.cardId(),
+                null,
                 inputModel.amount(),
                 TransactionType.WALLET,
                 "WALLET TRANSFER",
@@ -50,6 +51,7 @@ public class AddMoneyToWalletService implements AddMoneyToWallet {
                 false,
                 null,
                 wallet.getUserId(),
+                null,
                 null
         );
 

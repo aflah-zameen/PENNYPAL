@@ -137,7 +137,7 @@ public class Card {
             throw new NegativeAmountNotAllowedExceptionDomain();
         }
 
-        if(amount.compareTo(BigDecimal.ZERO) == 0){
+        if(this.balanceAmount.compareTo(amount) < 0){
             throw new DomainBusinessException("Insufficient balance", DomainErrorCode.INSUFFICIENT_BALANCE);
         }
 

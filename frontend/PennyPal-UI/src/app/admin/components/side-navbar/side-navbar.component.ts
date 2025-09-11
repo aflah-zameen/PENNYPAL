@@ -5,13 +5,14 @@ import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from '../../models/side-navbar.model';
 import { UserProfileComponent } from "../../../admin/components/user-profile/user-profile.component";
-import { filter, Subscription } from 'rxjs';
+import { filter, Observable, Subscription } from 'rxjs';
 import { AdminUser } from '../../models/admin.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from '../../../public/auth/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { User } from '../../../models/User';
 
 @Component({
   selector: 'app-side-navbar',
@@ -23,7 +24,7 @@ export class SideNavbarComponent {
    @Input() activeRoute = ""
 
   navigationTitle = "Admin Dashboard"
-  currentUser: AdminUser | null = null
+  currentUser$: Observable<User|null> 
   isLogoutModalOpen = false
 
   private subscription = new Subscription()
@@ -31,62 +32,70 @@ export class SideNavbarComponent {
   menuItems: MenuItem[] = [
     {
       text: "Dashboard",
-      icon: "dashboard",
+      icon: "",
       route: "/admin/dashboard",
       isActive: false,
     },
     {
       text: "Manage Accounts",
-      icon: "users",
+      icon: "",
       route: "/admin/user-management",
       badge: "12",
     },
     {
       text: "Transaction Management",
-      icon: "credit-card",
+      icon: "",
       route: "/admin/transaction-management/",
     },
     {
       text: "Lending & Borrowing",
-      icon: "trending-up",
-      route: "/admin/lending",
+      icon: "",
+      route: "/admin/lending-management",
+    },{
+      text : "Subscription Management",
+      icon : "",
+      route : "/admin/subscription-management"
     },
     {
-      text: "Referral & Rewards",
-      icon: "gift",
-      route: "/admin/referrals",
-      badge: "New",
+      text: "Reward Management",
+      icon: "",
+      route: "/admin/reward-management",
+    },
+     {
+      text: "Redemption Management",
+      icon: "",
+      route: "/admin/redemption-management",
     },
     {
       text: "Category Management",
-      icon: "folder",
+      icon: "",
       route: "/admin/category-management",
     },
-    {
-      text: "Reports & Analytics",
-      icon: "chart-bar",
-      route: "/admin/reports",
-      subItems: [
-        { text: "Financial Reports", icon: "document-report", route: "/admin/reports/financial" },
-        { text: "User Analytics", icon: "chart-pie", route: "/admin/reports/users" },
-      ],
-    },
-    {
-      text: "Settings",
-      icon: "cog",
-      route: "/admin/settings",
-      subItems: [
-        { text: "System Settings", icon: "adjustments", route: "/admin/settings/system" },
-        { text: "Security", icon: "shield-check", route: "/admin/settings/security" },
-        { text: "Profile Settings", icon: "key", route: "/admin/settings/profile" },
-        { text: "Notifications", icon: "bell", route: "/admin/settings/notifications" },
-      ],
-    },
-    {
-      text: "Income Dashboard",
-      icon: "trending-up",
-      route: "/admin/income",
-    },
+    // {
+    //   text: "Reports & Analytics",
+    //   icon: "chart-bar",
+    //   route: "/admin/reports",
+    //   subItems: [
+    //     { text: "Financial Reports", icon: "document-report", route: "/admin/reports/financial" },
+    //     { text: "User Analytics", icon: "chart-pie", route: "/admin/reports/users" },
+    //   ],
+    // },
+    // {
+    //   text: "Settings",
+    //   icon: "cog",
+    //   route: "/admin/settings",
+    //   subItems: [
+    //     { text: "System Settings", icon: "adjustments", route: "/admin/settings/system" },
+    //     { text: "Security", icon: "shield-check", route: "/admin/settings/security" },
+    //     { text: "Profile Settings", icon: "key", route: "/admin/settings/profile" },
+    //     { text: "Notifications", icon: "bell", route: "/admin/settings/notifications" },
+    //   ],
+    // },
+    // {
+    //   text: "Income Dashboard",
+    //   icon: "trending-up",
+    //   route: "/admin/income",
+    // },
     {
       text: "Goals Dashboard",
       icon: "target",
@@ -97,17 +106,7 @@ export class SideNavbarComponent {
   constructor(private router: Router,private dialog : MatDialog,private spinner : NgxSpinnerService,
     private authService: AuthService,private toster: ToastrService
   ) {
-    // Mock current user - in real app, get from auth service
-    this.currentUser = {
-      id: "1",
-      name: "John Anderson",
-      email: "john.anderson@company.com",
-      role: "Super Administrator",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-      lastLogin: new Date().toISOString(),
-      status: "online",
-      permissions: ["read", "write", "delete", "admin"],
-    }
+    this.currentUser$ = this.authService.user$
   }
 
   ngOnInit() {

@@ -1,6 +1,5 @@
 package com.application.pennypal.application.service.goal;
 
-import com.application.pennypal.application.dto.output.notification.NotificationOutputModel;
 import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.port.in.goal.GoalWithdrawalApproval;
 import com.application.pennypal.application.port.out.repository.*;
@@ -27,7 +26,6 @@ public class GoalWithdrawalApprovalService implements GoalWithdrawalApproval {
     private final GoalRepositoryPort goalRepositoryPort;
     private final WalletRepositoryPort walletRepositoryPort;
     private final MessageBrokerPort messageBrokerPort;
-    private final NotificationRepositoryPort notificationRepositoryPort;
     private final UserRepositoryPort userRepositoryPort;
     private final TransactionRepositoryPort transactionRepositoryPort;
     @Override
@@ -53,6 +51,7 @@ public class GoalWithdrawalApprovalService implements GoalWithdrawalApproval {
                 wallet.getUserId(),
                 null,
                 null,
+                null,
                 goalWithdraw.getAmount(),
                 TransactionType.WALLET,
                 "GOAL AMOUNT WITHDRAWAL",
@@ -62,6 +61,7 @@ public class GoalWithdrawalApprovalService implements GoalWithdrawalApproval {
                 false,
                 null,
                 wallet.getUserId(),
+                null,
                 null
         );
         transactionRepositoryPort.save(transaction);
@@ -74,7 +74,6 @@ public class GoalWithdrawalApprovalService implements GoalWithdrawalApproval {
                 null,
                 false
         );
-        notificationRepositoryPort.save(notification);
         /// Notify user about the approval
         User user = userRepositoryPort.findByUserId(goal.getUserId())
                 .orElseThrow(() -> new ApplicationBusinessException("User not found","USER_NOT_FOUND"));

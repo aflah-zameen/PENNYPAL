@@ -17,6 +17,7 @@ public class UserJpaMapper {
                 userEntity.getRoles(),
                 userEntity.isActive(),
                 userEntity.isVerified(),
+                userEntity.isSuspended(),
                 userEntity.getCreatedAt(),
                 userEntity.getUpdatedAt(),
                 userEntity.getProfileURL()

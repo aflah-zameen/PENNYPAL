@@ -29,9 +29,9 @@ export class SideNavbarComponent {
     { label: "Income", icon: "trending-up", route: "/user/income-management" },
     { label: "Goals", icon: "target", route: "/user/goal-management" },
     { label: "Spend Activity", icon: "activity", route: "/user/spend-activity" },
-    { label: "Lent money", icon: "hand-coins", route: "/user/lent-money" },
-    { label: "Money to pay", icon: "dollar-sign", route: "/user/money-to-pay" },
-    { label: "Requested Money", icon: "message-square", route: "/user/requested-money" },
+    { label: "Lent money", icon: "hand-coins", route: "/user/lending-management" },
+    { label: "Money to pay", icon: "dollar-sign", route: "/user/borrowing-management" },
+    // { label: "Requested Money", icon: "message-square", route: "/user/requested-money" },
     { label: "Rewards", icon: "gift", route: "/user/rewards" },
   ]
 

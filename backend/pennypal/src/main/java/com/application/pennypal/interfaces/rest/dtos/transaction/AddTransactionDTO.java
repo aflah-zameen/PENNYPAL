@@ -19,6 +19,5 @@ public record AddTransactionDTO(@NotNull(message = "Amount can't be null")
                                 @NotNull(message = "Transaction date cannot be null") String transactionDate,
                                 String description,
                                 String transferToUserId,
-                                String transferFromUserId
-) {
+                                String transferFromUserId) {
 }

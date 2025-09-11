@@ -2,28 +2,30 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AdminProfile } from '../../models/admin.model';
 import { AdminProfileService } from '../../services/admin-profile.service';
-import { SecuritySettingComponent } from "../../components/profile/security-setting/security-setting.component";
 import { ProfileEditModalComponent } from "../../components/profile/profile-edit-modal/profile-edit-modal.component";
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../public/auth/services/auth.service';
+import { User } from '../../../models/User';
+import { Roles } from '../../../models/Roles';
 
 @Component({
   selector: 'app-admin-profile',
-  imports: [SecuritySettingComponent, ProfileEditModalComponent,CommonModule],
+  imports: [ ProfileEditModalComponent,CommonModule],
   templateUrl: './admin-profile.component.html',
   styleUrl: './admin-profile.component.css'
 })
 export class AdminProfileComponent {
-   profile$!: Observable<AdminProfile | null>
-  currentProfile: AdminProfile | null = null
+  currentProfile$!: Observable<User| null>
   isEditModalOpen = false
 
-  constructor(public adminProfileService: AdminProfileService) {}
+  constructor(public adminProfileService: AdminProfileService,public authService :AuthService) {
+    this.currentProfile$ = this.authService.user$
+  }
 
   ngOnInit() {
-    this.profile$ = this.adminProfileService.profile$
-    this.profile$.subscribe((profile) => {
-      this.currentProfile = profile
-    })
+    // this.profile$.subscribe((profile) => {
+    //   this.currentProfile = profile
+    // })
   }
 
   openEditModal() {
@@ -34,37 +36,16 @@ export class AdminProfileComponent {
     this.isEditModalOpen = false
   }
 
-  onProfileUpdated(updatedProfile: AdminProfile) {
-    this.currentProfile = updatedProfile
-    // In a real app, you would update the service state here
+  onProfileUpdated(updatedProfile: User) {
+    this.authService.updateUser(updatedProfile);
   }
 
-  updateTheme(event: Event) {
-    const target = event.target as HTMLSelectElement
-    const theme = target.value as "light" | "dark" | "system"
-
-    this.adminProfileService
-      .updatePreferences({
-        theme,
-      })
-      .subscribe()
-  }
-
-  updateNotificationPreference(type: "email" | "push" | "sms", event: Event) {
-    const target = event.target as HTMLInputElement
-    const currentNotifications = this.currentProfile?.preferences.notifications || {
-      email: false,
-      push: false,
-      sms: false,
+  getRoles(roles: Set<Roles>): string {
+    if (!roles || roles.size === 0) {
+      return 'No roles assigned';
     }
-
-    this.adminProfileService
-      .updatePreferences({
-        notifications: {
-          ...currentNotifications,
-          [type]: target.checked,
-        },
-      })
-      .subscribe()
+  
+    return Array.from(roles).join(', ');
   }
+
 }

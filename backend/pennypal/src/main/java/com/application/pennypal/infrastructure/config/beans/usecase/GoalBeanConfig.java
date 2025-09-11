@@ -2,6 +2,7 @@ package com.application.pennypal.infrastructure.config.beans.usecase;
 
 import com.application.pennypal.application.mappers.goal.GoalApplicationMapper;
 import com.application.pennypal.application.mappers.goal.GoalContributionApplicationMapper;
+import com.application.pennypal.application.port.in.coin.CoinReward;
 import com.application.pennypal.application.port.out.service.MessageBrokerPort;
 import com.application.pennypal.application.port.out.repository.*;
 import com.application.pennypal.application.port.in.goal.*;
@@ -23,8 +24,10 @@ public class GoalBeanConfig {
         );
     }
     @Bean
-    public GoalApplicationMapper goalApplicationMapper(CategoryManagementRepositoryPort categoryManagementRepositoryPort,GoalContributionApplicationMapper goalContributionApplicationMapper){
-        return new GoalApplicationMapper(categoryManagementRepositoryPort,goalContributionApplicationMapper);
+    public GoalApplicationMapper goalApplicationMapper(CategoryManagementRepositoryPort categoryManagementRepositoryPort,
+                                                       GoalContributionApplicationMapper goalContributionApplicationMapper,
+                                                       UserCoinAccountRepositoryPort userCoinAccountRepositoryPort){
+        return new GoalApplicationMapper(categoryManagementRepositoryPort,goalContributionApplicationMapper,userCoinAccountRepositoryPort);
     }
 
     @Bean
@@ -37,8 +40,9 @@ public class GoalBeanConfig {
                                            TransactionRepositoryPort transactionRepositoryPort,
                                            GoalContributionRepositoryPort goalContributionRepositoryPort,
                                            GoalContributionApplicationMapper goalContributionApplicationMapper,
-                                           CardRepositoryPort cardRepositoryPort){
-        return new AddContributionService(goalRepositoryPort,transactionRepositoryPort,goalContributionRepositoryPort,goalContributionApplicationMapper,cardRepositoryPort);
+                                           CardRepositoryPort cardRepositoryPort,
+                                           CoinReward coinReward){
+        return new AddContributionService(goalRepositoryPort,transactionRepositoryPort,goalContributionRepositoryPort,goalContributionApplicationMapper,cardRepositoryPort,coinReward);
     }
     @Bean
     public EditGoal editGoal(GoalRepositoryPort goalRepositoryPort, GoalApplicationMapper goalApplicationMapper){

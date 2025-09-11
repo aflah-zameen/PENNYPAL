@@ -6,9 +6,8 @@ import lombok.Getter;
 public enum LendingRequestStatus {
     PENDING("PENDING"),
     ACCEPTED("ACCEPTED"),
-    REJECTED("REJECTED"),
-    MODIFIED("MODIFIED"),
-    TRANSFERRED("TRANSFERRED");
+    CANCELLED("CANCELLED"),
+    REJECTED("REJECTED");
 
     private final String value;
     LendingRequestStatus(String value){

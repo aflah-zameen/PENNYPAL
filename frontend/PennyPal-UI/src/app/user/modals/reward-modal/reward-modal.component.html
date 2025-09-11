@@ -1,0 +1,33 @@
+<app-modal-overlay (close)="close.emit()" [isOpen]="isModalOpen">
+    <div 
+      class="p-8 text-center bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 group"
+    >
+      <div class="p-3 inline-block bg-green-100 rounded-full mb-6">
+        <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <h2 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-green-800 mb-2">
+        Congratulations!
+      </h2>
+      <p class="text-lg text-gray-700 font-medium mb-4">
+        You've earned a reward.
+      </p>
+      <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 mb-6">
+        <p class="text-xl text-gray-500 font-medium mb-2">Rewarded Coins</p>
+        <p class="text-5xl font-bold text-gray-900 animate-pulse">
+          {{ coins }}
+        </p>
+      </div>
+      <p class="text-sm text-gray-500 mb-8">
+        These coins will be automatically added to your wallet and can be redeemed for real money.
+      </p>
+      <button
+        (click)="onOkay()"
+        class="w-full sm:w-auto px-8 py-4 text-white font-bold rounded-xl shadow-lg transition-all duration-300
+               bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transform active:scale-95"
+      >
+        Okay
+      </button>
+    </div>
+</app-modal-overlay>

@@ -20,6 +20,8 @@ public class LendingRequestEntity {
     @Column(nullable = false,updatable = false,unique = true)
     private String requestId;
 
+
+
     @Column(nullable = false)
     private String requestedBy;
 
@@ -39,6 +41,9 @@ public class LendingRequestEntity {
     @Setter
     @Column(nullable = false)
     private LendingRequestStatus status;
+
+    @OneToOne(mappedBy = "lendingRequest", cascade = CascadeType.ALL)
+    private LoanEntity loan;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

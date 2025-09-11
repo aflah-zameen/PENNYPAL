@@ -1,4 +1,4 @@
-package com.application.pennypal.infrastructure.adapter.out.lend;
+package com.application.pennypal.infrastructure.adapter.out.lent;
 
 import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.port.out.repository.LendingRequestRepositoryPort;

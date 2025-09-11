@@ -1,4 +1,4 @@
-package com.application.pennypal.interfaces.rest.dtos.lend;
+package com.application.pennypal.interfaces.rest.dtos.lent;
 
 import java.time.LocalDateTime;
 

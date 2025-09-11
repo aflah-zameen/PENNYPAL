@@ -1,0 +1,105 @@
+<div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-purple-800 bg-clip-text text-transparent">
+      Lending Requests Received
+    </h3>
+    <div class="p-3 bg-gradient-to-r from-purple-100 to-blue-100 rounded-2xl">
+      <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8V4a1 1 0 00-1-1H6a1 1 0 00-1 1v1m16 0H4"></path>
+      </svg>
+    </div>
+  </div>
+
+  <div *ngIf="requestsReceived$ | async as requests" class="max-h-[500px] overflow-y-auto space-y-4">
+    <div *ngIf="requests.length === 0" class="text-center py-12">
+      <div class="p-4 bg-gray-100 rounded-2xl inline-block mb-4">
+        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <p class="text-gray-500 text-lg font-medium">No lending requests received</p>
+      <p class="text-gray-400 text-sm">Incoming requests will appear here</p>
+    </div>
+
+    <div *ngFor="let request of requests" 
+         class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 border border-purple-200 hover:shadow-lg transition-all duration-300 group">
+      <div class="flex items-start justify-between">
+        <div class="flex-1">
+          <div class="flex items-center space-x-3 mb-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+              {{ request.senderName.charAt(0) }}
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900">{{ request.senderName }}</h4>
+              <p class="text-sm text-gray-500">{{ lendingService.formatDate(request.requestDate) }}</p>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <p class="text-sm text-gray-500">Amount Requested</p>
+              <p class="text-lg font-bold text-gray-900">{{ lendingService.formatCurrency(request.amount) }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Requested Deadline</p>
+              <p class="text-sm font-medium text-gray-700">{{ lendingService.formatDate(request.repaymentDeadline) }}</p>
+            </div>
+          </div>
+
+          <div *ngIf="request.message" class="mb-4">
+            <p class="text-sm text-gray-500">Message</p>
+            <p class="text-sm text-gray-700 bg-white p-3 rounded-lg border">{{ request.message }}</p>
+          </div>
+        </div>
+
+        <div class="ml-6 flex flex-col items-end space-y-3">
+          <span [ngClass]="{
+            'bg-yellow-100 text-yellow-800': request.status === 'PENDING',
+            'bg-green-100 text-green-800': request.status === 'ACCEPTED',
+            'bg-red-100 text-red-800': request.status === 'REJECTED'
+          }" class="px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wide">
+            {{ request.status }}
+          </span>
+
+          <div *ngIf="request.status === 'PENDING'" class="flex space-x-2">
+            <button (click)="approveRequest(request)"
+                    [disabled]="loading$ | async"
+                    class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span *ngIf="!(loading$ | async)">Approve</span>
+              <span *ngIf="loading$ | async" class="flex items-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processing...
+              </span>
+            </button>
+            
+            <button (click)="rejectRequest(request.id)"
+                    [disabled]="loading$ | async"
+                    class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+              Reject
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-send-lent-money
+[isOpen]="isAddMoneyModalOpen"
+[paymentMethods]="paymentMethods"
+(continue)="onAmountConfirmed($event)"
+(close)="closeAddMoneyModal()"
+[fixedAmount]="amount"
+></app-send-lent-money>
+
+<app-pin-confirmation-modal 
+  [isOpen]="isPinConfirmationOpen"
+  [amount]="amount"
+  [paymentMethod]="selectedPaymentMethod"
+  (close)="isPinConfirmationOpen=false"
+  (confirm)="onPinConfirmed($event)"
+>
+</app-pin-confirmation-modal>

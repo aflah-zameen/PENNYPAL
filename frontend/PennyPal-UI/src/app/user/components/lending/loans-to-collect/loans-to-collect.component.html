@@ -1,0 +1,155 @@
+<div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-2xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-green-800 bg-clip-text text-transparent">
+      Loans to Collect
+    </h3>
+    <div class="p-3 bg-gradient-to-r from-green-100 to-emerald-100 rounded-2xl">
+      <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Loan List -->
+  <div *ngIf="loansToCollect$ | async as loans" class="space-y-6 max-h-[500px] overflow-y-auto">
+    
+    <!-- Empty State -->
+    <div *ngIf="loans.length === 0" class="text-center py-12">
+      <div class="p-4 bg-gray-100 rounded-2xl inline-block mb-4">
+        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
+          </path>
+        </svg>
+      </div>
+      <p class="text-gray-500 text-lg font-medium">No loans to collect</p>
+      <p class="text-gray-400 text-sm">Your lent loans will appear here</p>
+    </div>
+
+    <!-- Loan Card -->
+    <div *ngFor="let loan of loans"
+         [ngClass]="{
+           'bg-gradient-to-r from-red-50 to-pink-50 border-red-200': loan.isOverdue,
+           'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200': !loan.isOverdue
+         }"
+         class="rounded-2xl p-6 border hover:shadow-lg transition-all duration-300 space-y-6">
+
+      <!-- Overdue Banner -->
+      <div *ngIf="loan.isOverdue" class="bg-red-100 border border-red-200 rounded-lg p-3 flex items-center space-x-2">
+        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
+          </path>
+        </svg>
+        <span class="text-red-700 font-medium text-sm">
+          OVERDUE: {{ loan.daysPastDue }} days past due
+        </span>
+      </div>
+
+      <!-- Borrower Info -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
+          {{ loan.borrowerName.charAt(0) }}
+        </div>
+        <div>
+          <h4 class="font-semibold text-gray-900">{{ loan.borrowerName }}</h4>
+          <p class="text-sm text-gray-500">Borrowed on {{ lendingService.formatDate(loan.loanDate) }}</p>
+        </div>
+      </div>
+
+      <!-- Loan Details Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <p class="text-sm text-gray-500">Original Amount</p>
+          <p class="text-lg font-bold text-gray-900">{{ lendingService.formatCurrency(loan.amount) }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">Amount Paid</p>
+          <p class="text-sm font-medium text-green-600">{{ lendingService.formatCurrency(loan.amountPaid) }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">Remaining</p>
+          <p class="text-sm font-medium text-red-600">{{ lendingService.formatCurrency(loan.remainingAmount) }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">Due Date</p>
+          <p [ngClass]="{
+            'text-red-600 font-semibold': loan.isOverdue,
+            'text-gray-700': !loan.isOverdue
+          }" class="text-sm font-medium">
+            {{ lendingService.formatDate(loan.repaymentDeadline) }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div>
+        <div class="flex justify-between text-sm text-gray-600 mb-1">
+          <span>Repayment Progress</span>
+          <span>{{ ((loan.amountPaid / loan.amount) * 100).toFixed(1) }}%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div class="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full transition-all duration-300"
+               [style.width.%]="(loan.amountPaid / loan.amount) * 100"></div>
+        </div>
+      </div>
+
+      <!-- Status Badge -->
+      <div>
+        <span [ngClass]="{
+          'bg-green-100 text-green-800': loan.repaymentStatus === 'paid',
+          'bg-blue-100 text-blue-800': loan.repaymentStatus === 'active',
+          'bg-red-100 text-red-800': loan.repaymentStatus === 'overdue',
+          'bg-yellow-100 text-yellow-800': loan.repaymentStatus === 'partial'
+        }" class="px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wide inline-block">
+          {{ loan.repaymentStatus }}
+        </span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div *ngIf="loan.repaymentStatus !== 'paid'" class="space-y-2">
+        <button (click)="sendReminder(loan.id)"
+        [disabled]="(loading$ | async) || isReminderCooldownActive(loan)"
+        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+          <ng-container *ngIf="!isReminderCooldownActive(loan)">
+            <span *ngIf="!(loading$ | async)">Send Reminder</span>
+            <span *ngIf="loading$ | async">Sending...</span>
+          </ng-container>
+          <ng-container *ngIf="isReminderCooldownActive(loan)">
+            <span>Reminder Sent</span>
+          </ng-container>
+        </button>
+
+        <!-- Cooldown Message -->
+        <div *ngIf="isReminderCooldownActive(loan)" class="text-xs text-gray-500 mt-1">
+          You can send another reminder after: <span class="font-medium text-gray-700">{{ getNextReminderTime(loan) }}</span>
+        </div>
+
+
+        <button *ngIf="loan.isOverdue"
+                (click)="openFileCaseModal(loan)"
+                [disabled]="loading$ | async"
+                class="w-full sm:w-64 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span *ngIf="!(loading$ | async)">File Case</span>
+              <span *ngIf="loading$ | async" class="flex items-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Filing...
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <app-file-case-modal
+    [isOpen]="isFileCaseModalOpen"
+    [loan]="selectedLoan!"
+    (close)="isFileCaseModalOpen = false"
+    (caseSubmitted)="fileCase($event)"
+  >
+  </app-file-case-modal>

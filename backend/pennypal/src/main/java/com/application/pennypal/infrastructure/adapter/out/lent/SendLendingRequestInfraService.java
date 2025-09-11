@@ -1,4 +1,4 @@
-package com.application.pennypal.infrastructure.adapter.out.lend;
+package com.application.pennypal.infrastructure.adapter.out.lent;
 
 import com.application.pennypal.application.dto.input.lend.LendRequestInputModel;
 import com.application.pennypal.application.dto.output.lend.LendingRequestOutputModel;

@@ -20,10 +20,11 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 import { environment } from '../../../../environments/environment';
 import { PaymentMethod } from '../../models/transaction.model';
 import { UserCardService } from '../../services/user-card.service';
+import { RewardModalComponent } from "../../modals/reward-modal/reward-modal.component";
 
 @Component({
   selector: 'app-goal-management',
-  imports: [ StatsCardComponent, SectionHeaderComponent, GoalCardComponent, CommonModule, AddGoalModalComponent, EditGoalModalComponent],
+  imports: [StatsCardComponent, SectionHeaderComponent, GoalCardComponent, CommonModule, AddGoalModalComponent, EditGoalModalComponent, RewardModalComponent],
   templateUrl: './goal-management.component.html',
   styleUrl: './goal-management.component.css'
 })
@@ -40,6 +41,9 @@ stats: GoalStats = {
     totalSaved: 0.00,
     completedGoals: 0
   };
+
+  rewardCoins : number = 0;
+  isRewardModalOpen : boolean = false;
 
   goalEditTimeInMin:number = environment.goalEditTimeInMin;
 
@@ -363,8 +367,12 @@ stats: GoalStats = {
   addContribution(contribution : ContributionFormData){ 
       this.spinner.show();
       this.goalService.addContribution(contribution).subscribe({
-        next:()=>{
+        next:(coins)=>{
           this.spinner.hide();
+          if(coins){
+            this.rewardCoins = coins
+            this.isRewardModalOpen = true;
+          }
           this.toastr.success("Contribution added successfully");
         }
         ,

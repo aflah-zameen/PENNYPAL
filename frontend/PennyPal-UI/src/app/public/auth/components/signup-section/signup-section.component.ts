@@ -48,7 +48,8 @@ export class SignupSectionComponent {
 
 onProfileSelected(file: File) {
   this.accountForm.patchValue({ profilePicture: file });
-   }
+  this.getFormControl('profilePicture').markAsTouched(); 
+}
 
 
   passwordMatchValidator(form: FormGroup) {
@@ -78,7 +79,8 @@ onProfileSelected(file: File) {
 
   onSubmit() {
   if (this.accountForm.invalid) {
-    this.toastr.error('Please fill out the form.', 'Form Error');
+    this.accountForm.markAllAsTouched();
+    this.toastr.error('Please fill out all required fields correctly.', 'Form Error');
     return;
   }
 
@@ -86,18 +88,16 @@ onProfileSelected(file: File) {
 
   this.spinner.show();
   this.authService.signup(signupRequest).subscribe({
-    next: (response:{
-        id: string;
-        email: string;
-        expiry: string;
-    }) => {
+    next: (response) => {
       this.spinner.hide();
       this.toastr.success('Registration completed', 'Success');
-      if(response?.expiry != null)
+      if (response?.expiry != null){
         this.authService.otpTimerSubject.next(new Date(response.expiry));
+        console.log('OTP expiry set to:', new Date(response.expiry));
+      }
       this.router.navigate(['/otp-section'], {
-            queryParams: { email: signupRequest.email, context: 'register' }
-          });
+        queryParams: { email: signupRequest.email, context: 'register' }
+      });
     },
     error: (err) => {
       this.spinner.hide();
@@ -105,6 +105,7 @@ onProfileSelected(file: File) {
     }
   });
 }
+
 
 
 }

@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend/pennypal
+    container_name: pennypal-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./backend/pennypal/.env
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend/PennyPal-UI
+    container_name: pennypal-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:15
+    container_name: pennypal-db
+    environment:
+      POSTGRES_DB: pennypal
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: pennypal-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  pgdata:

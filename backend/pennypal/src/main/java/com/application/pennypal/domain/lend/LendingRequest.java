@@ -1,5 +1,7 @@
 package com.application.pennypal.domain.lend;
 
+import com.application.pennypal.domain.shared.exception.DomainErrorCode;
+import com.application.pennypal.domain.shared.exception.base.DomainBusinessException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +23,7 @@ public class LendingRequest {
     private LendingRequestStatus status;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
+    private Loan loan;
 
     /// factory method to create
     public static LendingRequest create(
@@ -41,6 +44,7 @@ public class LendingRequest {
                 acceptedDeadline,
                 LendingRequestStatus.PENDING,
                 null,
+                null,
                 null
         );
     }
@@ -56,7 +60,8 @@ public class LendingRequest {
             LocalDateTime acceptedDeadline,
             LendingRequestStatus status,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            Loan loan
     ){
         return new LendingRequest(
                 requestId,
@@ -68,13 +73,25 @@ public class LendingRequest {
                 acceptedDeadline,
                 status,
                 createdAt,
-                updatedAt
+                updatedAt,
+                loan
         );
     }
 
     /// Business Methods
-    public LendingRequest updateStatus(LendingRequestStatus status){
-        this.status = status;
+    public LendingRequest acceptRequest(LocalDateTime deadline){
+        if(this.status != LendingRequestStatus.PENDING)
+            throw new DomainBusinessException("Only pending requests can be accepted", DomainErrorCode.ILLEGAL_STATE);
+        this.acceptedDeadline = deadline;
+        this.status = LendingRequestStatus.ACCEPTED;
+        this.loan = Loan.createFrom(this);
+        return this;
+    }
+
+    public LendingRequest rejectRequest(){
+        if(this.status != LendingRequestStatus.PENDING)
+            throw new DomainBusinessException("Only pending requests can be rejected", DomainErrorCode.ILLEGAL_STATE);
+        this.status = LendingRequestStatus.REJECTED;
         return this;
     }
 
@@ -82,4 +99,12 @@ public class LendingRequest {
         this.acceptedDeadline= acceptedDeadline;
         return this;
     }
+
+    public LendingRequest cancelRequest(){
+        if(this.status != LendingRequestStatus.PENDING)
+            throw new DomainBusinessException("Only pending requests can be rejected", DomainErrorCode.ILLEGAL_STATE);
+        this.status = LendingRequestStatus.CANCELLED;
+        return this;
+    }
+
 }

@@ -24,6 +24,7 @@ export interface Transaction {
   date: string
   amount: number
   type: "income" | "expense" | "transfer"
+  isCredit : boolean
 }
 
 const gradientPresets = [

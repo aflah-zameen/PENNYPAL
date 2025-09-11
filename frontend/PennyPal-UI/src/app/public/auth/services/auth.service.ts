@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from "rxjs";
 import { environment } from "../../../../environments/environment";
-import { LoginRequest, LoginResponse, SignupRequest, SignupResponse } from "../models/auth.model";
+import { LoginRequest, SignupRequest } from "../models/auth.model";
 import { Router } from "@angular/router";
 import { User } from "../../../models/User";
 import { Roles } from "../../../models/Roles";
@@ -10,8 +10,6 @@ import { UserResponse } from "../../../models/UserResponse";
 import { UserMapper } from "../../../mapper/UserMapper";
 import { ApiResponse } from "../../../models/ApiResponse";
 import { PresenceService } from "../../../user/services/websocket/presence-service";
-import { NotificationService } from "../../../external-service/notification.service";
-import { WebsocketService } from "../../../external-service/websocket.service";
 
 
 
@@ -19,141 +17,7 @@ import { WebsocketService } from "../../../external-service/websocket.service";
     providedIn : 'root'
 })
 export class AuthService{
-  //   private apiURL = `${environment.apiBaseUrl}/api`;
-  //   private userSubject = new BehaviorSubject<any>(null);
-  //   user$ = this.userSubject.asObservable();
-
-  //   constructor(private http : HttpClient,private router : Router,private toastr  : ToastrService){}
-
-  //   sendOtp(email : string){
-  //       return this.http.post(`${this.apiURL}/auth/sent-otp`,null,{params : {
-  //           "email" : email
-  //       }})
-  //   }
-
-  //   signup(user : SignupRequest):Observable<any>{
-  //       user.role = "USER";
-  //       return this.http.post<any>(`${this.apiURL}/auth/signup`,user)
-  //           .pipe(
-  //               catchError(this.handleError)
-  //           )
-  //   }
-
-  //   login(credentials : LoginRequest){
-  //       this.http.post<LoginResponse>(`${this.apiURL}/auth/login`,credentials,{withCredentials : true}).pipe(
-  //           catchError(this.handleError)
-  //       ).subscribe({
-  //     next: (response: any) => {
-  //       console.log(response);
-  //       this.userSubject.next(response.data);
-  //       this.toastr.success(response.message || 'Login successful', 'Success');
-  //       this.router.navigate(['/home']);
-  //     },
-  //     error: (err) => {
-  //       this.toastr.error(err.message || 'Login failed. Please try again.', 'Error');
-  //     },
-  //   });
-  //   }
-
-  //   adminLogin(credentials : LoginRequest):Observable<LoginResponse>{
-  //       return this.http.post<LoginResponse>(`${this.apiURL}/auth/admin-login`,credentials,{withCredentials:true}).pipe(
-  //           catchError(this.handleError)
-  //       )
-  //   }
-
-  //   updatePassword(password : string,email : string){
-  //       return this.http.patch(`${this.apiURL}/auth/update-password`,null,{params : {password : password,email :email }}).pipe(
-  //           catchError(this.handleError)
-  //       );
-  //   }
-
-  //   verifyOtp(otpData : {email : string , otp :string}, isPasswordReset : boolean,email:string): Observable<any> {
-  //   return this.http
-  //     .post<any>(`${this.apiURL}/auth/verify-otp`, otpData)
-  //     .pipe(
-  //       tap(()=>{
-  //           if (!isPasswordReset) {
-  //           this.loadUserFromToken();
-  //           this.router.navigate(['/login']);
-  //           this.toastr.info("Registration successful. Please login with your credentials");
-  //         } else {
-  //           this.router.navigate(['/set-new-password'], { queryParams: { email } });
-  //         }
-  //       }),
-  //       catchError(this.handleError
-
-  //       ));
-  // }
-
-  // refreshToken(): Observable<any> {
-  //   return this.http
-  //     .post(`${this.apiURL}/auth/refresh-token`, {}, { withCredentials: true })
-  //     .pipe(
-  //       tap(() => this.loadUserFromToken()),
-  //       catchError((error) => {
-  //         this.logout();
-  //         return throwError(() => error);
-  //       })
-  //     );
-  // }
-
-  // logout(): void {
-  //   this.http
-  //     .post(`${this.apiURL}/auth/logout`, {}, { withCredentials: true })
-  //     .subscribe({
-  //       next: () => {
-  //         this.userSubject.next(null);
-  //         this.router.navigate(['/login']);
-  //       },
-  //       error: () => {
-  //         this.userSubject.next(null);
-  //         this.router.navigate(['/login']);
-  //       }
-  //     });
-  // }
-
-  // isAuthenticated(): Observable<boolean> {
-  //   if(this.userSubject.value)
-  //     return of(true)
-  //   else{
-  //     return this.loadUserFromToken().pipe(
-  //       map(()=> !!this.userSubject.value),
-  //       catchError(()=> of(false))
-  //     );
-  //   }
-  // }
-
-  // hasRole(role: string): boolean {
-  //   const user = this.userSubject.value;
-  //   return user ? user.roles.includes(role.toUpperCase()) : false;
-  // }
-
-  // private loadUserFromToken(): Observable<any> {
-  //   return this.http
-  //     .get<any>(`${this.apiURL}/auth/authenticate`,{withCredentials:true})
-  //     .pipe(
-  //       tap((user) => this.userSubject.next(user)),
-  //       catchError((err) => {
-  //         this.userSubject.next(null);
-  //         return throwError(() => err);
-  //       })
-  //     );
-  // }
-
-  //   private handleError(error : HttpErrorResponse):Observable<never>{
-  //       let errorMessage = 'An unknown error occured!';
-  //       if(error.error instanceof ErrorEvent){
-  //           errorMessage = `Error : ${error.error.message}`;
-  //       }
-  //       else{
-  //           errorMessage = `Error code : ${error.status}\nMessage : ${error.message}`;
-  //           if(error.error && error.error.message){
-  //               errorMessage = error.error.message;
-  //           }
-  //       }
-  //       console.error(errorMessage);
-  //       return throwError(()=>new Error(errorMessage));
-  //   }
+ 
   private apiURL : string;
   private userSubject : BehaviorSubject<User|null>;
   otpTimerSubject : BehaviorSubject<Date | null>;
@@ -169,6 +33,21 @@ export class AuthService{
     this.userSubject = new BehaviorSubject<User|null>(null);
     this.otpTimerSubject = new BehaviorSubject<Date | null>(null);
     this.user$ = this.userSubject.asObservable();
+  }
+
+
+
+  // update user coins
+  updateUserCoins(coins : number){
+    if(!coins) return;
+    const current = this.userSubject.value;
+    if(!current)  return;
+    const updated : User ={
+      ...current,
+      coinBalance : current.coinBalance+coins
+    } 
+    
+    this.userSubject.next(updated);
   }
 
   //check user authentication

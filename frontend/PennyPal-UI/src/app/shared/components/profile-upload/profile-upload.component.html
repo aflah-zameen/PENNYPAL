@@ -59,6 +59,10 @@
     </div>
   </div>
 
+  <div *ngIf="errorMessage" class="text-red-500 text-sm mt-1">
+    {{ errorMessage }}
+  </div>
+
   <div *ngIf="control?.touched && control?.invalid && !errorMessage" class="text-red-500 text-sm mt-1">
   <span *ngIf="control?.errors?.['required']">Profile picture is required.</span>
   <span *ngIf="control?.errors?.['invalidType']">Only image files are allowed.</span>

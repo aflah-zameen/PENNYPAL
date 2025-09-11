@@ -7,15 +7,15 @@
           <div class="relative flex-shrink-0">
             <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm">
               <img 
-                *ngIf="user.avatar; else defaultAvatar"
-                [src]="user.avatar" 
-                [alt]="user.name"
+                *ngIf="user?.profileURL; else defaultAvatar"
+                [src]="user?.profileURL" 
+                [alt]="user?.userName"
                 class="w-full h-full object-cover"
                 (error)="onImageError($event)"
               />
-              <ng-template #defaultAvatar>
+              <ng-template #defaultAvatar >
                 <div class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                  <span class="text-white font-semibold text-sm">{{ getInitials(user.name) }}</span>
+                  <span *ngIf="user" class="text-white font-semibold text-sm">{{ getInitials(user.userName) }}</span>
                 </div>
               </ng-template>
             </div>
@@ -27,9 +27,9 @@
           </div>
           
           <!-- User Details -->
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold text-gray-900 truncate">{{ user.name }}</p>
-            <p class="text-xs text-gray-500 truncate">{{ user.role }}</p>
+          <div class="flex-1 min-w-0" *ngIf="user">
+            <p class="text-sm font-semibold text-gray-900 truncate">{{ user.userName }}</p>
+            <p class="text-xs text-gray-500 truncate">{{ getRoles(user.roles) }}</p>
           </div>
           
           <!-- Dropdown Toggle -->
@@ -47,10 +47,10 @@
         </div>
 
         <!-- Last Login Info -->
-        <div class="text-xs text-gray-500 mb-3">
+        <!-- <div class="text-xs text-gray-500 mb-3">
           <span>Last login: {{ formatLastLogin() }}</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- Dropdown Menu -->
       <div *ngIf="isDropdownOpen" 
@@ -68,7 +68,7 @@
             View Profile
           </button>
           
-          <button
+          <!-- <button
             (click)="onSettingsClick()"
             class="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
           >
@@ -77,9 +77,9 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
             </svg>
             Account Settings
-          </button>
+          </button> -->
 
-          <button
+          <!-- <button
             (click)="onHelpClick()"
             class="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
           >
@@ -88,7 +88,7 @@
             </svg>
             Help & Support
           </button>
-        </div>
+        </div> -->
 
         <!-- Divider -->
         <div class="border-t border-gray-200"></div>

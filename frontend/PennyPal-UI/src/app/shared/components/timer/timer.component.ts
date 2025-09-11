@@ -41,6 +41,10 @@ export class TimerComponent implements OnInit, OnDestroy{
       })
     );
 
+    this.fomrattedTime$.subscribe(formatted => {
+      console.log('Formatted time:', formatted);
+    });
+
   }
 
   ngOnDestroy() {

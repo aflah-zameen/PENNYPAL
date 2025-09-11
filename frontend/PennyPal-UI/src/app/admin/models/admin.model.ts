@@ -72,8 +72,5 @@ export interface AdminStats {
 export interface ProfileUpdateRequest {
   name: string
   phoneNumber?: string
-  location?: string
-  timezone: string
-  language: string
   avatar?: File
 }

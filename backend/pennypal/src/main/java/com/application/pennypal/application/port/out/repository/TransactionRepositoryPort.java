@@ -2,6 +2,8 @@ package com.application.pennypal.application.port.out.repository;
 
 import com.application.pennypal.application.dto.output.card.CardExpenseOverviewOutputModel;
 import com.application.pennypal.application.dto.output.card.CardSpendingOutputModel;
+import com.application.pennypal.application.dto.output.sale.PaymentStatusDTO;
+import com.application.pennypal.application.dto.output.sale.SalesDataOutput;
 import com.application.pennypal.application.dto.output.transaction.*;
 import com.application.pennypal.application.dto.output.wallet.WalletStatsOutputModel;
 import com.application.pennypal.domain.catgeory.entity.Category;
@@ -51,4 +53,14 @@ public interface TransactionRepositoryPort {
     WalletStatsOutputModel getWalletStats(String userId);
 
     List<Transaction> getWalletTransactions(String userId);
+
+    List<Transaction> findByPlanIdAndDateRange(String planId, LocalDate start, LocalDate end);
+
+    BigDecimal sumAmountByStatusAndDateRange(List<String> strings, LocalDate start, LocalDate end);
+
+    List<Transaction> findByDateRangeAndPlans(LocalDate start, LocalDate end, List<String> planIds);
+
+    List<PaymentStatusDTO> findPaymentStatusSummary(LocalDate start, LocalDate end);
+
+    List<SalesDataOutput> findSalesGroupedByMonthAndPlan(LocalDate start, LocalDate end);
 }

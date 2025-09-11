@@ -6,4 +6,7 @@ export interface ChatMessageDto{
     sentAt : Date;
     status : string;
     isFromUser:boolean; 
+    replyToMessageId?: string | null;
+    mediaUrl?: string | null;
+    deleted?: boolean;
 }

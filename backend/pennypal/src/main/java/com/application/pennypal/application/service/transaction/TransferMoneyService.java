@@ -39,6 +39,7 @@ public class TransferMoneyService implements TransferMoney {
                         inputModel.senderId(),
                         null,
                         inputModel.methodId(),
+                        null,
                         inputModel.amount(),
                         TransactionType.TRANSFER,
                         "Transfer",
@@ -48,7 +49,8 @@ public class TransferMoneyService implements TransferMoney {
                         false,
                         null,
                         inputModel.recipientId(),
-                        inputModel.senderId()
+                        inputModel.senderId(),
+                        receiverCard.getCardId()
                 );
 
                 Transaction newTransaction = transactionRepositoryPort.save(transaction);

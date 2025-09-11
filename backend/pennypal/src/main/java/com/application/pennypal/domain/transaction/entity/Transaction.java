@@ -20,6 +20,7 @@ public class Transaction {
     private final String transactionId ;
     private final String userId;
     private final String categoryId;
+    private final String planId;
     private final String cardId;
     private final BigDecimal amount;
     private final TransactionType type;
@@ -31,6 +32,7 @@ public class Transaction {
     private final String recurringTransactionId;
     private final String transferToUserId;
     private final String transferFromUserId;
+    private final String receiverCardId;
     private final TransactionStatus transactionStatus;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
@@ -40,6 +42,7 @@ public class Transaction {
             String transactionId,
             String userId,
             String categoryId,
+            String planId,
             String cardId,
             BigDecimal amount,
             TransactionType type,
@@ -51,13 +54,15 @@ public class Transaction {
             String recurringTransactionId,
             String transferToUserId,
             String transferFromUserId,
+            String receiverCardId,
             LocalDateTime createdAt,
             LocalDateTime updatedAt) {
-        validate(transactionId,userId, amount,paymentMethod,cardId, type, transactionDate,isFromRecurring,recurringTransactionId,transferToUserId,transferFromUserId,categoryId);
+        validate(transactionId,userId, amount,paymentMethod,cardId, type, transactionDate,isFromRecurring,recurringTransactionId,transferToUserId,transferFromUserId,receiverCardId,categoryId);
 
         this.transactionId = transactionId;
         this.userId = userId;
         this.categoryId = categoryId;
+        this.planId = planId;
         this.cardId = cardId;
         this.amount = amount;
         this.type = type;
@@ -69,6 +74,7 @@ public class Transaction {
         this.recurringTransactionId = recurringTransactionId;
         this.transferToUserId = transferToUserId;
         this.transferFromUserId = transferFromUserId;
+        this.receiverCardId = receiverCardId;
         this.transactionStatus  = TransactionStatus.PENDING;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -79,6 +85,7 @@ public class Transaction {
             String userId,
             String categoryId,
             String cardId,
+            String planId,
             BigDecimal amount,
             TransactionType type,
             String title,
@@ -88,15 +95,16 @@ public class Transaction {
             boolean isFromRecurring,
             String recurringTransactionId,
             String transferToUserId,
-            String transferFromUserId
+            String transferFromUserId,
+            String receiverCardId
     ) {
         String transactionId = "TRX_"+ UUID.randomUUID();
         return new Transaction(
                 transactionId,
-                userId, categoryId, cardId, amount, type,
+                userId, categoryId,planId, cardId, amount, type,
                 title, description, paymentMethod, transactionDate,
                 isFromRecurring, recurringTransactionId,
-                transferToUserId, transferFromUserId,
+                transferToUserId, transferFromUserId,receiverCardId,
                 null, null
         );
     }
@@ -105,6 +113,7 @@ public class Transaction {
             String transactionId,
             String userId,
             String categoryId,
+            String planId,
             String cardId,
             BigDecimal amount,
             TransactionType type,
@@ -116,16 +125,17 @@ public class Transaction {
             String recurringTransactionId,
             String transferToUserId,
             String transferFromUserId,
+            String receiverCardId,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ){
 
         return new Transaction(
                 transactionId,
-                userId, categoryId, cardId, amount, type,
+                userId, categoryId,planId, cardId, amount, type,
                 title, description, paymentMethod, transactionDate,
                 isFromRecurring, recurringTransactionId,
-                transferToUserId, transferFromUserId,
+                transferToUserId, transferFromUserId,receiverCardId,
                 createdAt, updatedAt
         );
     }
@@ -137,6 +147,7 @@ public class Transaction {
                           Boolean isFromRecurring,String recurringTransactionId,
                           String transferToUserId,
                           String transferFromUserId,
+                          String receiverCardId,
                           String categoryId) {
 
         if(transactionId == null)
@@ -155,7 +166,7 @@ public class Transaction {
         }
 
         if (type == TransactionType.TRANSFER) {
-            if (transferToUserId == null || transferFromUserId == null) {
+            if (transferToUserId == null || transferFromUserId == null || receiverCardId == null) {
                 throw new TransferUsersRequiredExceptionDomain();
             }
         }
@@ -222,6 +233,15 @@ public class Transaction {
 
     public Optional<String> getCardId() {
         return Optional.ofNullable(cardId);
+    }
+
+    public Optional<String> getPlanId() {
+        return Optional.ofNullable(planId);
+    }
+
+
+    public Optional<String> getReceiverCardId(){
+        return Optional.ofNullable(receiverCardId);
     }
 
 

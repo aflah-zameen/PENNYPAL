@@ -1,0 +1,153 @@
+<div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-2xl font-bold bg-gradient-to-r from-red-600 via-pink-600 to-red-800 bg-clip-text text-transparent">
+      Loans to Repay
+    </h3>
+    <div class="p-3 bg-gradient-to-r from-red-100 to-pink-100 rounded-2xl">
+      <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </div>
+  </div>
+
+  <div *ngIf="loansToRepay$ | async as loans" class="space-y-6">
+    <div *ngIf="loans.length === 0" class="text-center py-12">
+      <div class="p-4 bg-gray-100 rounded-2xl inline-block mb-4">
+        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <p class="text-gray-500 text-lg font-medium">No loans to repay</p>
+      <p class="text-gray-400 text-sm">Your borrowed loans will appear here</p>
+    </div>
+
+    <div *ngFor="let loan of loans" 
+         [ngClass]="{
+           'bg-gradient-to-r from-red-50 to-pink-50 border-red-200': loan.isOverdue,
+           'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200': !loan.isOverdue
+         }"
+         class="rounded-2xl p-6 border hover:shadow-lg transition-all duration-300 group space-y-6">
+
+      <div *ngIf="loan.isOverdue" class="bg-red-100 border border-red-200 rounded-lg p-3 flex items-center space-x-2">
+        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+        </svg>
+        <span class="text-red-700 font-medium text-sm">
+          OVERDUE: {{ loan.daysPastDue }} days past due
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+          {{ loan.lenderName.charAt(0) }}
+        </div>
+        <div>
+          <h4 class="font-semibold text-gray-900">{{ loan.lenderName }}</h4>
+          <p class="text-sm text-gray-500">Lent on {{ lendingService.formatDate(loan.loanDate) }}</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <p class="text-sm text-gray-500">Original Amount</p>
+          <p class="text-lg font-bold text-gray-900">{{ lendingService.formatCurrency(loan.amount) }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">Amount Paid</p>
+          <p class="text-sm font-medium text-green-600">{{ lendingService.formatCurrency(loan.amountPaid) }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">Remaining</p>
+          <p class="text-sm font-medium text-red-600">{{ lendingService.formatCurrency(loan.remainingAmount) }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">Due Date</p>
+          <p [ngClass]="{
+            'text-red-600 font-semibold': loan.isOverdue,
+            'text-gray-700': !loan.isOverdue
+          }" class="text-sm font-medium">
+            {{ lendingService.formatDate(loan.repaymentDeadline) }}
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex justify-between text-sm text-gray-600 mb-1">
+          <span>Repayment Progress</span>
+          <span>{{ ((loan.amountPaid / loan.amount) * 100).toFixed(1) }}%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div class="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full transition-all duration-300"
+               [style.width.%]="(loan.amountPaid / loan.amount) * 100"></div>
+        </div>
+      </div>
+
+      <div>
+        <span [ngClass]="{
+          'bg-green-100 text-green-800': loan.repaymentStatus === 'paid',
+          'bg-blue-100 text-blue-800': loan.repaymentStatus === 'active',
+          'bg-red-100 text-red-800': loan.repaymentStatus === 'overdue',
+          'bg-yellow-100 text-yellow-800': loan.repaymentStatus === 'partial'
+        }" class="px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wide inline-block">
+          {{ loan.repaymentStatus }}
+        </span>
+      </div>
+
+      <div *ngIf="loan.repaymentStatus !== 'paid'" class="space-y-2">
+        <input type="number" 
+       [(ngModel)]="repaymentAmounts[loan.id]" 
+       (ngModelChange)="validateAmount(loan)"
+       [placeholder]="'Max: ' + lendingService.formatCurrency(loan.remainingAmount)"
+       [max]="loan.remainingAmount"
+       min="1"
+       class="w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+
+
+        <div *ngIf="paymentErrors[loan.id]" class="text-sm text-red-600">
+          {{ paymentErrors[loan.id] }}
+        </div>
+
+        <button
+          (click)="makePayment(loan, repaymentAmounts[loan.id])"
+          [disabled]="(loading$ | async) || isDisabled(loan.id) || !!paymentErrors[loan.id]"
+          class="w-full sm:w-64 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+          
+          <span *ngIf="!(loading$ | async)">Make Payment</span>
+          <span *ngIf="loading$ | async" class="flex items-center justify-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processing...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<app-send-lent-money
+[isOpen]="isAddMoneyModalOpen"
+[paymentMethods]="paymentMethods"
+(continue)="onAmountConfirmed($event)"
+(close)="closeAddMoneyModal()"
+[fixedAmount]="amount"
+></app-send-lent-money>
+
+<app-pin-confirmation-modal 
+  [isOpen]="isPinConfirmationOpen"
+  [amount]="amount"
+  [paymentMethod]="selectedPaymentMethod"
+  (close)="isPinConfirmationOpen=false"
+  (confirm)="onPinConfirmed($event)"
+>
+</app-pin-confirmation-modal>
+
+<app-reward-modal
+[isModalOpen]="isRewardModalOpen"
+[coins]="rewardCoins"
+(close)="isAddMoneyModalOpen = false"
+>
+
+</app-reward-modal>

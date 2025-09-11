@@ -117,6 +117,9 @@ export class CardManagementComponent implements OnInit {
 
   onCardSelected(card: CreditCard) {
     this.selectedCard = card
+    this.spendData$ = this.getCardSpendingOverview(this.selectedCard.id,"monthly");
+    this.expenseCategories$ = this.getCardExpenseOverview(this.selectedCard.id,{range : 'monthly'});
+    this.recentTransaction$ = this.getRecentCardTransaction(this.selectedCard.id);
   }
 
   onCardDetailsUploaded(card: Omit<CreditCardForm, 'pin'>) {

@@ -1,0 +1,70 @@
+<div class="w-full max-w-md">
+   <div class="relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100 group transform hover:scale-105"
+         [class.ring-4]="plan.isPopular"
+         [class.ring-purple-500]="plan.isPopular"
+         [class.ring-opacity-50]="plan.isPopular">
+      
+      <!-- Popular Badge -->
+      <div *ngIf="plan.isPopular" 
+           class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+        <div class="bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+          <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+          Most Popular
+        </div>
+      </div>
+
+      <!-- Plan Header -->
+      <div class="text-center mb-8">
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name }}</h3>
+        <p class="text-gray-600 text-sm mb-6">{{ plan.description }}</p>
+        
+        <!-- Pricing -->
+        <div class="mb-4">
+          <div class="flex items-center justify-center mb-2">
+            <span class="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
+              {{ formatCurrency(plan.amount) }}
+            </span>
+          </div>
+          
+          <!-- Original Price (if discounted) -->
+          <!-- <div *ngIf="plan.originalAmount" class="flex items-center justify-center gap-2 mb-2">
+            <span class="text-lg text-gray-400 line-through">{{ formatCurrency(plan.originalAmount) }}</span>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded-full">
+              Save {{ calculateSavings(plan.originalAmount, plan.amount) }}%
+            </span>
+          </div> -->
+          
+          <p class="text-gray-500 text-sm">
+            {{ getDurationText(plan.durationDays) }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Features List -->
+      <div class="mb-8">
+        <ul class="space-y-3">
+          <li *ngFor="let feature of plan.features" 
+              class="flex items-center text-gray-700">
+            <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+            <span class="text-sm">{{ feature }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Buy Button -->
+      <button 
+        (click)="onPurchase()"
+        class="w-full py-4 px-6 rounded-lg font-bold text-white transition-all duration-300 transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+        [class]="getButtonClasses()">
+        
+        <span class="flex items-center justify-center">
+          Buy Plan
+        </span>
+      
+    </button>
+    </div>
+</div>

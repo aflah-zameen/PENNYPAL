@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -42,5 +43,23 @@ public class ChatMessageAdapter implements ChatMessageRepositoryPort {
         var list = chatMessageRepository.findAllByChatIdIn(ids);
         list.forEach(e -> e.updateStatus(MessageStatus.DELIVERED));
         chatMessageRepository.saveAll(list);
+    }
+
+    @Override
+    public Optional<ChatMessage> findByChatId(String chatId) {
+        return chatMessageRepository.findByChatId(chatId).map(ChatMessageJpaMapper::toDomain);
+    }
+
+    @Override
+    public List<ChatMessage> findAllByUserId(String userId) {
+        return chatMessageRepository.findByReceiverIdOrSenderIdOrderBySentAtDesc(userId,userId);
+    }
+
+    @Override
+    public void deleteMessage(String chatId) {
+        chatMessageRepository.findByChatId(chatId).ifPresent(msg -> {
+            msg.setDeleted(true); // soft delete
+            chatMessageRepository.save(msg);
+        });
     }
 }

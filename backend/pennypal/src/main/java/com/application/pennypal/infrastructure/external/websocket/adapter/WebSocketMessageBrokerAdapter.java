@@ -1,8 +1,11 @@
 package com.application.pennypal.infrastructure.external.websocket.adapter;
 
+import com.application.pennypal.application.dto.output.lend.LoanCaseOutputModel;
 import com.application.pennypal.application.dto.output.notification.NotificationOutputModel;
+import com.application.pennypal.application.mappers.lent.LoanCaseApplicationMapper;
 import com.application.pennypal.application.port.out.repository.NotificationRepositoryPort;
 import com.application.pennypal.application.port.out.service.MessageBrokerPort;
+import com.application.pennypal.domain.LoanCase.LoanCase;
 import com.application.pennypal.domain.goal.entity.GoalWithdraw;
 import com.application.pennypal.domain.notification.Notification;
 import com.application.pennypal.infrastructure.external.websocket.dto.GoalWithdrawMessageDTO;
@@ -17,6 +20,7 @@ public class WebSocketMessageBrokerAdapter implements MessageBrokerPort {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final NotificationRepositoryPort notificationRepositoryPort;
+    private final LoanCaseApplicationMapper loanCaseApplicationMapper;
 
     @Override
     public void notifyPrivateUser(Notification notification, String userId) {
@@ -56,6 +60,22 @@ public class WebSocketMessageBrokerAdapter implements MessageBrokerPort {
                 goalWithdraw.getGoalId(),
                 LocalDateTime.now()
         ));
+    }
+
+    @Override
+    public void publishLoanCase(Notification notification, LoanCase loanCase) {
+        notification = notificationRepositoryPort.save(notification);
+
+        NotificationOutputModel outputModel = new NotificationOutputModel(
+                notification.getId(),
+                notification.getMessage(),
+                notification.isRead(),
+                notification.getTimeStamp(),
+                notification.getType(),
+                notification.getActionURL()
+        );
+
+        messagingTemplate.convertAndSend("/topic/admin/notifications",loanCaseApplicationMapper.toOutput(loanCase));
     }
 
 }

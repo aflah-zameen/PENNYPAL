@@ -58,6 +58,9 @@ public class UserEntity {
     @Setter
     private boolean verified;
 
+    @Setter
+    private boolean isSuspended = false;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 

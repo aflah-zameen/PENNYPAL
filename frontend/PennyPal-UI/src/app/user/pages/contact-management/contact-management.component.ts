@@ -13,6 +13,10 @@ import { TransactionReceiptComponent } from "../../components/money-flow/transac
 import { PresenceService } from '../../services/websocket/presence-service';
 import { ContactManagementService } from '../../services/contact-management.service';
 import { CreditCard } from '../../models/CreditCard.model';
+import { SentLentRequest } from '../../models/lend.model';
+import { LendingService } from '../../services/lending-management.serive';
+import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-contact-management',
@@ -27,7 +31,13 @@ export class ContactManagementComponent implements OnInit {
   // transactions: Transaction[] = []
   paymentMethods: PaymentMethod[] = []
 
-  constructor(private presenceService: PresenceService, private contactManagementService: ContactManagementService) {
+  constructor(
+    private presenceService: PresenceService,
+    private contactManagementService: ContactManagementService,
+    private lendingService : LendingService,
+    private spinner : NgxSpinnerService,
+    private toastr : ToastrService
+  ) {
    this.presenceService.getPresenceUpdates().subscribe((presenceUpdates) => {
     presenceUpdates.forEach(update => {
         const contact = this.contacts.find(c => c.id === update.userId);
@@ -58,158 +68,10 @@ export class ContactManagementComponent implements OnInit {
   showReceipt = false
 
   ngOnInit() {
-    // this.loadMockData();
     this.loadData();
     this.filteredContacts = this.contacts
   }
 
-  // loadMockData() {
-  //   // Mock contacts data
-  //   this.contacts = [
-  //     {
-  //       id: "1",
-  //       name: "Sarah Johnson",
-  //       email: "sarah.johnson@email.com",
-  //       avatar: "/placeholder.svg?height=64&width=64",
-  //       isOnline: true,
-  //     },
-  //     {
-  //       id: "2",
-  //       name: "Michael Chen",
-  //       email: "michael.chen@email.com",
-  //       avatar: "/placeholder.svg?height=64&width=64",
-  //       isOnline: false,
-  //     },
-  //     {
-  //       id: "3",
-  //       name: "Emily Rodriguez",
-  //       email: "emily.rodriguez@email.com",
-  //       avatar: "/placeholder.svg?height=64&width=64",
-  //       isOnline: true,
-  //     },
-  //     {
-  //       id: "4",
-  //       name: "David Kim",
-  //       email: "david.kim@email.com",
-  //       avatar: "/placeholder.svg?height=64&width=64",
-  //       isOnline: true,
-  //     },
-  //     {
-  //       id: "5",
-  //       name: "Lisa Thompson",
-  //       email: "lisa.thompson@email.com",
-  //       avatar: "/placeholder.svg?height=64&width=64",
-  //       isOnline: false,
-  //     },
-  //     {
-  //       id: "6",
-  //       name: "James Wilson",
-  //       email: "james.wilson@email.com",
-  //       avatar: "/placeholder.svg?height=64&width=64",
-  //       isOnline: true,
-  //     },
-  //   ]
-
-  //   this.recentContacts = this.contacts.slice(0, 4)
-
-  //   // Mock transactions data
-  //   this.transactions = [
-  //     {
-  //       id: "1",
-  //       senderId: "current-user",
-  //       recipientId: "1",
-  //       amount: 250,
-  //       type: "sent",
-  //       timestamp: new Date(Date.now() - 86400000),
-  //       status: "completed",
-  //     },
-  //     {
-  //       id: "2",
-  //       senderId: "1",
-  //       recipientId: "current-user",
-  //       amount: 100,
-  //       type: "received",
-  //       timestamp: new Date(Date.now() - 172800000),
-  //       status: "completed",
-  //     },
-  //     {
-  //       id: "3",
-  //       senderId: "current-user",
-  //       recipientId: "2",
-  //       amount: 500,
-  //       type: "sent",
-  //       timestamp: new Date(Date.now() - 259200000),
-  //       status: "pending",
-  //     },
-  //     {
-  //       id: "4",
-  //       senderId: "3",
-  //       recipientId: "current-user",
-  //       amount: 75,
-  //       type: "received",
-  //       timestamp: new Date(Date.now() - 345600000),
-  //       status: "completed",
-  //     },
-  //   ]
-
-  //   // Mock payment methods
-  //   this.paymentMethods = [
-  //     {
-  //       id: "wallet-1",
-  //       type: "wallet",
-  //       name: "Primary Wallet",
-  //       displayName: "Primary Wallet",
-  //       balance: 25000,
-  //       icon: "wallet",
-  //       isDefault: true,
-  //       isActive: true,
-  //     },
-  //     {
-  //       id: "card-1",
-  //       type: "card",
-  //       name: "HDFC Bank Credit Card",
-  //       displayName: "HDFC Credit Card",
-  //       balance: 50000,
-  //       cardNumber: "1234567890123456",
-  //       icon: "card",
-  //       isDefault: false,
-  //       isActive: true,
-  //     },
-  //     {
-  //       id: "card-2",
-  //       type: "card",
-  //       name: "SBI Debit Card",
-  //       displayName: "SBI Debit Card",
-  //       balance: 15000,
-  //       cardNumber: "9876543210987654",
-  //       icon: "card",
-  //       isDefault: false,
-  //       isActive: true,
-  //     },
-  //     {
-  //       id: "bank-1",
-  //       type: "bank",
-  //       name: "ICICI Bank Account",
-  //       displayName: "ICICI Savings",
-  //       balance: 75000,
-  //       bankName: "ICICI Bank",
-  //       icon: "bank",
-  //       isDefault: false,
-  //       isActive: true,
-  //     },
-  //     {
-  //       id: "card-3",
-  //       type: "card",
-  //       name: "Axis Bank Credit Card",
-  //       displayName: "Axis Credit Card",
-  //       balance: 0,
-  //       cardNumber: "5555444433332222",
-  //       icon: "card",
-  //       isDefault: false,
-  //       isActive: false,
-  //     },
-  //   ]
-  // }
   loadData(){
     this.contactManagementService.getContacts().subscribe({
       next: (contacts) => {
@@ -296,44 +158,6 @@ export class ContactManagementComponent implements OnInit {
     });
   }
 
-  // processTransaction() {
-  //   // Simulate PIN validation (90% success rate for demo)
-  //   const isValidPin = Math.random() > 0.1
-
-  //   if (isValidPin && this.selectedPaymentMethod) {
-  //     // Create successful transaction
-  //     this.currentTransaction = {
-  //       id: "TXN" + Date.now(),
-  //       senderId: "current-user",
-  //       recipientId: this.selectedContact!.id,
-  //       amount: this.transferData.amount,
-  //       note: this.transferData.note,
-  //       timestamp: new Date(),
-  //       status: "completed",
-  //       type: "sent",
-  //     }
-
-  //     // Update selected payment method balance
-  //     this.selectedPaymentMethod.balance = (this.selectedPaymentMethod.balance || 0) - this.transferData.amount
-
-  //     // Update the payment method in the array
-  //     const methodIndex = this.paymentMethods.findIndex((m) => m.id === this.selectedPaymentMethod!.id)
-  //     if (methodIndex !== -1) {
-  //       this.paymentMethods[methodIndex] = { ...this.selectedPaymentMethod }
-  //     }
-
-  //     // Add transaction to history
-  //     this.transactions.unshift(this.currentTransaction)
-
-  //     this.currentStep = { step: "success" }
-  //   } else {
-  //     // Transaction failed
-  //     this.failureReason = "Invalid PIN entered. Please try again."
-  //     this.currentStep = { step: "failed" }
-  //   }
-  //   this.isTransactionStatusOpen= true;
-  // }
-
   onRetryTransfer() {
     this.currentStep = { step: "pin" }
     this.failureReason = ""
@@ -377,6 +201,14 @@ export class ContactManagementComponent implements OnInit {
   onCloseChat() {
     this.isChatOpen = false
     this.selectedContact = null
+  }
+
+  moneyRequest(form : SentLentRequest){
+    this.spinner.show();
+    this.lendingService.sentMoneyRequest(form).subscribe(()=>{
+      this.spinner.hide();
+      this.toastr.success("The request sent successfully");
+    })
   }
 
   // getContactTransactions(contactId: string): Transaction[] {

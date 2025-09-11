@@ -1,4 +1,19 @@
 package com.application.pennypal.application.service.lent;
 
-public class RejectLendingRequestService {
+import com.application.pennypal.application.exception.base.ApplicationBusinessException;
+import com.application.pennypal.application.port.in.lent.RejectLendingRequest;
+import com.application.pennypal.application.port.out.repository.LendingRequestRepositoryPort;
+import com.application.pennypal.domain.lend.LendingRequest;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class RejectLendingRequestService implements RejectLendingRequest {
+    private final LendingRequestRepositoryPort lendingRequestRepositoryPort;
+    @Override
+    public void execute(String userId, String requestId) {
+        LendingRequest lendingRequest = lendingRequestRepositoryPort.findByRequestId(requestId)
+                .orElseThrow(() -> new ApplicationBusinessException("Lending Request not found","NOT_FOUND"));
+        lendingRequest=lendingRequest.rejectRequest();
+        lendingRequestRepositoryPort.update(lendingRequest);
+    }
 }

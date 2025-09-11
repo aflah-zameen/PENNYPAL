@@ -41,8 +41,8 @@ export interface TransactionFilters {
 }
 
 export interface PaginationInfo {
-  page: number
-  pageSize: number
-  total: number
+  currentPage: number
   totalPages: number
+  totalItems: number
+  itemsPerPage: number
 }

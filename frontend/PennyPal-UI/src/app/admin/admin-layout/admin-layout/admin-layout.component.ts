@@ -9,6 +9,7 @@ import { NotificationService } from '../../../external-service/notification.serv
 import { NotificationDropdownComponent } from "../../../user/components/notification-dropdown/notification-dropdown.component";
 import { NotificationMessageDto } from '../../../models/notification';
 import { NotificationIconComponent } from "../../../user/components/top-header/notification-icon/notification-icon.component";
+import { AuthService } from '../../../public/auth/services/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -21,10 +22,11 @@ export class AdminLayoutComponent {
   notifications : NotificationMessageDto[] = [];
 
 
-  constructor(private router: Router,private websocketService: WebsocketService, private notificationService: NotificationService) {}
+  constructor(private router: Router,private websocketService: WebsocketService, private notificationService: NotificationService,private authService : AuthService) {}
 
   ngOnInit() {
     // Listen to route changes to update active navigation
+    this.authService.loadUserFromToken().subscribe();
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.currentRoute = event.urlAfterRedirects
     })
@@ -39,6 +41,7 @@ export class AdminLayoutComponent {
       this.notifications = notifications;
     });    
     this.notificationService.loadAdminNotifications().subscribe();
+
 
   }
 

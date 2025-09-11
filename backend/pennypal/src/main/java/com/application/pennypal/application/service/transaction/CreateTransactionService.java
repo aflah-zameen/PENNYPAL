@@ -6,6 +6,7 @@ import com.application.pennypal.application.mappers.transaction.TransactionAppli
 import com.application.pennypal.application.port.in.transaction.CreateTransaction;
 import com.application.pennypal.application.port.out.repository.TransactionRepositoryPort;
 import com.application.pennypal.domain.transaction.entity.Transaction;
+import com.application.pennypal.domain.valueObject.TransactionType;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -18,7 +19,8 @@ public class CreateTransactionService implements CreateTransaction {
         Transaction transaction = Transaction.create(
                 userId,
                 inputModel.categoryId(),
-                inputModel.cardId(),
+                inputModel.transactionType().equals(TransactionType.EXPENSE) ? inputModel.cardId():null,
+                null,
                 inputModel.amount(),
                 inputModel.transactionType(),
                 inputModel.title(),
@@ -28,8 +30,8 @@ public class CreateTransactionService implements CreateTransaction {
                 false,
                 null,
                 inputModel.transferToUserId(),
-                inputModel.transferFromUserId()
-
+                inputModel.transferFromUserId(),
+                inputModel.transactionType().equals(TransactionType.INCOME) ? inputModel.cardId():null
         );
         Transaction createdTransaction = transactionRepositoryPort.save(transaction);
         return transactionApplicationMapper.toOutput(createdTransaction);

@@ -1,0 +1,224 @@
+<!-- Modal Backdrop -->
+    <div *ngIf="isOpen" 
+         class="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm transition-opacity duration-300 flex items-center justify-center p-4 z-50"
+         (click)="onBackdropClick($event)">
+      
+      <!-- Modal Container -->
+      <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+           (click)="$event.stopPropagation()">
+        
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-gray-900">
+              {{ editingPlan ? 'Edit Plan' : 'Create New Plan' }}
+            </h3>
+            <button
+              (click)="onClose()"
+              class="text-gray-400 hover:text-gray-600 transition-colors duration-150">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="px-6 py-6 max-h-[60vh] overflow-y-auto">
+          <form [formGroup]="planForm" class="space-y-6">
+            
+            <!-- Plan Name -->
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                Plan Name *
+              </label>
+              <input
+                id="name"
+                type="text"
+                formControlName="name"
+                placeholder="Enter plan name"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150"
+                [class.border-red-500]="planForm.get('name')?.invalid && planForm.get('name')?.touched"
+              >
+              <div *ngIf="planForm.get('name')?.invalid && planForm.get('name')?.touched" 
+                   class="mt-1 text-sm text-red-600">
+                <span *ngIf="planForm.get('name')?.errors?.['required']">Plan name is required</span>
+                <span *ngIf="planForm.get('name')?.errors?.['minlength']">Plan name must be at least 3 characters</span>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                Description
+              </label>
+              <textarea
+                id="description"
+                formControlName="description"
+                rows="3"
+                placeholder="Enter plan description"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150"
+              ></textarea>
+            </div>
+
+            <!-- Amount and Duration Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              <!-- Amount -->
+              <div>
+                <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">
+                  Amount (USD) *
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span class="text-gray-500 sm:text-sm">$</span>
+                  </div>
+                  <input
+                    id="amount"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    formControlName="amount"
+                    placeholder="0.00"
+                    class="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150"
+                    [class.border-red-500]="planForm.get('amount')?.invalid && planForm.get('amount')?.touched"
+                  >
+                </div>
+                <div *ngIf="planForm.get('amount')?.invalid && planForm.get('amount')?.touched" 
+                     class="mt-1 text-sm text-red-600">
+                  <span *ngIf="planForm.get('amount')?.errors?.['required']">Amount is required</span>
+                  <span *ngIf="planForm.get('amount')?.errors?.['min']">Amount must be greater than 0</span>
+                </div>
+              </div>
+
+              <!-- Duration -->
+              <div>
+                <label for="durationDays" class="block text-sm font-medium text-gray-700 mb-2">
+                  Duration (Days) *
+                </label>
+                <select
+                  id="durationDays"
+                  formControlName="durationDays"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150"
+                  [class.border-red-500]="planForm.get('durationDays')?.invalid && planForm.get('durationDays')?.touched"
+                >
+                  <option value="">Select duration</option>
+                  <option value="7">7 Days (1 Week)</option>
+                  <option value="30">30 Days (1 Month)</option>
+                  <option value="90">90 Days (3 Months)</option>
+                  <option value="180">180 Days (6 Months)</option>
+                  <option value="365">365 Days (1 Year)</option>
+                </select>
+                <div *ngIf="planForm.get('durationDays')?.invalid && planForm.get('durationDays')?.touched" 
+                     class="mt-1 text-sm text-red-600">
+                  <span *ngIf="planForm.get('durationDays')?.errors?.['required']">Duration is required</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Features -->
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <label class="block text-sm font-medium text-gray-700">
+                  Features
+                </label>
+                <button
+                  type="button"
+                  (click)="addFeature()"
+                  class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150"
+                >
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                  </svg>
+                  Add Feature
+                </button>
+              </div>
+              
+              <div formArrayName="features" class="space-y-3">
+                <div *ngFor="let feature of featuresArray.controls; let i = index" 
+                     class="flex items-center space-x-3">
+                  <div class="flex-1">
+                    <input
+                      type="text"
+                      [formControlName]="i"
+                      placeholder="Enter feature description"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150"
+                      [class.border-red-500]="feature.invalid && feature.touched"
+                    >
+                    <div *ngIf="feature.invalid && feature.touched" class="mt-1 text-sm text-red-600">
+                      Feature description is required
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    (click)="removeFeature(i)"
+                    class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors duration-150"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Add first feature if none exist -->
+              <div *ngIf="featuresArray.length === 0" class="text-center py-6 border-2 border-dashed border-gray-300 rounded-md">
+                <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <p class="mt-2 text-sm text-gray-500">No features added yet</p>
+                <button
+                  type="button"
+                  (click)="addFeature()"
+                  class="mt-2 inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150"
+                >
+                  Add First Feature
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Status (only for edit mode) -->
+            <div *ngIf="editingPlan" class="flex items-center">
+              <input
+                id="isActive"
+                type="checkbox"
+                formControlName="isActive"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              >
+              <label for="isActive" class="ml-2 block text-sm text-gray-900">
+                Plan is active
+              </label>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-end space-x-3">
+          <button
+            type="button"
+            (click)="onClose()"
+            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            (click)="onSubmit()"
+            [disabled]="planForm.invalid || loading"
+            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
+          >
+            <span *ngIf="loading" class="inline-flex items-center">
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              {{ editingPlan ? 'Updating...' : 'Creating...' }}
+            </span>
+            <span *ngIf="!loading">
+              {{ editingPlan ? 'Update Plan' : 'Create Plan' }}
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>

@@ -11,6 +11,9 @@ public record ChatMessageOutputModel(
         String content,
         LocalDateTime sentAt,
         String status,
-        boolean isFromUser
+        boolean isFromUser,
+        String replyToMessageId,
+        String mediaUrl,
+        boolean deleted
 ) {
 }

@@ -13,6 +13,7 @@ public class TransactionJpaMapper {
                 transactionEntity.getTransactionId(),
                 transactionEntity.getUser().getUserId(),
                 transactionEntity.getCategory() == null ? null : transactionEntity.getCategory().getCategoryId(),
+                transactionEntity.getPlanId(),
                 transactionEntity.getCard() != null ? transactionEntity.getCard().getCardId():null,
                 transactionEntity.getAmount(),
                 transactionEntity.getTransactionType(),
@@ -24,6 +25,7 @@ public class TransactionJpaMapper {
                 transactionEntity.getRecurringTransactionId(),
                 transactionEntity.getTransferToUserId(),
                 transactionEntity.getTransferFromUserId(),
+                transactionEntity.getReceiverCardId(),
                 transactionEntity.getCreatedAt(),
                 transactionEntity.getUpdatedAt()
         );
@@ -39,12 +41,15 @@ public class TransactionJpaMapper {
                 transaction.getType(),
                 transaction.getTransactionStatus(),
                 category,
+                transaction.getPlanId().orElse(null),
                 transaction.getDescription(),
                 transaction.getPaymentMethod(),
                 transaction.isFromRecurring(),
                 transaction.getRecurringTransactionId().orElse(null),
                 transaction.getTransferToUserId().orElse(null),
-                transaction.getTransferFromUserId().orElse(null)
+                transaction.getTransferFromUserId().orElse(null),
+                transaction.getReceiverCardId().orElse(null)
+
         );
     }
 }

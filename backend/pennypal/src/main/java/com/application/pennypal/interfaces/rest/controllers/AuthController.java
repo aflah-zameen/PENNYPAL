@@ -7,6 +7,7 @@ import com.application.pennypal.application.port.in.auth.ResetPasswordVerificati
 import com.application.pennypal.application.port.in.auth.SendVerificationEmail;
 import com.application.pennypal.application.port.in.auth.VerifyEmailWithToken;
 import com.application.pennypal.application.port.in.user.*;
+import com.application.pennypal.application.port.out.repository.UserCoinAccountRepositoryPort;
 import com.application.pennypal.application.service.auth.ValidateEmailUniqueness;
 import com.application.pennypal.domain.valueObject.TokenPairDTO;
 import com.application.pennypal.domain.valueObject.UserDomainDTO;
@@ -24,6 +25,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 
 @RestController
@@ -42,6 +46,7 @@ public class AuthController {
     private final VerifyEmailWithToken verifyEmailWithToken;
     private final SendVerificationEmail sendVerificationEmail;
     private final ResetPasswordVerification resetPasswordVerification;
+    private final UserCoinAccountRepositoryPort userCoinAccountRepositoryPort;
 
     /// Admin email verification
     @PatchMapping("/admin/verify-email-token")
@@ -55,7 +60,12 @@ public class AuthController {
     @PostMapping("/user-register")
     public ResponseEntity<RegisterResponse> registerUser(@Valid @ModelAttribute RegisterRequestDTO requestDTO) {
             RegisterOutputModel outputModel = createUser.execute(UserDtoMapper.toInput(requestDTO));
-            return ResponseEntity.ok(new RegisterResponse(true,outputModel, "User Registered Successfully."));
+            RegisterResponseDTO responseDTO = new RegisterResponseDTO(
+                    outputModel.id(),
+                    outputModel.email(),
+                    outputModel.expiry().toInstant(ZoneOffset.UTC)
+            );
+            return ResponseEntity.ok(new RegisterResponse(true,responseDTO, "User Registered Successfully."));
     }
 
 
@@ -97,12 +107,15 @@ public class AuthController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         setAccessTokenCookie(loginResponseOutput.accessToken(), response);
         setRefreshTokenCookie(loginResponseOutput.refreshToken(), response);
+        BigDecimal coinBalance = userCoinAccountRepositoryPort.getCoins(loginResponseOutput.user().userId());
+
         UserResponseDTO responseDTO = new UserResponseDTO(
                 loginResponseOutput.user().userId(),
-                loginResponseOutput.user().name(),
+                loginResponseOutput.user().userName(),
                 loginResponseOutput.user().email(),
                 loginResponseOutput.user().roles(),
                 loginResponseOutput.user().phone(),
+                coinBalance,
                 loginResponseOutput.user().active(),
                 loginResponseOutput.user().verified(),
                 loginResponseOutput.user().created(),
@@ -126,11 +139,26 @@ public class AuthController {
 
 
     @GetMapping("/authenticate")
-    public ResponseEntity<ApiResponse<UserDomainDTO>> getUser(@CookieValue(name = "accessToken",required = false) String accessToken){
+    public ResponseEntity<ApiResponse<UserResponseDTO>> getUser(@CookieValue(name = "accessToken",required = false) String accessToken){
         if(accessToken == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse<>(false,null,"Access token is empty."));
         UserDomainDTO user = getUser.get(accessToken);
-        return ResponseEntity.ok(new ApiResponse<>(true,user,"User authenticated successfully"));
+        BigDecimal coinBalance = userCoinAccountRepositoryPort.getCoins(user.userId());
+
+        UserResponseDTO responseDTO = new UserResponseDTO(
+                user.userId(),
+                user.userName(),
+                user.email(),
+                user.roles(),
+                user.phone(),
+                coinBalance,
+                user.active(),
+                user.verified(),
+                user.created(),
+                user.profileURL(),
+                null
+        );
+        return ResponseEntity.ok(new ApiResponse<>(true,responseDTO,"User authenticated successfully"));
     }
 
     @PostMapping("/logout")

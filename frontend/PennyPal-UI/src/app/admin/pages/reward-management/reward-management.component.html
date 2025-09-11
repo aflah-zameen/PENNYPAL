@@ -1,0 +1,85 @@
+<div class="min-h-screen bg-gray-50">
+     <!-- Page Header -->
+        <div class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="py-6">
+            <h1 class="text-2xl font-bold text-gray-900">Reward Policy Management</h1>
+            <p class="mt-1 text-sm text-gray-500">
+                Configure reward policies and manage coin distributions for user actions
+            </p>
+            </div>
+        </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-lg shadow p-4 text-center border border-gray-200">
+            <div class="text-2xl font-bold text-blue-600">{{ totalPolicies }}</div>
+            <div class="text-sm text-gray-500 mt-1">Total Policies</div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 text-center border border-gray-200">
+            <div class="text-2xl font-bold text-green-600">{{ activePolicies }}</div>
+            <div class="text-sm text-gray-500 mt-1">Active Policies</div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 text-center border border-gray-200">
+            <div class="text-2xl font-bold text-yellow-600">{{ totalCoinsPerAction }}</div>
+            <div class="text-sm text-gray-500 mt-1">Total Coins/Action</div>
+        </div>
+        </div>
+
+
+      <!-- Main Content -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Policies Table -->
+        <app-reward-policy-table
+          [policies]="policies"
+          [loading]="loading"
+          (addPolicy)="onAddPolicy()"
+          (editPolicy)="onEditPolicy($event)"
+          (deletePolicy)="onDeletePolicy($event)"
+          (toggleStatus)="onToggleStatus($event)"
+        ></app-reward-policy-table>
+
+      </div>
+
+      <!-- Add/Edit Policy Modal -->
+      <app-reward-policy-modal
+        [isOpen]="showPolicyModal"
+        [editingPolicy]="editingPolicy"
+        [loading]="modalLoading"
+        (close)="onClosePolicyModal()"
+        (save)="onSavePolicy($event)"
+      ></app-reward-policy-modal>
+
+      <!-- Delete Confirmation Modal -->
+      <app-reward-policy-delete-modal
+        [isOpen]="showDeleteModal"
+        [policy]="policyToDelete"
+        [loading]="deleteLoading"
+        (confirm)="onConfirmDelete()"
+        (cancel)="onCancelDelete()"
+      ></app-reward-policy-delete-modal>
+
+      <!-- Success Toast -->
+      <div *ngIf="showSuccessToast" 
+           class="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-md shadow-lg z-50 transition-all duration-300">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          {{ successMessage }}
+        </div>
+      </div>
+
+      <!-- Error Toast -->
+      <div *ngIf="showErrorToast" 
+           class="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md shadow-lg z-50 transition-all duration-300">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          {{ errorMessage }}
+        </div>
+      </div>
+    </div>

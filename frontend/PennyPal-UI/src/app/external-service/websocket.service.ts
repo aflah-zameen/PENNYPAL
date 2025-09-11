@@ -80,23 +80,30 @@ private user: User | null = null;
     }
   }
 
-  sendChatMessage(receiverId: string, content: string): void {
-  if (this.stompClient?.active) {
-    const payload = {
-      receiverId,
-      content,
-    };
-
-    this.stompClient.publish({
-      destination: '/app/chat.send',
-      body: JSON.stringify(payload),
-    });
-
-    console.log('📤 Chat message sent:', payload);
-  } else {
-    console.warn('⚠️ STOMP client not active. Message not sent.');
+   sendChatMessage(payload: any): void {  
+    if (this.stompClient?.active) {
+      console.log(payload);
+      this.stompClient.publish({
+        destination: '/app/chat.send',
+        body: JSON.stringify(payload),
+      });
+      console.log('📤 Sent chat over STOMP', payload);
+    } else {
+      console.warn('⚠️ STOMP client not active. Message not sent.');
+    }
   }
-}
+
+sendDeleteMessage(messageId: string, forEveryone = false): void {
+    if (this.stompClient?.active) {
+      this.stompClient.publish({
+        destination: '/app/chat.delete',
+        body: JSON.stringify({ messageId, forEveryone }),
+      });
+      console.log('📤 Sent delete command', messageId, forEveryone);
+    } else {
+      console.warn('⚠️ STOMP client not active. Delete not sent.');
+    }
+  }
 
 getMessage(){
   return this.chatMessages$;

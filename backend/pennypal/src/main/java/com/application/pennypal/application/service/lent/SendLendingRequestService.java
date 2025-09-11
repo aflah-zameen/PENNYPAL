@@ -1,10 +1,9 @@
-package com.application.pennypal.application.service.lend;
+package com.application.pennypal.application.service.lent;
 
 import com.application.pennypal.application.dto.input.lend.LendRequestInputModel;
 import com.application.pennypal.application.dto.output.lend.LendingRequestOutputModel;
-import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.exception.usecase.user.UserNotFoundApplicationException;
-import com.application.pennypal.application.port.in.lend.SendLendingRequest;
+import com.application.pennypal.application.port.in.lent.SendLendingRequest;
 import com.application.pennypal.application.port.out.repository.LendingRequestRepositoryPort;
 import com.application.pennypal.application.port.out.repository.UserRepositoryPort;
 import com.application.pennypal.application.port.out.service.MessageBrokerPort;

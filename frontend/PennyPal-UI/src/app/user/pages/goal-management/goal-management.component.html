@@ -138,3 +138,10 @@
       (close)="closeEditModal()"
       (goalUpdated)="onGoalUpdated($event)"
     ></app-edit-goal-modal>
+
+    <app-reward-modal
+      [isModalOpen]="isRewardModalOpen"
+      (close)="isRewardModalOpen = false"
+      [coins]="rewardCoins"
+    >
+    </app-reward-modal>

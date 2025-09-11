@@ -1,89 +1,101 @@
- <div 
-      class="fixed inset-y-0 right-0 w-[40%] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 border-l border-gray-200"
-      [ngClass]="{ 'translate-x-0': isOpen, 'translate-x-full': !isOpen }"
-    >
-      <div class="flex flex-col h-full">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white p-2 flex items-center justify-between">
-          <div class="flex items-center">
-            <img 
-              [src]="selectedContact?.profileURL" 
-              [alt]="selectedContact?.name"
-              class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-lg mr-4"
-            />
-            <div>
-              <h3 class="font-bold text-lg">{{ selectedContact?.name }}</h3>
-              <p class="text-blue-100 text-sm">{{ selectedContact?.email }}</p>
-            </div>
-          </div>
-          <button 
-            (click)="onClose()"
-            class="text-white hover:text-gray-200 transition-colors duration-200"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
+<!-- src/app/components/chat-drawer/chat-drawer.component.html -->
+<div
+  class="fixed inset-y-0 right-0 w-[40%] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 border-l border-gray-200"
+  [ngClass]="{ 'translate-x-0': isOpen, 'translate-x-full': !isOpen }"
+>
+  <div class="flex flex-col h-full">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white p-2 flex items-center justify-between">
+      <div class="flex items-center">
+        <img
+          [src]="selectedContact?.profileURL"
+          [alt]="selectedContact?.name"
+          class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-lg mr-4"
+        />
+        <div>
+          <h3 class="font-bold text-lg">{{ selectedContact?.name }}</h3>
+          <p class="text-blue-100 text-sm">{{ selectedContact?.email }}</p>
         </div>
+      </div>
+      <button (click)="onClose()" class="text-white hover:text-gray-200 transition-colors duration-200">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
 
-        <!-- Chat Messages -->
-        <div
-        #chatContainer
-         class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-          <div 
-            *ngFor="let message of chatMessages" 
-            class="flex"
-            [ngClass]="{ 'justify-end': message.isFromUser, 'justify-start': !message.isFromUser }"
-          >
-            <div 
-              class="max-w-xs px-4 py-2 rounded-2xl shadow-sm"
-              [ngClass]="{
-                'bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white': message.isFromUser,
-                'bg-white text-gray-800 border border-gray-200': !message.isFromUser
-              }"
-            >
-              <p class="text-sm">{{ message.content }}</p>
-              <p 
-                class="text-xs mt-1 opacity-70"
-                [ngClass]="{
-                  'text-blue-100': message.isFromUser,
-                  'text-gray-500': !message.isFromUser
-                }"
-              >
-                {{ message.sentAt | date:'short' }}
-              </p>
-            </div>
-          </div>
-        </div>
+    <!-- Chat Messages -->
+    <div #chatContainer class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+      <div *ngFor="let message of chatMessages" class="flex" [ngClass]="{ 'justify-end': message.isFromUser, 'justify-start': !message.isFromUser }">
+        <div class="relative max-w-xs px-4 py-2 rounded-2xl shadow-sm"
+             [ngClass]="{
+               'bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white': message.isFromUser,
+               'bg-white text-gray-800 border border-gray-200': !message.isFromUser
+             }">
+          
+          <!-- reply preview -->
+          <!-- <div *ngIf="message.replyPreview" class="text-xs italic mb-1 opacity-70">
+            Replying to: "{{ message.replyPreview.content || (message.replyPreview.mediaUrl ? 'Image' : '') }}"
+          </div> -->
 
-        <!-- Message Input -->
-        <div class="p-4 border-t border-gray-200 bg-white">
-          <div class="flex space-x-2">
-            <input
-              type="text"
-              [(ngModel)]="newMessage"
-              (keyup.enter)="sendMessage()"
-              placeholder="Type a message..."
-              class="flex-1 px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-            />
-            <button 
-              (click)="sendMessage()"
-              [disabled]="!newMessage.trim()"
-              class="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white px-6 py-3 rounded-2xl hover:shadow-lg transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                </svg>
+          <!-- image/media from server -->
+          <img *ngIf="message.mediaUrl" [src]="message.mediaUrl" class="max-w-[200px] rounded-lg mb-2" />
 
-            </button>
+          <!-- deleted state -->
+          <p class="text-sm" [class.line-through]="message.deleted">
+            {{ message.deleted ? 'Message deleted' : message.content }}
+          </p>
+
+          <p class="text-xs mt-1 opacity-70" [ngClass]="{ 'text-blue-100': message.isFromUser, 'text-gray-500': !message.isFromUser }">
+            {{ message.sentAt | date:'short' }}
+          </p>
+
+          <!-- actions -->
+          <div class="absolute -top-2 right-0 flex space-x-1 text-xs">
+            <button (click)="setReply(message)" class="px-1" title="Reply">↩</button>
+            <button *ngIf="message.isFromUser && !message.deleted" (click)="deleteMessage(message, true)" class="px-1" title="Delete for everyone">🗑</button>
+            <button *ngIf="message.isFromUser && !message.deleted" (click)="deleteMessage(message, false)" class="px-1" title="Delete for me">❌</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Backdrop -->
-    <div 
-  *ngIf="isOpen"
-    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300"
-    (click)="onClose()"
-></div>
+    <!-- Message Input -->
+    <div class="p-4 border-t border-gray-200 bg-white">
+      <div *ngIf="replyingTo" class="mb-2 p-2 bg-gray-100 rounded">
+        Replying to: "{{ replyingTo.content || (replyingTo.mediaUrl ? 'Image' : '') }}"
+        <button (click)="cancelReply()" class="ml-2 text-red-500">x</button>
+      </div>
+
+      <div *ngIf="selectedFilePreviewUrl" class="mb-2">
+        <img [src]="selectedFilePreviewUrl" class="max-w-[120px] rounded" />
+      </div>
+
+      <div class="flex space-x-2 items-center">
+        <input type="file" (change)="onFileSelected($event)" class="hidden" #fileInput />
+        <button (click)="fileInput.click()" class="px-2">📎</button>
+
+        <input
+          type="text"
+          [(ngModel)]="newMessage"
+          (keyup.enter)="sendMessage()"
+          placeholder="Type a message..."
+          class="flex-1 px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+        />
+
+        <button
+          (click)="sendMessage()"
+          [disabled]="!newMessage.trim() && !selectedFile"
+          class="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white px-6 py-3 rounded-2xl hover:shadow-lg transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div *ngIf="isOpen" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300" (click)="onClose()"></div>

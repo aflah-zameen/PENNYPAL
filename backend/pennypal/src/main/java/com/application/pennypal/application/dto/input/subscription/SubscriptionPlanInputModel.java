@@ -1,4 +1,13 @@
 package com.application.pennypal.application.dto.input.subscription;
 
-public record SubscriptionPlanInputModel() {
+import java.math.BigDecimal;
+import java.util.List;
+
+public record SubscriptionPlanInputModel(
+    String name,
+    String description,
+    BigDecimal amount,
+    int durationDays,
+    List<String> features
+) {
 }

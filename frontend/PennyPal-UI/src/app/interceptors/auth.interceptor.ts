@@ -44,6 +44,17 @@ export const authInterceptor: HttpInterceptorFn = (
         return throwError(() => error);
       }
 
+      if(error.status === 403 && error.error.suspended){
+        router.navigate(['/login']);
+        toastr.error(error.error?.message || 'Account has Suspended by admin', 'Error', { timeOut: 2000 });
+        return throwError(() => error);        
+      }
+
+      if(error.status === 402 && !error.error.hasActiveSubscription){
+        router.navigate(['/user/plans']);
+        return throwError(() => error);
+      }
+
       // Handle other API errors (non-auth)
       if (typeof error.error === 'string') {
         errorMessage = error.error;

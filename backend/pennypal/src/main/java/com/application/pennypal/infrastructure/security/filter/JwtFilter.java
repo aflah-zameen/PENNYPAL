@@ -1,5 +1,7 @@
 package com.application.pennypal.infrastructure.security.filter;
 
+import com.application.pennypal.application.port.in.subscription.HasActiveSubscription;
+import com.application.pennypal.application.port.in.user.CheckUserIsSuspended;
 import com.application.pennypal.application.port.out.repository.UserRepositoryPort;
 import com.application.pennypal.application.port.out.service.CheckUserBlockedPort;
 import com.application.pennypal.application.port.out.service.TokenBlackListPort;
@@ -37,6 +39,8 @@ public class JwtFilter extends OncePerRequestFilter {
     private final TokenServicePort  tokenServicePort;
     private final TokenBlackListPort tokenBlackListPort;
     private final CheckUserBlockedPort checkUserBlockedPort;
+    private final CheckUserIsSuspended checkUserIsSuspended;
+    private final HasActiveSubscription hasActiveSubscription;
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request){
@@ -80,8 +84,36 @@ public class JwtFilter extends OncePerRequestFilter {
                     new ObjectMapper().writeValue(response.getOutputStream(),errorBody);
                     return;
                 }
-                Set<String> roles = tokenServicePort.getRolesFromToken(accessToken);
+                if(checkUserIsSuspended.execute(email)){
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setContentType("application/json");
 
+                    Map<String, Object> errorBody = new HashMap<>();
+                    errorBody.put("timestamp", LocalDateTime.now().toString());
+                    errorBody.put("status", 403);
+                    errorBody.put("suspended",true);
+                    errorBody.put("error", "Forbidden");
+                    errorBody.put("message", "You have been suspended by the admin");
+                    errorBody.put("path", ((HttpServletRequest) request).getRequestURI());
+
+                    new ObjectMapper().writeValue(response.getOutputStream(),errorBody);
+                    return;
+                }
+                Set<String> roles = tokenServicePort.getRolesFromToken(accessToken);
+                if(roles.contains("USER") && !hasActiveSubscription.execute(email)){
+                    response.setStatus(HttpServletResponse.SC_PAYMENT_REQUIRED);
+                    response.setContentType("application/json");
+
+                    Map<String, Object> errorBody = new HashMap<>();
+                    errorBody.put("timestamp", LocalDateTime.now().toString());
+                    errorBody.put("status", 402);
+                    errorBody.put("hasActiveSubscription",false);
+                    errorBody.put("error", "Payment Required");
+                    errorBody.put("message", "You don't have valid plan");
+                    errorBody.put("path", ((HttpServletRequest) request).getRequestURI());
+                    new ObjectMapper().writeValue(response.getOutputStream(),errorBody);
+                    return;
+                }
                 List<SimpleGrantedAuthority> authorities = roles != null
                         ? roles.stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_"+role))

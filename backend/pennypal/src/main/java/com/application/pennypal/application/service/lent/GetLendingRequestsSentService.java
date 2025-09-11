@@ -1,8 +1,8 @@
-package com.application.pennypal.application.service.lend;
+package com.application.pennypal.application.service.lent;
 
 import com.application.pennypal.application.dto.output.lend.LendingRequestOutputModel;
 import com.application.pennypal.application.mappers.lent.LentApplicationMapper;
-import com.application.pennypal.application.port.in.lend.GetLendingRequestsSent;
+import com.application.pennypal.application.port.in.lent.GetLendingRequestsSent;
 import com.application.pennypal.application.port.out.repository.LendingRequestRepositoryPort;
 import lombok.RequiredArgsConstructor;
 

@@ -36,5 +36,17 @@ export const userRoutes : Routes =[{
     },{
         path : 'wallet-management',
         loadComponent : () => import('./pages/wallet-management/wallet-management.component').then(m => m.WalletManagementComponent)
+    },{
+        path : 'lending-management',
+        loadComponent : () => import('./pages/lending-management/lending-management.component').then(m => m.LendingManagementComponent)
+    },{
+        path : 'borrowing-management',
+        loadComponent : () => import('./pages/borrowing-management/borrowing-management.component').then(m=>m.BorrowingManagementComponent)
+    },{
+        path : 'plans',
+        loadComponent : ()=> import('./pages/subscription-plans/subscription-plans.component').then(m => m.SubscriptionPlansComponent)
+    },{
+        path : 'rewards',
+        loadComponent : () => import('./pages/reward-management/reward-management.component').then(m => m .RewardManagementComponent)
     }]
 }]

@@ -4,6 +4,7 @@ import com.application.pennypal.domain.chat.MessageStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -33,13 +34,20 @@ public class ChatMessageEntity {
     @Column(nullable=false)
     private MessageStatus status;
 
+    private String replyToMessageId;   // For replies
+    private String mediaUrl;           // For uploaded images/files
+    @Setter
+    private boolean deleted = false;   // Soft delete
+
     public ChatMessageEntity(
             String chatId,
             String senderId,
             String receiverId,
             String content,
             LocalDateTime sentAt,
-            MessageStatus status
+            MessageStatus status,
+            String replyToMessageId,
+            String mediaUrl
     ){
         this.chatId = chatId;
         this.senderId = senderId;
@@ -47,6 +55,8 @@ public class ChatMessageEntity {
         this.content = content;
         this.sentAt = sentAt;
         this.status = status;
+        this.replyToMessageId = replyToMessageId;
+        this.mediaUrl = mediaUrl;
     }
 
     /// update status
@@ -54,6 +64,7 @@ public class ChatMessageEntity {
         this.status = status;
         return this;
     }
+
 
 
 }

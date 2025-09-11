@@ -50,6 +50,7 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
         userEntity.setActive(user.isActive());
         userEntity.setVerified(user.isVerified());
         userEntity.setProfileURL(user.getProfileURL().isPresent() ? user.getProfileURL().get() : null);
+        userEntity.setSuspended(user.isSuspended());
         UserEntity updatedUser = springDataUserRepository.save(userEntity);
         return UserJpaMapper.toDomain(updatedUser);
     }

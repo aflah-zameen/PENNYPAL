@@ -59,6 +59,7 @@ public class CollectPendingTransactionService implements CollectPendingTransacti
                 recurringTransaction.getUserId(),
                 recurringTransaction.getCategoryId(),
                 recurringTransaction.getCardId().isPresent() ? recurringTransaction.getCardId().get():null,
+                null,
                 recurringTransaction.getAmount(),
                 recurringTransaction.getTransactionType(),
                 recurringTransaction.getTitle(),
@@ -67,6 +68,7 @@ public class CollectPendingTransactionService implements CollectPendingTransacti
                 paymentDate,
                 true,
                 recurringTransaction.getRecurringId(),
+                null,
                 null,
                 null
 

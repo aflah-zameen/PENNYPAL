@@ -5,10 +5,10 @@ import com.application.pennypal.interfaces.rest.dtos.ApiResponse;
 
 import java.util.List;
 
-public class RegisterResponse extends ApiResponse<RegisterOutputModel> {
+public class RegisterResponse extends ApiResponse<RegisterResponseDTO> {
 
-    public RegisterResponse(boolean success,RegisterOutputModel outputModel,String message){
-        super(success,outputModel,message);
+    public RegisterResponse(boolean success,RegisterResponseDTO responseDTO,String message){
+        super(success,responseDTO,message);
     }
 
     public RegisterResponse(boolean success, String message, List<String> errors, String errorCode){

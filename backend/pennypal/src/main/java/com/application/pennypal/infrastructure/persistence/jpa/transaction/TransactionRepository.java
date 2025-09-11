@@ -1,8 +1,11 @@
 package com.application.pennypal.infrastructure.persistence.jpa.transaction;
 
 import com.application.pennypal.application.dto.output.card.CardExpenseOverviewOutputModel;
+import com.application.pennypal.application.dto.output.sale.PaymentStatusDTO;
+import com.application.pennypal.application.dto.output.sale.SalesDataOutput;
 import com.application.pennypal.domain.transaction.entity.Transaction;
 import com.application.pennypal.domain.valueObject.PaymentMethod;
+import com.application.pennypal.domain.valueObject.TransactionStatus;
 import com.application.pennypal.domain.valueObject.TransactionType;
 import com.application.pennypal.infrastructure.persistence.jpa.entity.TransactionEntity;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,7 @@ import org.springframework.data.repository.query.Param;
 import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -136,6 +140,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity,L
     @Query("""
         SELECT t FROM TransactionEntity t
         WHERE t.transferToUserId = :userId OR t.transferFromUserId = :userId
+        ORDER BY t.createdAt DESC
         """)
     List<TransactionEntity> findUserInvolvedTransactions(@Param("userId") String userId);
 
@@ -176,5 +181,44 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity,L
         AND t.user.userId = :userId
     """)
     Object fetchWalletStatsByUserId(@Param("userId") String userId);
+
+    @Query("""
+        SELECT t FROM TransactionEntity t
+        WHERE t.card.cardId = :cardId OR t.receiverCardId = :cardId
+        ORDER BY t.createdAt DESC
+    """)
+    List<TransactionEntity> findCardTransactions(String cardId, Pageable pageable);
+
+    @Query("SELECT t FROM TransactionEntity t WHERE t.planId = :planId AND t.transactionDate BETWEEN :start AND :end")
+    List<TransactionEntity> findByPlanIdAndDateRange(@Param("planId") String planId, @Param("start") LocalDate start, @Param("end") LocalDate end);
+
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM TransactionEntity t " +
+            "WHERE t.status = :status AND t.transactionDate BETWEEN :start AND :end AND transactionType = 'SUBSCRIPTION' ")
+    BigDecimal sumAmountByStatusAndDateRange(@Param("status") TransactionStatus status,
+                                             @Param("start") LocalDate start,
+                                             @Param("end") LocalDate end);
+
+    @Query(value = """
+    SELECT TO_CHAR(t.transaction_date, 'YYYYMM') AS month,
+           t.plan_id AS planId,
+           SUM(t.amount) AS revenue,
+           COUNT(*) AS transactionCount
+    FROM transactions t
+    WHERE t.transaction_date BETWEEN :start AND :end
+    GROUP BY TO_CHAR(t.transaction_date, 'YYYYMM'), t.plan_id
+""", nativeQuery = true)
+    List<SalesDataOutput> findSalesGroupedByMonthAndPlan(LocalDate start, LocalDate end);
+
+
+    @Query("SELECT new com.application.pennypal.application.dto.output.sale.PaymentStatusDTO(t.status, COUNT(t), SUM(t.amount)) FROM TransactionEntity t WHERE t.transactionDate BETWEEN :start AND :end AND transactionType = 'SUBSCRIPTION' GROUP BY t.status")
+    List<PaymentStatusDTO> findPaymentStatusSummary(LocalDate start, LocalDate end);
+
+
+    @Query("SELECT t FROM TransactionEntity t WHERE t.transactionDate BETWEEN :start AND :end AND t.planId IN :planIds")
+    List<TransactionEntity> findByDateRangeAndPlans(
+            @Param("start") LocalDate start,
+            @Param("end") LocalDate end,
+            @Param("planIds") List<String> planIds
+    );
 
 }

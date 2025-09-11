@@ -14,12 +14,12 @@ export class TransactionService {
     amountRange: { min: null, max: null },
     userEmail: "",
   })
-  private paginationSubject = new BehaviorSubject<PaginationInfo>({
-    page: 1,
-    pageSize: 10,
-    total: 0,
-    totalPages: 0,
-  })
+ private paginationSubject = new BehaviorSubject<PaginationInfo>({
+  currentPage: 1,
+  itemsPerPage: 10,
+  totalItems: 0,
+  totalPages: 0,
+})
 
   transactions$ = this.transactionsSubject.asObservable()
   filters$ = this.filtersSubject.asObservable()
@@ -189,14 +189,14 @@ export class TransactionService {
     this.filtersSubject.next({ ...currentFilters, ...filters })
   }
 
-  updatePagination(total: number) {
-    const current = this.paginationSubject.value
-    this.paginationSubject.next({
-      ...current,
-      total,
-      totalPages: Math.ceil(total / current.pageSize),
-    })
-  }
+updatePagination(total: number): void {
+  const current = this.paginationSubject.value;
+  this.paginationSubject.next({
+    ...current,
+    totalItems: total, // ✅ match the interface
+    totalPages: Math.ceil(total / current.itemsPerPage),
+  });
+}
 
   reverseTransaction(transactionId: string): Observable<boolean> {
     const transactions = this.transactionsSubject.value

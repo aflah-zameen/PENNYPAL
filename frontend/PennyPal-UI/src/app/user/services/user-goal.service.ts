@@ -4,7 +4,8 @@ import { BehaviorSubject, catchError, map, Observable, Subject, tap, throwError 
 import { Goal, GoalFormData, GoalStats } from "../models/goal.model";
 import { environment } from "../../../environments/environment";
 import { ApiResponse } from "../../models/ApiResponse";
-import { ContributionFormData } from "../models/contribution-form-date.model";
+import { ContributionFormData, ContributionResponse } from "../models/contribution-form-date.model";
+import { AuthService } from "../../public/auth/services/auth.service";
 
 @Injectable({
     providedIn : 'root'
@@ -21,7 +22,7 @@ export class UserGoalService{
 
     addGoal$ = this.addGoalSubject.asObservable();
     
-    constructor(private https : HttpClient){}
+    constructor(private https : HttpClient,private authService : AuthService){}
 
     //Add new goal
     addNewGoal(data : GoalFormData):Observable<Goal>{
@@ -47,7 +48,13 @@ export class UserGoalService{
     // Add contributions
     addContribution(contribution : ContributionFormData){
       
-    return this.https.post<ApiResponse<string>>(`${this.apiURL}/goal/add-contribution`,contribution,{withCredentials:true}).pipe(
+    return this.https.post<ApiResponse<ContributionResponse>>(`${this.apiURL}/goal/add-contribution`,contribution,{withCredentials:true}).pipe(
+      map(res => res.data),
+      map(data => data.coins),
+      tap(coins => {        
+        if(coins)
+          this.authService.updateUserCoins(coins);
+      }),
       tap(()=> {
         this.changeCycle.next();
       }),

@@ -7,10 +7,12 @@ import com.application.pennypal.domain.card.entity.Card;
 import com.application.pennypal.domain.goal.entity.GoalContribution;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
+
 @RequiredArgsConstructor
 public class GoalContributionApplicationMapper {
     private final CardRepositoryPort cardRepositoryPort;
-    public GoalContributionOutput toOutput(GoalContribution goalContribution){
+    public GoalContributionOutput toOutput(GoalContribution goalContribution, BigDecimal coins){
         Card card = goalContribution.getCardId() != null ?
                 cardRepositoryPort.findByCardId(goalContribution.getGoalId())
                 .orElseThrow(()-> new ApplicationBusinessException("Card entity not found","NOT_FOUND")) :
@@ -20,7 +22,8 @@ public class GoalContributionApplicationMapper {
                 card == null ? null : card.getCardNumber(),
                 goalContribution.getAmount(),
                 goalContribution.getDate(),
-                goalContribution.getNotes()
+                goalContribution.getNotes(),
+                coins
         );
     }
 }

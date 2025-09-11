@@ -5,5 +5,5 @@ import com.application.pennypal.domain.user.valueObject.Roles;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public record UserDomainDTO(String userId, String name, String email, Set<Roles> roles, String phone, boolean active, boolean verified, LocalDateTime created, String profileURL) {
+public record UserDomainDTO(String userId, String userName, String email, Set<Roles> roles, String phone, boolean active, boolean verified, LocalDateTime created, String profileURL) {
 }

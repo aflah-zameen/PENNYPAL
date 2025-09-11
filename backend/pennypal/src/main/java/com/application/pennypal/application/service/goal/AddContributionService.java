@@ -4,6 +4,7 @@ import com.application.pennypal.application.dto.input.goal.AddContributionInputM
 import com.application.pennypal.application.dto.output.goal.GoalContributionOutput;
 import com.application.pennypal.application.exception.base.ApplicationBusinessException;
 import com.application.pennypal.application.mappers.goal.GoalContributionApplicationMapper;
+import com.application.pennypal.application.port.in.coin.CoinReward;
 import com.application.pennypal.application.port.out.repository.CardRepositoryPort;
 import com.application.pennypal.application.port.out.repository.GoalContributionRepositoryPort;
 import com.application.pennypal.application.port.out.repository.GoalRepositoryPort;
@@ -13,9 +14,12 @@ import com.application.pennypal.domain.card.entity.Card;
 import com.application.pennypal.domain.goal.entity.Goal;
 import com.application.pennypal.domain.goal.entity.GoalContribution;
 import com.application.pennypal.domain.transaction.entity.Transaction;
+import com.application.pennypal.domain.valueObject.GoalStatus;
 import com.application.pennypal.domain.valueObject.PaymentMethod;
 import com.application.pennypal.domain.valueObject.TransactionType;
 import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ public class AddContributionService implements AddContribution {
     private final GoalContributionRepositoryPort goalContributionRepositoryPort;
     private final GoalContributionApplicationMapper goalContributionApplicationMapper;
     private final CardRepositoryPort cardRepositoryPort;
+    private final CoinReward coinReward;
 
     @Override
     public GoalContributionOutput execute(String userId, AddContributionInputModel inputModel) {
@@ -41,7 +46,7 @@ public class AddContributionService implements AddContribution {
             goal.contribute(inputModel.amount());
 
             cardRepositoryPort.update(card);
-            goalRepositoryPort.update(goal,goal.getGoalId());
+            goal = goalRepositoryPort.update(goal,goal.getGoalId());
 
 
             /// Create a new Transaction
@@ -49,6 +54,7 @@ public class AddContributionService implements AddContribution {
                   inputModel.userId(),
                     goal.getCategoryId(),
                     inputModel.cardId(),
+                    null,
                     inputModel.amount(),
                     TransactionType.GOAL,
                     "Goal Contribution",
@@ -56,6 +62,7 @@ public class AddContributionService implements AddContribution {
                     PaymentMethod.CARD,
                     LocalDate.now(),
                     false,
+                    null,
                     null,
                     null,
                     null
@@ -73,7 +80,14 @@ public class AddContributionService implements AddContribution {
             );
 
             GoalContribution goalContribution = goalContributionRepositoryPort.save(contribution);
-            return goalContributionApplicationMapper.toOutput(goalContribution);
+
+            /// Coin management
+            if(goal.getStatus().equals(GoalStatus.COMPLETED) && goal.getEndDate().isAfter(LocalDate.now())){
+                BigDecimal coins = coinReward.addCoinsForGoal(goal.getUserId(),goal.getGoalId());
+                return goalContributionApplicationMapper.toOutput(goalContribution,coins);
+            }
+
+            return goalContributionApplicationMapper.toOutput(goalContribution,null);
 
         }
         else{

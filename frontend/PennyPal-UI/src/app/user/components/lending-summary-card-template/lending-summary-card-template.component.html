@@ -1,0 +1,43 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <!-- Lending Cards -->
+  <ng-container *ngIf="mode === 'lending'">
+    <!-- Total Lent -->
+    <app-lending-summary-card
+      title="Total Amount Lent"
+      label="Total Lent"
+      icon="plus"
+      color="green"
+      [value]="lendingService.formatCurrency(summary.totalAmountLent)">
+    </app-lending-summary-card>
+
+    <!-- Pending Requests -->
+    <app-lending-summary-card
+      title="Pending Requests"
+      label="Pending"
+      icon="clock"
+      color="yellow"
+      [value]="summary.totalPendingRequests">
+    </app-lending-summary-card>
+  </ng-container>
+
+  <!-- Borrowing Cards -->
+  <ng-container *ngIf="mode === 'borrowing'">
+    <!-- Total Borrowed -->
+    <app-lending-summary-card
+      title="Total Amount Borrowed"
+      label="Total Borrowed"
+      icon="arrow-down"
+      color="blue"
+      [value]="lendingService.formatCurrency(summary.totalAmountBorrowed)">
+    </app-lending-summary-card>
+
+    <!-- Overdue Loans -->
+    <app-lending-summary-card
+      title="Overdue Loans"
+      label="Overdue"
+      icon="warning"
+      color="red"
+      [value]="summary.overdueLoansCount">
+    </app-lending-summary-card>
+  </ng-container>
+</div>

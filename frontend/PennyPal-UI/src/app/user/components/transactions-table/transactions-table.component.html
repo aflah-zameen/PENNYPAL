@@ -26,9 +26,9 @@
               <td class="py-4 text-gray-600 text-sm">{{ transaction.date }}</td>
               <td 
                 class="py-4 text-right font-semibold"
-                [class]="transaction.type === 'income' ? 'text-green-600' : 'text-red-600'"
+                [class]="transaction.isCredit ? 'text-green-600' : 'text-red-600'"
               >
-                {{ transaction.type === 'income' ? '+' : '-' }}${{ Math.abs(transaction.amount) }}
+                {{ transaction.isCredit ? '+' : '-' }}${{ Math.abs(transaction.amount) }}
               </td>
             </tr>
           </tbody>

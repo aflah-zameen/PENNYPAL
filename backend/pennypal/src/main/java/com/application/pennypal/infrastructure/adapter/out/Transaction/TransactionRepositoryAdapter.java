@@ -3,6 +3,8 @@ package com.application.pennypal.infrastructure.adapter.out.Transaction;
 import com.application.pennypal.application.dto.output.card.CardExpenseOverviewOutputModel;
 import com.application.pennypal.application.dto.output.card.CardSpendingOutputModel;
 import com.application.pennypal.application.dto.output.category.CategoryUserOutput;
+import com.application.pennypal.application.dto.output.sale.PaymentStatusDTO;
+import com.application.pennypal.application.dto.output.sale.SalesDataOutput;
 import com.application.pennypal.application.dto.output.transaction.CategorySpendingOutputModel;
 import com.application.pennypal.application.dto.output.transaction.DashIncExpChart;
 import com.application.pennypal.application.dto.output.transaction.ExpenseDataChart;
@@ -166,8 +168,8 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
 
     @Override
     public List<Transaction> getCardTransaction(String cardId, int page, int size) {
-        Pageable pageable = PageRequest.of(page,size);
-        return transactionRepository.findAllByCard_CardId(cardId,pageable).stream()
+        Pageable pageable = PageRequest.of(page,size,Sort.by(Sort.Direction.DESC, "transactionDate"));
+        return transactionRepository.findCardTransactions(cardId,pageable).stream()
                 .map(TransactionJpaMapper::toDomain)
                 .toList();
     }
@@ -306,6 +308,41 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
         return transactionRepository.findAllByUser_UserIdAndTransactionType(userId, TransactionType.WALLET,sort).stream()
                 .map(TransactionJpaMapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public List<Transaction> findByPlanIdAndDateRange(String planId, LocalDate start, LocalDate end) {
+        return transactionRepository.findByPlanIdAndDateRange(planId,start,end).stream()
+                .map(TransactionJpaMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public BigDecimal sumAmountByStatusAndDateRange(List<String> strings, LocalDate start, LocalDate end) {
+        BigDecimal total = BigDecimal.ZERO;
+        for(String status : strings){
+            TransactionStatus transactionStatus = TransactionStatus.valueOf(status.toUpperCase());
+            BigDecimal sum = transactionRepository.sumAmountByStatusAndDateRange(transactionStatus,start,end);
+            total = total.add(sum);
+        }
+        return total;
+    }
+
+    @Override
+    public List<Transaction> findByDateRangeAndPlans(LocalDate start, LocalDate end, List<String> planIds) {
+        return transactionRepository.findByDateRangeAndPlans(start,end,planIds).stream()
+                .map(TransactionJpaMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<PaymentStatusDTO> findPaymentStatusSummary(LocalDate start, LocalDate end) {
+        return transactionRepository.findPaymentStatusSummary(start,end);
+    }
+
+    @Override
+    public List<SalesDataOutput> findSalesGroupedByMonthAndPlan(LocalDate start, LocalDate end) {
+        return transactionRepository.findSalesGroupedByMonthAndPlan(start,end);
     }
 }
 

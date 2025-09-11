@@ -15,6 +15,5 @@ public record TransactionInputModel(
         String description,
         PaymentMethod paymentMethod,
         String transferToUserId,
-        String transferFromUserId
-) {
+        String transferFromUserId) {
 }

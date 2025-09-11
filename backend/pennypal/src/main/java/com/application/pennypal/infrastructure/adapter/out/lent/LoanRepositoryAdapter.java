@@ -1,16 +1,18 @@
-package com.application.pennypal.infrastructure.adapter.out.lend;
+package com.application.pennypal.infrastructure.adapter.out.lent;
 
+import com.application.pennypal.application.dto.output.lend.LoanAdminSummary;
+import com.application.pennypal.application.port.in.lent.LoanFilterInputModel;
 import com.application.pennypal.application.port.out.repository.LoanRepositoryPort;
-import com.application.pennypal.domain.lend.LendingRequest;
 import com.application.pennypal.domain.lend.Loan;
-import com.application.pennypal.domain.lend.LoanStatus;
 import com.application.pennypal.infrastructure.exception.base.InfrastructureException;
 import com.application.pennypal.infrastructure.persistence.jpa.lend.LendingRequestEntity;
 import com.application.pennypal.infrastructure.persistence.jpa.lend.LendingRequestRepository;
 import com.application.pennypal.infrastructure.persistence.jpa.lend.LoanEntity;
 import com.application.pennypal.infrastructure.persistence.jpa.lend.LoanRepository;
 import com.application.pennypal.infrastructure.persistence.jpa.mapper.LoanJpaMapper;
+import com.application.pennypal.infrastructure.persistence.jpa.specification.LoanSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -40,6 +42,7 @@ public class LoanRepositoryAdapter implements LoanRepositoryPort {
                 .orElseThrow(() -> new InfrastructureException("Loan Entity not found","NOT_FOUND"));
         loanEntity.setAmountPaid(loan.getAmountPaid());
         loanEntity.setStatus(loan.getStatus());
+        loanEntity.setLastReminderSentAt(loan.getLastReminderSentAt());
         loanEntity = loanRepository.save(loanEntity);
         return LoanJpaMapper.toDomain(loanEntity);
     }
@@ -87,5 +90,25 @@ public class LoanRepositoryAdapter implements LoanRepositoryPort {
         return loanRepository.findAllByLendingRequest_RequestedToAndStatusIn(userId,List.of(ACTIVE,PARTIAL,OVERDUE)).stream()
                 .map(LoanJpaMapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public List<Loan> getAll() {
+        return loanRepository.findAllByOrderByCreatedAtDesc().stream()
+                .map(LoanJpaMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Loan> getFilteredAll(LoanFilterInputModel inputModel) {
+        Specification<LoanEntity> spec = LoanSpecification.fromFilter(inputModel);
+        return loanRepository.findAll(spec).stream()
+                .map(LoanJpaMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public LoanAdminSummary getLoanAdminSummary() {
+        return loanRepository.fetchAdminSummary();
     }
 }

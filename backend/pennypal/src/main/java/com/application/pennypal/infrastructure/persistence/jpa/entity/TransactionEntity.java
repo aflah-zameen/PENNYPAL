@@ -56,6 +56,8 @@ public class TransactionEntity {
     @JoinColumn(name = "category_id",referencedColumnName = "categoryId")
     private CategoryEntity category;
 
+    private String planId;
+
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -72,6 +74,7 @@ public class TransactionEntity {
     // Transfer specific fields
     private String transferToUserId;
     private String transferFromUserId;
+    private String receiverCardId;
 
     // Audit fields
     private LocalDateTime createdAt;
@@ -98,12 +101,14 @@ public class TransactionEntity {
             TransactionType transactionType,
             TransactionStatus transactionStatus,
             CategoryEntity category,
+            String planId,
             String description,
             PaymentMethod paymentMethod,
             boolean isFromRecurring,
             String recurringTransactionId,
             String transferToUserId,
-            String transferFromUserId
+            String transferFromUserId,
+            String receiverCardId
     ){
         this.transactionId = transactionId;
         this.user = userEntity;
@@ -114,12 +119,14 @@ public class TransactionEntity {
         this.transactionType = transactionType;
         this.status = transactionStatus;
         this.category = category;
+        this.planId = planId;
         this.description = description;
         this.paymentMethod = paymentMethod;
         this.isFromRecurring = isFromRecurring;
         this.recurringTransactionId  =recurringTransactionId;
         this.transferToUserId = transferToUserId;
         this.transferFromUserId = transferFromUserId;
+        this.receiverCardId = receiverCardId;
     }
 
     public TransactionEntity updateStatus(TransactionStatus status){

@@ -1,17 +1,35 @@
 <div class="flex flex-col items-start w-full">
-      <label class="text-xl tracking-tighter text-center text-black">
-        {{ label }}
-        <span *ngIf="required" style="color: rgba(255, 0, 0, 1)">*</span>
-      </label>
-      <input
-        [type]="type"
-        [placeholder]="placeholder"
-        [required]="required"
-        [formControl] = "control!"
-        [class]="'px-3.5 py-2 mt-2 w-full text-md tracking-tighter bg-white rounded-2xl border border-solid text-neutral-500 ' +
-          (control?.invalid && control?.touched ? 'border-red-500' : 'border-black')"
-      />
-      <span *ngIf="errorMessage" class="text-red-500 text-sm mt-1 max-w-50">
-        {{ errorMessage }}
-      </span>
-    </div>
+  <label
+    [attr.for]="label"
+    class="text-sm font-medium text-black"
+  >
+    {{ label }}
+    <span *ngIf="required" class="text-red-600">*</span>
+  </label>
+
+  <input
+    [id]="label"
+    [type]="type"
+    [placeholder]="placeholder"
+    [required]="required"
+    [disabled]="disabled"
+    [formControl]="control!"
+    [autocomplete]="type === 'password' ? 'new-password' : 'on'" 
+    spellcheck="false" 
+    (input)="onInputChange($event)"
+    [class]="
+      'px-3.5 py-2 mt-2 w-full text-md tracking-tight bg-white rounded-2xl border border-solid text-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ' +
+      (control?.invalid && control?.touched ? 'border-red-500' : 'border-gray-300')
+    "
+    [attr.aria-invalid]="control?.invalid && control?.touched"
+    [attr.aria-describedby]="errorMessage ? label + '-error' : null"
+  />
+
+  <span
+    *ngIf="errorMessage"
+    [id]="label + '-error'"
+    class="text-red-500 text-sm mt-1 max-w-[300px]"
+  >
+    {{ errorMessage }}
+  </span>
+</div>

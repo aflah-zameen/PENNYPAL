@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum MessageStatus {
     SEND("SEND"),
     DELIVERED("DELIVERED"),
+    DELETED("DELETED"),
     READ("READ");
 
     private final String value;
