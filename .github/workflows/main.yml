@@ -86,7 +86,7 @@ jobs:
           username: ${{ secrets.AZURE_USER }}
           key: ${{ secrets.AZURE_SSH_KEY }}
           source: "docker-compose.yml"    # adjust if in a subfolder
-          target: "/home/azureuser/pennypal/docker-compose.yml"
+          target: "/home/azureuser/pennypal/"
 
       # ---------------------------
       # Deploy on Azure VM
