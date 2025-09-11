@@ -24,7 +24,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build Backend
-        run: mvn -B -f backend/pom.xml clean package -DskipTests
+        run: mvn -B -f backend/pennypal/pom.xml clean package -DskipTests
 
       # ---------------------------
       # Build Angular Frontend
