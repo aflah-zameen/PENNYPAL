@@ -129,4 +129,4 @@ jobs:
             EOF
 
             echo "Starting all containers..."
-            docker-compose up -d
+            docker-compose --env-file pennypal.env up -d
