@@ -37,7 +37,7 @@ jobs:
 
       - name: Install & Build Frontend
         run: |
-          cd frontend
+          cd frontend/PennyPal-UI
           npm install
           npm run build --prod
 
