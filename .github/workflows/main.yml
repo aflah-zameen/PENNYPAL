@@ -24,12 +24,6 @@ jobs:
       # ---------------------------
       # Build Backend with Maven
       # ---------------------------
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
       - name: Build Backend
         run: mvn -B -f backend/pennypal/pom.xml clean package -DskipTests
 
