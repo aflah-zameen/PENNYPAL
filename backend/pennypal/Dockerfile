@@ -8,7 +8,7 @@ RUN ./mvnw dependency:go-offline
 COPY src src
 RUN ./mvnw package -DskipTests
 
-COPY .env .env
+# COPY .env .env
 
 # Runtime stage (slim JRE for smaller image)
 FROM eclipse-temurin:21-jre-alpine

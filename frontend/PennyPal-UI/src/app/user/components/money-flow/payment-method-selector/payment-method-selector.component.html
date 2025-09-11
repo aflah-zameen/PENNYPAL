@@ -60,7 +60,10 @@
 
           <!-- Card Info -->
           <div *ngIf="method.type === 'card'" class="text-sm text-gray-600">
-            <p>•••• •••• •••• {{ method.cardNumber?.slice(-4) }}</p>
+            <p>
+              •••• •••• •••• {{ method.cardNumber ? (method.cardNumber + '').slice(-4) : 'XXXX' }}
+            </p>
+
           </div>
 
           <!-- Wallet/Bank Info -->
