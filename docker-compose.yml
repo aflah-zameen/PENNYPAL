@@ -2,20 +2,20 @@ version: "3.9"
 
 services:
   backend:
-    build: ./backend/pennypal
+    image: ${DOCKERHUB_USERNAME}/pennypal-backend:latest
     container_name: pennypal-backend
     ports:
       - "8080:8080"
     env_file:
-      - ./backend/pennypal/.env
+      - ~/pennypal.env
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       redis:
         condition: service_healthy
 
   frontend:
-    build: ./frontend/PennyPal-UI
+    image: ${DOCKERHUB_USERNAME}/pennypal-frontend:latest
     container_name: pennypal-frontend
     ports:
       - "4200:80"
@@ -33,6 +33,11 @@ services:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   redis:
     image: redis:7
