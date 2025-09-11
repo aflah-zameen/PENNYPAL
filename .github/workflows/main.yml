@@ -52,12 +52,12 @@ jobs:
 
       - name: Build & Push Backend Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pennypal-backend:latest ./backend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pennypal-backend:latest ./backend/pennypal
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/pennypal-backend:latest
 
       - name: Build & Push Frontend Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pennypal-frontend:latest ./frontend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pennypal-frontend:latest ./frontend/PennyPal-UI
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/pennypal-frontend:latest
 
       # ---------------------------
