@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/private/user/message")
+@RequestMapping("/api/private/user/messages")
 @RequiredArgsConstructor
 public class MessageController {
     private final MessageService messageService;

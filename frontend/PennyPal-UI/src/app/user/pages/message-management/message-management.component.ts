@@ -15,7 +15,9 @@ export class MessageManagementComponent {
 
   messages: Message[] = []
 
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService) {
+    this.messageService.getAllMessages();
+  }
 
   ngOnInit(): void {
     this.messageService.messages$.subscribe({

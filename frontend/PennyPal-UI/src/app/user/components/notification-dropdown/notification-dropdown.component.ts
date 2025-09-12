@@ -52,26 +52,31 @@ export class NotificationDropdownComponent {
   }
 
   formatTimestamp(timestamp: string): string {
-    const now = new Date()
-    const messageTime = new Date(timestamp)
-    const diffInMinutes = Math.floor((now.getTime() - messageTime.getTime()) / (1000 * 60))
+  // Keep only first 3 digits of fractional seconds
+  const safeTimestamp = timestamp.replace(/\.(\d{3})\d+Z$/, '.$1Z')
 
-    if (diffInMinutes < 1) return "Just now"
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`
+  const now = new Date()
+  const messageTime = new Date(safeTimestamp)
 
-    const diffInHours = Math.floor(diffInMinutes / 60)
-    if (diffInHours < 24) return `${diffInHours}h ago`
+  const diffInMinutes = Math.floor((now.getTime() - messageTime.getTime()) / (1000 * 60))
 
-    const diffInDays = Math.floor(diffInHours / 24)
-    if (diffInDays < 7) return `${diffInDays}d ago`
+  if (diffInMinutes < 1) return "Just now"
+  if (diffInMinutes < 60) return `${diffInMinutes}m ago`
 
-    return messageTime.toLocaleDateString()
-  }
+  const diffInHours = Math.floor(diffInMinutes / 60)
+  if (diffInHours < 24) return `${diffInHours}h ago`
+
+  const diffInDays = Math.floor(diffInHours / 24)
+  if (diffInDays < 7) return `${diffInDays}d ago`
+
+  return messageTime.toLocaleDateString()
+}
+
 
   get unreadCount(): number {    
     return this.notifications ? this.notifications.filter(n => !n.read).length : 0;
   }
-
+  
   onMarkAsRead(notificationId: string){
     this.markAsRead.emit(notificationId);
   }
