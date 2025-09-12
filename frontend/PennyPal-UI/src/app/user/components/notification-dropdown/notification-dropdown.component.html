@@ -30,7 +30,7 @@
               <p class="text-xs mt-1" [ngClass]="{'text-gray-600': notification.read, 'text-gray-800 font-medium': !notification.read}">
                 {{ notification.message }}
               </p>
-              <p class="text-xs text-gray-400 mt-1">{{ formatTimestamp(notification.timestamp) }}</p>
+              <p class="text-xs text-gray-400 mt-1">{{ formatTimestamp(notification.timeStamp) }}</p>
             </div>
             
             <button 
