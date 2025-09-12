@@ -36,14 +36,14 @@ export class SideNavbarComponent {
   ]
 
   informationItems: NavItem[] = [
-    { label: "Messages", icon: "message-circle", route: "/messages" },
-    { label: "Offers", icon: "tag", route: "/offers" },
+    { label: "Messages", icon: "message-circle", route: "/user/messages" }
+    // { label: "Offers", icon: "tag", route: "/offers" },
   ]
 
-  otherItems: NavItem[] = [
-    { label: "Help & Support", icon: "help-circle", route: "/help" },
-    { label: "Feedback", icon: "message-circle", route: "/feedback" },
-  ]
+  // otherItems: NavItem[] = [
+  //   { label: "Help & Support", icon: "help-circle", route: "/help" },
+  //   { label: "Feedback", icon: "message-circle", route: "/feedback" },
+  // ]
 
   constructor(private router: Router) {}
 

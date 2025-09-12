@@ -6,6 +6,7 @@ import com.application.pennypal.application.port.out.repository.NotificationRepo
 import com.application.pennypal.domain.notification.Notification;
 import lombok.RequiredArgsConstructor;
 
+import java.time.ZoneOffset;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class GetAllUserNotificationService implements GetAllUserNotification {
                         notification.getId(),
                         notification.getMessage(),
                         notification.isRead(),
-                        notification.getTimeStamp(),
+                        notification.getTimeStamp().toInstant(ZoneOffset.UTC),
                         notification.getType(),
                         notification.getActionURL()
                 ))

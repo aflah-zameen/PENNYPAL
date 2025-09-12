@@ -12,4 +12,6 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
     Optional<NotificationEntity> findByNotificationId(String notificationId);
     List<NotificationEntity> findAllByUserIdAndReadFalse(String userId, Sort sort);
     List<NotificationEntity> findAllByForAdminTrueAndReadFalse(Sort sort);
+
+    List<NotificationEntity> findAllByUserId(String userId);
 }

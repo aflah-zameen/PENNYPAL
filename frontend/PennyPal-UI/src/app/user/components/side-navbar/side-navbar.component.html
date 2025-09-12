@@ -22,15 +22,5 @@
             [isActive]="isRouteActive(item.route)"
           ></app-nav-item>
         </app-nav-section>
-
-        <app-nav-section title="Others" [isLast]="true">
-          <app-nav-item
-            *ngFor="let item of otherItems"
-            [label]="item.label"
-            [icon]="item.icon"
-            [route]="item.route"
-            [isActive]="isRouteActive(item.route)"
-          ></app-nav-item>
-        </app-nav-section>
       </div>
     </nav>

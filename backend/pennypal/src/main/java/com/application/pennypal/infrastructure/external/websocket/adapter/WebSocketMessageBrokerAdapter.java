@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Component
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class WebSocketMessageBrokerAdapter implements MessageBrokerPort {
                 notification.getId(),
                 notification.getMessage(),
                 notification.isRead(),
-                notification.getTimeStamp(),
+                notification.getTimeStamp().toInstant(ZoneOffset.UTC),
                 notification.getType(),
                 notification.getActionURL()
         );
@@ -51,7 +52,7 @@ public class WebSocketMessageBrokerAdapter implements MessageBrokerPort {
                 notification.getId(),
                 notification.getMessage(),
                 notification.isRead(),
-                notification.getTimeStamp(),
+                notification.getTimeStamp().toInstant(ZoneOffset.UTC),
                 notification.getType(),
                 notification.getActionURL()
         );
@@ -70,7 +71,7 @@ public class WebSocketMessageBrokerAdapter implements MessageBrokerPort {
                 notification.getId(),
                 notification.getMessage(),
                 notification.isRead(),
-                notification.getTimeStamp(),
+                notification.getTimeStamp().toInstant(ZoneOffset.UTC),
                 notification.getType(),
                 notification.getActionURL()
         );

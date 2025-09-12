@@ -48,5 +48,8 @@ export const userRoutes : Routes =[{
     },{
         path : 'rewards',
         loadComponent : () => import('./pages/reward-management/reward-management.component').then(m => m .RewardManagementComponent)
+    },{
+        path : 'messages',
+        loadComponent : () => import('./pages/message-management/message-management.component').then(m => m.MessageManagementComponent)
     }]
 }]

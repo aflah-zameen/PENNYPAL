@@ -1,0 +1,14 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div class="max-w-7xl mx-auto p-6">
+        <!-- Header -->
+        <app-message-header
+        ></app-message-header>
+
+        <!-- Messages List with Custom Scrollbar -->
+        <div class="max-h-[calc(100vh-400px)] overflow-y-auto custom-scrollbar">
+          <app-message-list
+            [messages]="messages"
+          ></app-message-list>
+        </div>
+      </div>
+    </div>
