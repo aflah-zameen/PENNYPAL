@@ -112,6 +112,8 @@ jobs:
             echo "Creating .env file dynamically..."
             cat > pennypal.env <<EOF
             DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+            SPRING_REDIS_HOST=redis
+            SPRING_REDIS_PORT=6379
             SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pennypal
             SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
             SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
