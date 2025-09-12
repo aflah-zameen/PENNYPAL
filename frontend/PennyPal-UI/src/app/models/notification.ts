@@ -2,7 +2,7 @@ export interface NotificationMessageDto {
   id: string;
   type: string;
   message: string;
-  timestamp: string;
+  timeStamp: string;
   actionURL ?: string;
   read: boolean;
 }

@@ -32,13 +32,14 @@ private user: User | null = null;
 
   connect(): void {
   if (this.user != null) {
+  const protocol = window.location.protocol === 'https:' ? 'https' : 'http';
+  const host = window.location.host; // domain + port if needed
+  const url = `${protocol}://${host}/ws`; // SockJS endpoint
     this.stompClient = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws', null, {
-        withCredentials: true,
-      } as any),
-      reconnectDelay: 5000,
-      debug: (str) => console.log(str),
-    });
+    webSocketFactory: () => new SockJS(url, null, { withCredentials: true } as any),
+    reconnectDelay: 5000,
+    debug: (str) => console.log(str),
+  });
 
     this.stompClient.onConnect = () => {
       console.log('✅ WebSocket connected');
