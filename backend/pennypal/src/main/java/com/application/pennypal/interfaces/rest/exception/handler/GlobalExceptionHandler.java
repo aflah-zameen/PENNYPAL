@@ -41,15 +41,16 @@ public class GlobalExceptionHandler {
             String message,
             HttpStatus status,
             HttpServletRequest request,
-            List<String> errors
+            List<String> errors,
+            Throwable ex
     ) {
-        // Log error consistently
+        // Centralized logging based on status
         if (status.is5xxServerError()) {
-            log.error("Error [{}] at [{}]: {} | Details: {}", errorCode, request.getRequestURI(), message, errors, new Throwable());
+            log.error("Error [{}] at [{}]: {} | Details: {}", errorCode, request.getRequestURI(), message, errors, ex);
         } else if (status.is4xxClientError()) {
-            log.warn("Client error [{}] at [{}]: {} | Details: {}", errorCode, request.getRequestURI(), message, errors);
+            log.warn("Client error [{}] at [{}]: {} | Details: {}", errorCode, request.getRequestURI(), message, errors, ex);
         } else {
-            log.info("Handled exception [{}] at [{}]: {} | Details: {}", errorCode, request.getRequestURI(), message, errors);
+            log.info("Handled exception [{}] at [{}]: {} | Details: {}", errorCode, request.getRequestURI(), message, errors, ex);
         }
 
         return ResponseEntity
@@ -66,44 +67,44 @@ public class GlobalExceptionHandler {
     // ---------------- Domain Layer Exceptions ----------------
     @ExceptionHandler(DomainValidationException.class)
     public ResponseEntity<ApiErrorResponse> handleDomainValidation(DomainValidationException ex, HttpServletRequest request) {
-        return buildResponse(ex.code().value(), ex.getMessage(), HttpStatus.BAD_REQUEST, request, null);
+        return buildResponse(ex.code().value(), ex.getMessage(), HttpStatus.BAD_REQUEST, request, null, ex);
     }
 
     @ExceptionHandler(DomainBusinessException.class)
     public ResponseEntity<ApiErrorResponse> handleDomainBusiness(DomainBusinessException ex, HttpServletRequest request) {
-        return buildResponse(ex.code().value(), ex.getMessage(), HttpStatus.CONFLICT, request, null);
+        return buildResponse(ex.code().value(), ex.getMessage(), HttpStatus.CONFLICT, request, null, ex);
     }
 
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ApiErrorResponse> handleGenericDomain(DomainException ex, HttpServletRequest request) {
-        return buildResponse(ex.code().value(), ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, request, null);
+        return buildResponse(ex.code().value(), ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, request, null, ex);
     }
 
     // ---------------- Application Layer Exceptions ----------------
     @ExceptionHandler(ApplicationValidationException.class)
     public ResponseEntity<ApiErrorResponse> handleAppValidation(ApplicationValidationException ex, HttpServletRequest request) {
-        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.BAD_REQUEST, request, null);
+        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.BAD_REQUEST, request, null, ex);
     }
 
     @ExceptionHandler(ApplicationBusinessException.class)
     public ResponseEntity<ApiErrorResponse> handleAppBusiness(ApplicationBusinessException ex, HttpServletRequest request) {
-        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.CONFLICT, request, null);
+        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.CONFLICT, request, null, ex);
     }
 
     @ExceptionHandler(UserSuspendedApplicationException.class)
     public ResponseEntity<ApiErrorResponse> handleSuspended(UserSuspendedApplicationException ex, HttpServletRequest request) {
-        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.FORBIDDEN, request, null);
+        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.FORBIDDEN, request, null, ex);
     }
 
     // ---------------- Infrastructure Layer Exceptions ----------------
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<ApiErrorResponse> handleDatabase(DatabaseException ex, HttpServletRequest request) {
-        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE, request, null);
+        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE, request, null, ex);
     }
 
     @ExceptionHandler(InfrastructureException.class)
     public ResponseEntity<ApiErrorResponse> handleInfraGeneric(InfrastructureException ex, HttpServletRequest request) {
-        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE, request, null);
+        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE, request, null, ex);
     }
 
     // ---------------- Interface Layer Exceptions ----------------
@@ -116,40 +117,38 @@ public class GlobalExceptionHandler {
                 .toList();
 
         return buildResponse(InterfaceErrorCode.METHOD_ARGUMENT_NOT_VALID.getValue(),
-                "Request arguments are invalid", HttpStatus.BAD_REQUEST, request, errors);
+                "Request arguments are invalid", HttpStatus.BAD_REQUEST, request, errors, ex);
     }
 
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<ApiErrorResponse> handleInvalidRequest(InvalidRequestException ex, HttpServletRequest request) {
-        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.BAD_REQUEST, request, null);
+        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.BAD_REQUEST, request, null, ex);
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ResponseEntity<ApiErrorResponse> handleUnauthorized(UnauthorizedAccessException ex, HttpServletRequest request) {
-        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.UNAUTHORIZED, request, null);
+        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.UNAUTHORIZED, request, null, ex);
     }
 
     @ExceptionHandler(ForbiddenAccessException.class)
     public ResponseEntity<ApiErrorResponse> handleForbidden(ForbiddenAccessException ex, HttpServletRequest request) {
-        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.FORBIDDEN, request, null);
+        return buildResponse(ex.getErrorCode(), ex.getMessage(), HttpStatus.FORBIDDEN, request, null, ex);
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ApiErrorResponse> handleMaxUpload(MaxUploadSizeExceededException ex, HttpServletRequest request) {
-        return buildResponse(InterfaceErrorCode.MAX_SIZE_EXCEED.getValue(), ex.getMessage(), HttpStatus.BAD_REQUEST, request, null);
+        return buildResponse(InterfaceErrorCode.MAX_SIZE_EXCEED.getValue(), ex.getMessage(), HttpStatus.BAD_REQUEST, request, null, ex);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleNoResourceFound(NoResourceFoundException ex, HttpServletRequest request) {
-        return buildResponse(InterfaceErrorCode.RESOURCE_NOT_FOUND.getValue(), ex.getMessage(), HttpStatus.NOT_FOUND, request, null);
+        return buildResponse(InterfaceErrorCode.RESOURCE_NOT_FOUND.getValue(), ex.getMessage(), HttpStatus.NOT_FOUND, request, null, ex);
     }
 
     // ---------------- Fallback Generic ----------------
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
-        // Centralized logging for unhandled exceptions
-        log.error("Unhandled exception at [{}]: {}", request.getRequestURI(), ex.getMessage(), ex);
-        return buildResponse(InterfaceErrorCode.UNEXPECTED_ERROR.getValue(), "Unexpected error occurred",
-                HttpStatus.INTERNAL_SERVER_ERROR, request, null);
+        return buildResponse(InterfaceErrorCode.UNEXPECTED_ERROR.getValue(),
+                "Unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR, request, null, ex);
     }
 }
