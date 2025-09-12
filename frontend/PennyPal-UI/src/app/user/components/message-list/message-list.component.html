@@ -1,7 +1,7 @@
 <div class="space-y-4">
 
       <!-- Messages List -->
-      <div messages.length > 0" class="space-y-4">
+      <div *ngIf="messages.length > 0" class="space-y-4">
         <app-message-item
           *ngFor="let message of messages; trackBy: trackByMessageId"
           [message]="message"
