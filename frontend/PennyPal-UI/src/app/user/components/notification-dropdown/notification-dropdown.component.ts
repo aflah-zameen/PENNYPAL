@@ -52,6 +52,9 @@ export class NotificationDropdownComponent {
   }
 
   formatTimestamp(timestamp: string): string {
+    console.log(timestamp);
+    
+    if (!timestamp) return '';
   // Keep only first 3 digits of fractional seconds
   const safeTimestamp = timestamp.replace(/\.(\d{3})\d+Z$/, '.$1Z')
 
@@ -76,7 +79,7 @@ export class NotificationDropdownComponent {
   get unreadCount(): number {    
     return this.notifications ? this.notifications.filter(n => !n.read).length : 0;
   }
-  
+
   onMarkAsRead(notificationId: string){
     this.markAsRead.emit(notificationId);
   }
