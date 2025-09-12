@@ -16,6 +16,7 @@ import com.stripe.param.checkout.SessionCreateParams;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,13 @@ public class SubscriptionController {
     private final SubscriptionInfraService subscriptionInfraService;
     private final GetUser getUser;
 
+    @Value("${stripe.success-url}")
+    private String successUrl;
+
+    @Value("${stripe.cancel-url}")
+    private String cancelUrl;
+
+
     @PostMapping("/checkout-session")
     public ResponseEntity<Map<String, String>> createCheckoutSession(@RequestBody PlanRequest request) {
         try {
@@ -52,8 +60,8 @@ public class SubscriptionController {
 
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT) // or PAYMENT for one-time
-                    .setSuccessUrl("http://localhost:4200/user/plans?session_id={CHECKOUT_SESSION_ID}&plan_id="+request.planId())
-                    .setCancelUrl("http://localhost:4200/user/plans")
+                    .setSuccessUrl(successUrl + "?session_id={CHECKOUT_SESSION_ID}&plan_id=" + request.planId())
+                    .setCancelUrl(cancelUrl)
                     .addLineItem(
                             SessionCreateParams.LineItem.builder()
                                     .setPrice(price.getId()) // This is the Stripe Price ID for the plan
