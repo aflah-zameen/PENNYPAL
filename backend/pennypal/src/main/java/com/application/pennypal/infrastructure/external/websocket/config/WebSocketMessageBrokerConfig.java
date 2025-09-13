@@ -38,9 +38,7 @@ public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfi
     public void registerStompEndpoints(StompEndpointRegistry registry){
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*")
-                .setHandshakeHandler(new CustomHandshakeHandler(tokenServicePort,userRepositoryPort))
-                .withSockJS()
-                .setSessionCookieNeeded(true);
+                .setHandshakeHandler(new CustomHandshakeHandler(tokenServicePort,userRepositoryPort));
     }
 
 //    @Override
