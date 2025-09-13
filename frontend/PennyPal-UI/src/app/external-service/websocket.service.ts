@@ -32,7 +32,7 @@ private user: User | null = null;
 
   connect(): void {
   if (this.user != null) {
-  const url = `wss://${window.location.host}/ws`;
+  const url = 'wss://api.sneakerheadaz.shop/ws';
   this.stompClient = new Client({
     brokerURL: url,
     reconnectDelay: 5000,
