@@ -32,7 +32,7 @@ private user: User | null = null;
 
   connect(): void {
   if (this.user != null) {
-  const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+  const protocol = window.location.protocol === 'https:' ? 'https' : 'http';
   const host = window.location.host; // domain + port if needed
   const url = `${protocol}://${host}/ws`; // SockJS endpoint
     this.stompClient = new Client({
