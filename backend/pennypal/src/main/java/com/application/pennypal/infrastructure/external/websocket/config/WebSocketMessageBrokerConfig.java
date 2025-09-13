@@ -37,7 +37,7 @@ public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfi
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry){
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("http://localhost:4200")
+                .setAllowedOriginPatterns("*")
                 .setHandshakeHandler(new CustomHandshakeHandler(tokenServicePort,userRepositoryPort))
                 .withSockJS()
                 .setSessionCookieNeeded(true);
