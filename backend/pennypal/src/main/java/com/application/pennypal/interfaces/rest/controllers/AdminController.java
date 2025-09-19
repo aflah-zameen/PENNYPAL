@@ -8,6 +8,7 @@ import java.util.List;
 import com.application.pennypal.domain.valueObject.CategoryType;
 import com.application.pennypal.interfaces.rest.dtos.catgeory.CategoryAdminResponse;
 import com.application.pennypal.interfaces.rest.dtos.catgeory.CategoryRequestDTO;
+import jakarta.transaction.Transactional;
 import lombok.val;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -279,6 +280,7 @@ public class AdminController {
    }
 
     @DeleteMapping("/delete-category/{id}")
+    @Transactional
     public ResponseEntity<ApiResponse<?>> deleteCategory(@PathVariable("id") String categoryId){
         deleteCategory.delete(categoryId);
         return ResponseEntity.ok(new ApiResponse<>(true,null,"Deleted successfully"));
