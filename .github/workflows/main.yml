@@ -91,7 +91,7 @@ jobs:
             docker pull redis:7
 
             echo "Stopping old containers..."
-            docker-compose down || true
+            docker compose down || true
 
             echo "Creating .env file dynamically..."
             cat > pennypal.env <<EOF
@@ -115,4 +115,4 @@ jobs:
             EOF
 
             echo "Starting all containers..."
-            docker-compose --env-file pennypal.env up -d
+            docker compose --env-file pennypal.env up -d
