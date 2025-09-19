@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
         Category newCategory = Category.create(
                 userId,
                 category.name(),
-                category.usageTypes().stream().map(CategoryType::valueOf).toList(),
+                new ArrayList<>(Arrays.asList(category.usageTypes())).stream().map(CategoryType::valueOf).collect(Collectors.toList()),
                 category.sortOrder(),
                 category.description(),
                 category.color(),
@@ -58,7 +59,7 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
         oldCategory.setUpdatedAt(LocalDateTime.now());
         oldCategory.setDescription(category.description());
         oldCategory.setUsageTypes(
-                category.usageTypes().stream().map(CategoryType::valueOf).collect(Collectors.toList())
+                new ArrayList<>(Arrays.asList(category.usageTypes())).stream().map(CategoryType::valueOf).collect(Collectors.toList())
         );
         oldCategory.setDefault(category.isDefault());
         oldCategory.setSortOrder(category.sortOrder());
