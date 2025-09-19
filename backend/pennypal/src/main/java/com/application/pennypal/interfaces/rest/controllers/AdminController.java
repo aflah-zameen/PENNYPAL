@@ -6,7 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.application.pennypal.domain.valueObject.CategoryType;
+import com.application.pennypal.interfaces.rest.dtos.catgeory.CategoryAdminResponse;
 import com.application.pennypal.interfaces.rest.dtos.catgeory.CategoryRequestDTO;
+import lombok.val;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -184,34 +186,96 @@ public class AdminController {
 
     //category management
    @PostMapping("/add-category")
-   public ResponseEntity<ApiResponse<Category>> addNewCategory(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO, HttpServletRequest httpServletRequest){
+   public ResponseEntity<ApiResponse<CategoryAdminResponse>> addNewCategory(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO, HttpServletRequest httpServletRequest){
            UserDomainDTO user= getUser.get(extractTokenFromCookie(httpServletRequest,"accessToken"));
            Category category = createCategory.execute(categoryRequestDTO, user.userId());
-           return ResponseEntity.ok(new ApiResponse<>(true,category,"Successfully category created"));
+       val sortOrder = category.getSortOrder();
+       CategoryAdminResponse adminResponse = new CategoryAdminResponse(
+                   category.getCategoryId(),
+                   category.getCreatedBy(),
+                   category.getName(),
+                   category.getUsageTypes(),
+                   category.getCreatedAt(),
+                   category.getUpdatedAt(),
+                   category.getSortOrder(),
+                   category.getDescription(),
+                   category.getColor(),
+                   category.isActive(),
+                   category.isDefault(),
+                   category.getIcon(),
+                   category.getUsageCount()
+           );
+           return ResponseEntity.ok(new ApiResponse<>(true,adminResponse,"Successfully category created"));
    }
 
     @GetMapping("/get-categories")
-    public ResponseEntity<ApiResponse<List<Category>>> getAllCategories(){
+    public ResponseEntity<ApiResponse<List<CategoryAdminResponse>>> getAllCategories(){
         List<Category> categories = getCategories.execute();
-        return ResponseEntity.ok(new ApiResponse<>(true,categories,"All categories fetched successfully"));
+        List<CategoryAdminResponse> adminResponses = categories.stream()
+                .map(category -> new CategoryAdminResponse(
+                        category.getCategoryId(),
+                        category.getCreatedBy(),
+                        category.getName(),
+                        category.getUsageTypes(),
+                        category.getCreatedAt(),
+                        category.getUpdatedAt(),
+                        category.getSortOrder(),
+                        category.getDescription(),
+                        category.getColor(),
+                        category.isActive(),
+                        category.isDefault(),
+                        category.getIcon(),
+                        category.getUsageCount()
+                )).toList();
+        return ResponseEntity.ok(new ApiResponse<>(true,adminResponses,"All categories fetched successfully"));
     }
 
    @PutMapping("/update-category/{id}")
-   public ResponseEntity<ApiResponse<Category>> updateCategory(
+   public ResponseEntity<ApiResponse<CategoryAdminResponse>> updateCategory(
            @RequestBody CategoryRequestDTO categoryRequestDTO,
            @PathVariable("id") String categoryId,HttpServletRequest request){
        String token = extractTokenFromCookie(request,"accessToken");
        UserDomainDTO user = getUser.get(token);
        Category category = updateCategory.update(categoryRequestDTO,categoryId, user.userId());
-        return ResponseEntity.ok(new ApiResponse<>(true,category,"Updated successfully"));
+       CategoryAdminResponse adminResponse = new CategoryAdminResponse(
+               category.getCategoryId(),
+               category.getCreatedBy(),
+               category.getName(),
+               category.getUsageTypes(),
+               category.getCreatedAt(),
+               category.getUpdatedAt(),
+               category.getSortOrder(),
+               category.getDescription(),
+               category.getColor(),
+               category.isActive(),
+               category.isDefault(),
+               category.getIcon(),
+               category.getUsageCount()
+       );
+        return ResponseEntity.ok(new ApiResponse<>(true,adminResponse,"Updated successfully"));
    }
 
    @PatchMapping("/toggle-category-status/{id}")
-   public ResponseEntity<ApiResponse<Category>> updateCategory(@PathVariable("id") String categoryId,HttpServletRequest request){
+   public ResponseEntity<ApiResponse<CategoryAdminResponse>> updateCategory(@PathVariable("id") String categoryId,HttpServletRequest request){
            String token = extractTokenFromCookie(request,"accessToken");
            UserDomainDTO userDomainDTO = getUser.get(token);
            Category category = toggleCategoryStatus.toggle(categoryId,userDomainDTO.userId());
-           return ResponseEntity.ok(new ApiResponse<>(true, category,"Updated category status"));
+       CategoryAdminResponse adminResponse = new CategoryAdminResponse(
+               category.getCategoryId(),
+               category.getCreatedBy(),
+               category.getName(),
+               category.getUsageTypes(),
+               category.getCreatedAt(),
+               category.getUpdatedAt(),
+               category.getSortOrder(),
+               category.getDescription(),
+               category.getColor(),
+               category.isActive(),
+               category.isDefault(),
+               category.getIcon(),
+               category.getUsageCount()
+       );
+           return ResponseEntity.ok(new ApiResponse<>(true, adminResponse,"Updated category status"));
    }
 
     @DeleteMapping("/delete-category/{id}")
