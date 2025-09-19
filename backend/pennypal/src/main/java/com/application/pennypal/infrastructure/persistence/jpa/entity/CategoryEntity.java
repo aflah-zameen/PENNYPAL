@@ -37,6 +37,7 @@ public class CategoryEntity {
     private boolean isDefault;
     private String icon;
     private int usageCount;
+    private Boolean deleted = false;
 
     @OneToMany(mappedBy = "category" ,cascade = CascadeType.ALL,orphanRemoval = true)
     private List<TransactionEntity> transactionEntities = new ArrayList<>();

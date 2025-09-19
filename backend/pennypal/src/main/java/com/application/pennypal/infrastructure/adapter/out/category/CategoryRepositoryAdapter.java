@@ -52,7 +52,7 @@ public class CategoryRepositoryAdapter implements CategoryManagementRepositoryPo
 
     @Override
     public List<Category> findAll(){
-        return categoryRepository.findAll().stream().map(CategoryJpaMapper::toDomain).toList();
+        return categoryRepository.findAllNonDeleted().stream().map(CategoryJpaMapper::toDomain).toList();
     }
 
     @Override
@@ -81,6 +81,9 @@ public class CategoryRepositoryAdapter implements CategoryManagementRepositoryPo
     @Override
     @Transactional
     public void deleteByCategoryId(String categoryId) {
-        categoryRepository.deleteByCategoryId(categoryId);
+        CategoryEntity categoryEntity = categoryRepository.findByCategoryId(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+        categoryEntity.setDeleted(true);
+        categoryRepository.save(categoryEntity);
     }
 }
