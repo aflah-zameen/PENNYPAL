@@ -53,9 +53,9 @@ export class AdminCategoryService {
   }
 
   createCategory(formData: CategoryFormData): Observable<AdminCategory> {
-    const newCategory: AdminCategory = {
+    const newCategory= {
       ...formData,
-      default: false,
+      isDefault: false,
       usageCount: 0,
     }
     return this.https.post<ApiResponse<AdminCategory>>(`${this.apiURL}/add-category`, newCategory,{withCredentials: true  }).pipe(
@@ -181,7 +181,7 @@ export class AdminCategoryService {
 
   bulkUpdateStatus(categoryIds: number[], active: boolean): void {
     const categories = this.categoriesSubject.value.map((cat) => {
-      if (categoryIds.includes(cat.categoryId!) && !cat.default) {
+      if (categoryIds.includes(cat.categoryId!) && !cat.isDefault) {
         return { ...cat, active, updatedAt: new Date().toISOString() }
       }
       return cat

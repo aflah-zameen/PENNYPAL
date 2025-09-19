@@ -127,7 +127,7 @@ export class CategoryManagementComponent {
   }
 
   deleteCategory(category: AdminCategory): void {
-    if (category.default) {
+    if (category.isDefault) {
       this.toastr.error("Cannot delete default categories")
       return
     }

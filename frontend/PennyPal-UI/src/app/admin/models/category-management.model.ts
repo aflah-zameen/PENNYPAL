@@ -6,7 +6,7 @@ export interface AdminCategory {
   color: string
   usageTypes: CategoryUsageType[]
   active: boolean
-  default: boolean
+  isDefault: boolean
   sortOrder: number
   createdAt?: string
   updatedAt?: string

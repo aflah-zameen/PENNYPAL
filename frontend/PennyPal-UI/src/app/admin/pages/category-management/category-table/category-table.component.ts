@@ -31,7 +31,7 @@ export class CategoryTableComponent {
   }
 
   toggleSelectAll(): void {
-    const selectableCategories = this.categories.filter((cat) => !cat.default)
+    const selectableCategories = this.categories.filter((cat) => !cat.isDefault)
     if (this.isAllSelected()) {
       this.selectedCategories = []
     } else {
@@ -40,7 +40,7 @@ export class CategoryTableComponent {
   }
 
   isAllSelected(): boolean {
-    const selectableCategories = this.categories.filter((cat) => !cat.default)
+    const selectableCategories = this.categories.filter((cat) => !cat.isDefault)
     return selectableCategories.length > 0 && this.selectedCategories.length === selectableCategories.length
   }
 
