@@ -71,14 +71,23 @@ export class AdminCategoryService {
   updateCategory(id: number, formData: CategoryFormData): Observable<AdminCategory | null> {
     const categories = this.categoriesSubject.value
     const index = categories.findIndex((cat) => cat.categoryId === id)
-
     if (index === -1) return of(null)
+    const catgeory = categories[index];
 
     const updatedCategory: AdminCategory = {
-  ...categories[index],
-  ...formData,
-  usageTypes: formData.usageTypes,
-  isDefault: false , // 👈 explicitly set this
+  categoryId : catgeory.categoryId,
+  name : formData.name,
+  description : formData.description,
+  icon : formData.icon,
+  color : formData.color,
+  usageTypes : formData.usageTypes,
+  active : formData.active,
+  isDefault : false,
+  sortOrder : formData.sortOrder,
+  createdAt : catgeory.createdAt,
+  updatedAt : catgeory.updatedAt,
+  createdBy : catgeory.createdBy,
+  usageCount : catgeory.usageCount
 };
 
     updatedCategory.usageTypes = formData.usageTypes;    
