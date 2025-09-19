@@ -13,4 +13,5 @@ public record CategoryRequestDTO(@NotBlank(message = "Name cannot be null") Stri
                                  @NotNull(message = "Sort order value cannot be null.") int sortOrder,
                                  @NotNull(message = "Usage count value cannot be null.")  int usageCount,
                                  @NotNull(message = "Icon cant be null") String icon,
-                                 String description) { }
+                                 String description,
+                                 String categoryId) { }
