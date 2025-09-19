@@ -23,7 +23,10 @@ public class CategoryEntity {
     private String categoryId;
     private String name;
     private String createdBy;
+    @ElementCollection(targetClass = CategoryType.class)
     @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "category_usage_types", joinColumns = @JoinColumn(name = "category_id"))
+    @Column(name = "usage_type")
     private List<CategoryType> usageTypes;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

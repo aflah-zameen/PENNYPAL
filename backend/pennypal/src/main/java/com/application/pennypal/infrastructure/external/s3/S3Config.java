@@ -8,7 +8,6 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
-@Configuration
 public class S3Config {
     @Value("${AWS_ACCESS_KEY}")
     private String awsAccessKey;
@@ -22,7 +21,6 @@ public class S3Config {
     @Value("${AWS_REGION}")
     private String awsRegion;
 
-    @Bean
     public S3Client s3Client() {
         AwsBasicCredentials creds = AwsBasicCredentials.create(
                 awsAccessKey,awsSecretKey
@@ -34,7 +32,6 @@ public class S3Config {
                 .build();
     }
 
-    @Bean
     public String bucketName() {
         return bucketName;
     }

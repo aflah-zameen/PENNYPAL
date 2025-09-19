@@ -101,19 +101,20 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity,L
     List<SpendProjection> findYearlySpending(@Param("cardId") String cardId, @Param("transactionType") TransactionType transactionType);
 
     @Query("""
-    SELECT c.id, c.name, c.usageTypes, c.isActive, c.isDefault, c.sortOrder, c.color, c.icon, SUM(t.amount), 0.0
+    SELECT c.categoryId, c.name, c.isActive, c.isDefault, c.sortOrder, c.color, c.icon, SUM(t.amount), 0.0
     FROM TransactionEntity t
     JOIN t.category c
     WHERE t.card.cardId = :cardId
       AND t.transactionType = 'EXPENSE'
       AND t.transactionDate BETWEEN :startDate AND :endDate
-    GROUP BY c.id, c.name, c.usageTypes, c.isActive, c.isDefault, c.sortOrder, c.color, c.icon
+    GROUP BY c.categoryId, c.name, c.isActive, c.isDefault, c.sortOrder, c.color, c.icon
 """)
     List<Object[]> getCardExpenseOverviewRaw(
             @Param("cardId") String cardId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
     );
+
 
     List<TransactionEntity> findAllByCard_CardId(String cardId, Pageable pageable);
 

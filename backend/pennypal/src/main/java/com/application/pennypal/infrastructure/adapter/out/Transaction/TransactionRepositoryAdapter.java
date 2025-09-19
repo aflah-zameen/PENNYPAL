@@ -149,14 +149,14 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
         return raw.stream().map(row-> {
             String categoryId = (String) row[0];
             String name = (String) row[1];
-            List<CategoryType> usageTypes = (List<CategoryType>) row[2];
-            boolean isActive = (Boolean) row[3];
-            boolean isDefault = (Boolean) row[4];
-            int sortOrder = (Integer) row[5];
-            String color = (String) row[6];
-            String icon = (String) row[7];
-            BigDecimal totalAmount = (BigDecimal) row[8];
-            double trend = (Double) row[9];
+            List<CategoryType> usageTypes = null;
+            boolean isActive = (Boolean) row[2];
+            boolean isDefault = (Boolean) row[3];
+            int sortOrder = (Integer) row[4];
+            String color = (String) row[5];
+            String icon = (String) row[6];
+            BigDecimal totalAmount = (BigDecimal) row[7];
+            double trend = (Double) row[8];
 
             CategoryUserOutput categoryOutput = new CategoryUserOutput(
                     categoryId, name, usageTypes, isActive, isDefault, sortOrder, color, icon
