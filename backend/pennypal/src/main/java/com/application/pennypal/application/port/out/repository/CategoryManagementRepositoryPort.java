@@ -13,5 +13,5 @@ public interface CategoryManagementRepositoryPort {
     Optional<Category> findById(Long id);
     List<CategoryUserOutput> getUserCategories();
     Optional<Category> findByCategoryId(String categoryId);
-    void deleteByCategoryId(String categoryId);
+    void softDelete(String categoryId);
 }

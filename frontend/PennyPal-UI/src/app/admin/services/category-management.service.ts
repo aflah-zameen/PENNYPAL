@@ -105,7 +105,7 @@ export class AdminCategoryService {
   deleteCategory(id: number): Observable<boolean> {
     const categories = this.categoriesSubject.value
     const category = categories.find((cat) => cat.categoryId === id)
-    return this.https.delete<ApiResponse<null>>(`${this.apiURL}/delete-category/${id}`, {withCredentials: true}).pipe(
+    return this.https.patch<ApiResponse<null>>(`${this.apiURL}/delete-category/${id}`, {withCredentials: true}).pipe(
       tap((response) => {
         if (response.success) {
           const updatedCategories = categories.filter((cat) => cat.categoryId !== id)

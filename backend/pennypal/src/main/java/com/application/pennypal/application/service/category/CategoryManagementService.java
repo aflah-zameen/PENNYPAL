@@ -79,7 +79,7 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
         @Override
         @Transactional
         public void delete(String categoryId) {
-            this.categoryManagementRepositoryPort.deleteByCategoryId(categoryId);
+            this.categoryManagementRepositoryPort.softDelete(categoryId);
         }
 
     @Override

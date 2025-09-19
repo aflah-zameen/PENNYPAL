@@ -74,8 +74,7 @@ public class CategoryRepositoryAdapter implements CategoryManagementRepositoryPo
     }
 
     @Override
-    @Transactional
-    public void deleteByCategoryId(String categoryId) {
+    public void softDelete(String categoryId) {
         CategoryEntity categoryEntity = categoryRepository.findByCategoryId(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
         categoryEntity.setDeleted(true);

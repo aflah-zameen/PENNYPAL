@@ -279,8 +279,7 @@ public class AdminController {
            return ResponseEntity.ok(new ApiResponse<>(true, adminResponse,"Updated category status"));
    }
 
-    @DeleteMapping("/delete-category/{id}")
-    @Transactional
+    @PatchMapping("/delete-category/{id}")
     public ResponseEntity<ApiResponse<?>> deleteCategory(@PathVariable("id") String categoryId){
         deleteCategory.delete(categoryId);
         return ResponseEntity.ok(new ApiResponse<>(true,null,"Deleted successfully"));
