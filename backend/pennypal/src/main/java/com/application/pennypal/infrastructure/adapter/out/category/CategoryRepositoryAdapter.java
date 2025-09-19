@@ -7,6 +7,7 @@ import com.application.pennypal.domain.catgeory.entity.Category;
 import com.application.pennypal.infrastructure.persistence.jpa.category.CategoryRepository;
 import com.application.pennypal.infrastructure.persistence.jpa.entity.CategoryEntity;
 import com.application.pennypal.infrastructure.persistence.jpa.mapper.CategoryJpaMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -78,6 +79,7 @@ public class CategoryRepositoryAdapter implements CategoryManagementRepositoryPo
     }
 
     @Override
+    @Transactional
     public void deleteByCategoryId(String categoryId) {
         categoryRepository.deleteByCategoryId(categoryId);
     }

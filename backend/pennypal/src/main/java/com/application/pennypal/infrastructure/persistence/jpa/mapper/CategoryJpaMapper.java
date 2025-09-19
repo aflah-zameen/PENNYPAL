@@ -18,7 +18,10 @@ public class CategoryJpaMapper {
                 categoryEntity.getCategoryId(),
                 categoryEntity.getCreatedBy(),
                 categoryEntity.getName(),
-                categoryEntity.getUsageTypes(),
+                categoryEntity.getUsageTypes() == null
+                        ? new ArrayList<>()
+                        : new ArrayList<>(categoryEntity.getUsageTypes())
+                ,
                 categoryEntity.getCreatedAt(),
                 categoryEntity.getUpdatedAt(),
                 categoryEntity.getSortOrder(),
@@ -40,7 +43,10 @@ public class CategoryJpaMapper {
         categoryEntity.setCategoryId(category.getCategoryId());
         categoryEntity.setCreatedBy(category.getCreatedBy());
         categoryEntity.setName(category.getName());
-        categoryEntity.setUsageTypes(new ArrayList<>(category.getUsageTypes()));
+        categoryEntity.setUsageTypes(
+                category.getUsageTypes() == null ? new ArrayList<>() : new ArrayList<>(category.getUsageTypes())
+        );
+
         categoryEntity.setCreatedAt(category.getCreatedAt());
         categoryEntity.setUpdatedAt(category.getUpdatedAt());
         categoryEntity.setSortOrder(category.getSortOrder());

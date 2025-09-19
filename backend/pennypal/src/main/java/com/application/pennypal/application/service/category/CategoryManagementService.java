@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CategoryManagementService implements CreateCategory,GetCategories, UpdateCategory,
@@ -55,7 +56,9 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
         oldCategory.setActive(category.active());
         oldCategory.setUpdatedAt(LocalDateTime.now());
         oldCategory.setDescription(category.description());
-        oldCategory.setUsageTypes(new ArrayList<>(category.usageTypes().stream().map(CategoryType::valueOf).toList()));
+        oldCategory.setUsageTypes(
+                category.usageTypes().stream().map(CategoryType::valueOf).collect(Collectors.toList())
+        );
         oldCategory.setDefault(category.isDefault());
         oldCategory.setSortOrder(category.sortOrder());
         oldCategory.setUsageCount(category.usageCount());
