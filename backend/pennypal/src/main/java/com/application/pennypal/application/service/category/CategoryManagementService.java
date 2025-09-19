@@ -9,6 +9,7 @@ import com.application.pennypal.application.port.in.expense.GetUserCategories;
 import com.application.pennypal.domain.catgeory.entity.Category;
 import com.application.pennypal.domain.valueObject.CategoryType;
 import com.application.pennypal.interfaces.rest.dtos.catgeory.CategoryRequestDTO;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -75,6 +76,7 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
     }
 
     @Override
+    @Transactional
     public void delete(String categoryId) {
         this.categoryManagementRepositoryPort.deleteByCategoryId(categoryId);
     }
