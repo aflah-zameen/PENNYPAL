@@ -95,7 +95,7 @@ export class CategoryManagementComponent {
     try {
       if (this.selectedCategory) {
         // Edit existing category
-        this.categoryService.updateCategory(this.selectedCategory.id!, formData).subscribe({
+        this.categoryService.updateCategory(this.selectedCategory.categoryId!, formData).subscribe({
           next: (updatedCategory) => {
             this.toastr.success("Category updated successfully");
             this.selectedCategory = updatedCategory
@@ -143,7 +143,7 @@ export class CategoryManagementComponent {
       next: (result) => {
         if( result) {
           this.spinner.show();
-          this.categoryService.deleteCategory(category.id!).subscribe({
+          this.categoryService.deleteCategory(category.categoryId!).subscribe({
             next: () => {
               this.spinner.hide();
               this.toastr.success(`Category "${category.name}" deleted successfully`)
@@ -161,7 +161,7 @@ export class CategoryManagementComponent {
 
   toggleCategoryStatus(category: AdminCategory): void {
     this.spinner.show();
-    this.categoryService.toggleCategoryStatus(category.id!).subscribe({
+    this.categoryService.toggleCategoryStatus(category.categoryId!).subscribe({
       next: (updatedCategory) => {
         this.spinner.hide();
         this.toastr.success(`Category "${updatedCategory.name}" status updated successfully`)

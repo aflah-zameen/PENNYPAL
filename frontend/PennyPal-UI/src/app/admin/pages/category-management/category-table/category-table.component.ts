@@ -18,7 +18,7 @@ export class CategoryTableComponent {
   selectedCategories: number[] = []
 
   trackByCategory(index: number, category: AdminCategory): number {
-    return category.id!
+    return category.categoryId!
   }
 
   toggleSelect(categoryId: number): void {
@@ -35,7 +35,7 @@ export class CategoryTableComponent {
     if (this.isAllSelected()) {
       this.selectedCategories = []
     } else {
-      this.selectedCategories = selectableCategories.map((cat) => cat.id).filter((id) => typeof id === 'number')
+      this.selectedCategories = selectableCategories.map((cat) => cat.categoryId).filter((id) => typeof id === 'number')
     }
   }
 

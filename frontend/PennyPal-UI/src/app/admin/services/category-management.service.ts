@@ -49,7 +49,7 @@ export class AdminCategoryService {
   }
 
   getCategoryById(id: number): AdminCategory | undefined {
-    return this.categoriesSubject.value.find((cat) => cat.id === id)
+    return this.categoriesSubject.value.find((cat) => cat.categoryId === id)
   }
 
   createCategory(formData: CategoryFormData): Observable<AdminCategory> {
@@ -70,7 +70,7 @@ export class AdminCategoryService {
 
   updateCategory(id: number, formData: CategoryFormData): Observable<AdminCategory | null> {
     const categories = this.categoriesSubject.value
-    const index = categories.findIndex((cat) => cat.id === id)
+    const index = categories.findIndex((cat) => cat.categoryId === id)
 
     if (index === -1) return of(null)
 
@@ -94,11 +94,11 @@ export class AdminCategoryService {
 
   deleteCategory(id: number): Observable<boolean> {
     const categories = this.categoriesSubject.value
-    const category = categories.find((cat) => cat.id === id)
+    const category = categories.find((cat) => cat.categoryId === id)
     return this.https.delete<ApiResponse<null>>(`${this.apiURL}/delete-category/${id}`, {withCredentials: true}).pipe(
       tap((response) => {
         if (response.success) {
-          const updatedCategories = categories.filter((cat) => cat.id !== id)
+          const updatedCategories = categories.filter((cat) => cat.categoryId !== id)
           this.categoriesSubject.next(updatedCategories)
         }
       }),
@@ -110,7 +110,7 @@ export class AdminCategoryService {
     return this.https.patch<ApiResponse<AdminCategory>>(`${this.apiURL}/toggle-category-status/${id}`, {}, {withCredentials: true}).pipe(
       tap((response) => {
         const categories = this.categoriesSubject.value
-        const index = categories.findIndex((cat) => cat.id === id)
+        const index = categories.findIndex((cat) => cat.categoryId === id)
         if (index !== -1) {
           const updatedCategory = { ...categories[index], ...response.data }
           const updatedCategories = [...categories]
@@ -127,7 +127,7 @@ export class AdminCategoryService {
     const categories = this.categoriesSubject.value
     const reorderedCategories = categoryIds
       .map((id, index) => {
-        const category = categories.find((cat) => cat.id === id)
+        const category = categories.find((cat) => cat.categoryId === id)
         return category ? { ...category, sortOrder: index + 1, updatedAt: new Date().toISOString() } : null
       })
       .filter(Boolean) as AdminCategory[]
@@ -181,7 +181,7 @@ export class AdminCategoryService {
 
   bulkUpdateStatus(categoryIds: number[], active: boolean): void {
     const categories = this.categoriesSubject.value.map((cat) => {
-      if (categoryIds.includes(cat.id!) && !cat.default) {
+      if (categoryIds.includes(cat.categoryId!) && !cat.default) {
         return { ...cat, active, updatedAt: new Date().toISOString() }
       }
       return cat

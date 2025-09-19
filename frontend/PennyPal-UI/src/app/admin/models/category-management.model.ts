@@ -1,5 +1,5 @@
 export interface AdminCategory {
-  id?: number
+  categoryId?: number
   name: string
   description?: string
   icon: string

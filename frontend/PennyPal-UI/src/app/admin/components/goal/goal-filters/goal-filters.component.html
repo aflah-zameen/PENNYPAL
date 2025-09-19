@@ -41,7 +41,7 @@
         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
       >
         <option value="">All Categories</option>
-        <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+        <option *ngFor="let category of categories" [value]="category.categoryId">{{category.name}}</option>
       </select>
     </div>
 

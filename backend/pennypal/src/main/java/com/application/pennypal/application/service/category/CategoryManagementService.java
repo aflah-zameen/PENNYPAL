@@ -7,6 +7,8 @@ import com.application.pennypal.application.port.out.repository.CategoryManageme
 import com.application.pennypal.application.port.in.category.*;
 import com.application.pennypal.application.port.in.expense.GetUserCategories;
 import com.application.pennypal.domain.catgeory.entity.Category;
+import com.application.pennypal.domain.valueObject.CategoryType;
+import com.application.pennypal.interfaces.rest.dtos.catgeory.CategoryRequestDTO;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -17,11 +19,24 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
         ToggleCategoryStatus, DeleteCategory, GetUserCategories, GetCategoryById {
     private final CategoryManagementRepositoryPort categoryManagementRepositoryPort;
     @Override
-    public Category execute(Category category, String userId) {
-        if(categoryManagementRepositoryPort.findByName(category.getName()).isPresent()){
+    public Category execute(CategoryRequestDTO category, String userId) {
+        if(categoryManagementRepositoryPort.findByName(category.name()).isPresent()){
             throw new ApplicationBusinessException("Category already exist.","DUPLICATE_EXIST");
         }
-        return categoryManagementRepositoryPort.save(category,userId);
+
+        Category newCategory = Category.create(
+                userId,
+                category.name(),
+                category.usageTypes().stream().map(CategoryType::valueOf).toList(),
+                category.sortOrder(),
+                category.description(),
+                category.color(),
+                category.isDefault(),
+                category.icon());
+
+
+
+        return categoryManagementRepositoryPort.save(newCategory,userId);
     }
 
     @Override
@@ -30,20 +45,19 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
     }
 
     @Override
-    public Category update(Category category,String categoryId,String userId){
+    public Category update(CategoryRequestDTO category, String categoryId, String userId){
         Category oldCategory = categoryManagementRepositoryPort.findByCategoryId(categoryId)
                 .orElseThrow(() -> new UserNotFoundApplicationException("Category not found"));
-        oldCategory.setName(category.getName());
-        oldCategory.setColor(category.getColor());
-        oldCategory.setIcon(category.getIcon());
-        oldCategory.setActive(category.isActive());
+        oldCategory.setName(category.name());
+        oldCategory.setColor(category.color());
+        oldCategory.setIcon(category.icon());
+        oldCategory.setActive(category.active());
         oldCategory.setUpdatedAt(LocalDateTime.now());
-        oldCategory.setDescription(category.getDescription());
-        oldCategory.setUsageTypes(category.getUsageTypes());
+        oldCategory.setDescription(category.description());
+        oldCategory.setUsageTypes(category.usageTypes().stream().map(CategoryType::valueOf).toList());
         oldCategory.setDefault(category.isDefault());
-        oldCategory.setSortOrder(category.getSortOrder());
-        oldCategory.setCreatedAt(category.getCreatedAt());
-        oldCategory.setUsageCount(category.getUsageCount());
+        oldCategory.setSortOrder(category.sortOrder());
+        oldCategory.setUsageCount(category.usageCount());
         return categoryManagementRepositoryPort.save(oldCategory,userId);
     }
 
