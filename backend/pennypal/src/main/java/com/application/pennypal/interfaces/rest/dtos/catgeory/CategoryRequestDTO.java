@@ -1,9 +1,10 @@
 package com.application.pennypal.interfaces.rest.dtos.catgeory;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.List;
 
 public record CategoryRequestDTO(@NotBlank(message = "Name cannot be null") String name,
                                  @NotBlank(message = "Color cannot be null") String color,
@@ -14,4 +15,8 @@ public record CategoryRequestDTO(@NotBlank(message = "Name cannot be null") Stri
                                  @NotNull(message = "Usage count value cannot be null.")  int usageCount,
                                  @NotNull(message = "Icon cant be null") String icon,
                                  String description,
-                                 String categoryId) { }
+                                 String categoryId,
+                                 LocalDateTime createdAt,
+                                 String createdBy,
+                                 LocalDateTime updatedAt
+                                 ) { }

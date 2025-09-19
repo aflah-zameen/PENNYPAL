@@ -81,6 +81,8 @@ export class AdminCategoryService {
 
     updatedCategory.usageTypes = formData.usageTypes;
 
+    console.log(updatedCategory);
+    
     return this.https.put<ApiResponse<AdminCategory>>(`${this.apiURL}/update-category/${id}`, updatedCategory, {withCredentials: true}).pipe(
       tap((response) => {
         const updatedCategories = [...categories]
