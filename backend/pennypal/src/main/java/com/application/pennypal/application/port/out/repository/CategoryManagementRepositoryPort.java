@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryManagementRepositoryPort {
-    Category save (Category category,String userId );
+    Category save (Category category );
+    Category update (Category category, String categoryId );
     Optional<Category> findByName(String name);
     List<Category> findAll();
     Optional<Category> findById(Long id);

@@ -24,7 +24,6 @@ import com.application.pennypal.infrastructure.persistence.jpa.entity.CardEntity
 import com.application.pennypal.infrastructure.persistence.jpa.entity.CategoryEntity;
 import com.application.pennypal.infrastructure.persistence.jpa.entity.TransactionEntity;
 import com.application.pennypal.infrastructure.persistence.jpa.entity.UserEntity;
-import com.application.pennypal.infrastructure.persistence.jpa.mapper.CategoryMapper;
 import com.application.pennypal.infrastructure.persistence.jpa.mapper.TransactionJpaMapper;
 import com.application.pennypal.infrastructure.persistence.jpa.transaction.SpendProjection;
 import com.application.pennypal.infrastructure.persistence.jpa.transaction.TransactionRepository;

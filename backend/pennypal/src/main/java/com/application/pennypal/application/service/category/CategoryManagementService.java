@@ -36,7 +36,7 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
 
 
 
-        return categoryManagementRepositoryPort.save(newCategory,userId);
+        return categoryManagementRepositoryPort.save(newCategory);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
         oldCategory.setDefault(category.isDefault());
         oldCategory.setSortOrder(category.sortOrder());
         oldCategory.setUsageCount(category.usageCount());
-        return categoryManagementRepositoryPort.save(oldCategory,userId);
+        return categoryManagementRepositoryPort.update(oldCategory,categoryId);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
                 .orElseThrow(() -> new ApplicationBusinessException("Category cannot be found.","NOT_FOUND"));
         category.setActive(!category.isActive());
         category.setUpdatedAt(LocalDateTime.now());
-        return categoryManagementRepositoryPort.save(category,userId);
+        return categoryManagementRepositoryPort.update(category,categoryId);
     }
 
     @Override

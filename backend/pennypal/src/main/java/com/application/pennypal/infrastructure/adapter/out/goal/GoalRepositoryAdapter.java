@@ -17,7 +17,6 @@ import com.application.pennypal.infrastructure.persistence.jpa.entity.CategoryEn
 import com.application.pennypal.infrastructure.persistence.jpa.entity.GoalEntity;
 import com.application.pennypal.infrastructure.persistence.jpa.entity.UserEntity;
 import com.application.pennypal.infrastructure.persistence.jpa.goal.GoalRepository;
-import com.application.pennypal.infrastructure.persistence.jpa.mapper.CategoryMapper;
 import com.application.pennypal.infrastructure.persistence.jpa.mapper.GoalJpaMapper;
 import com.application.pennypal.infrastructure.persistence.jpa.mapper.UserJpaMapper;
 import com.application.pennypal.infrastructure.persistence.jpa.specification.GoalSpecification;
