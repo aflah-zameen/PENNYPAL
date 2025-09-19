@@ -75,14 +75,13 @@ export class AdminCategoryService {
     if (index === -1) return of(null)
 
     const updatedCategory: AdminCategory = {
-      ...categories[index],
-      ...formData,
-    }
+  ...categories[index],
+  ...formData,
+  usageTypes: formData.usageTypes,
+  isDefault: false , // 👈 explicitly set this
+};
 
-    updatedCategory.usageTypes = formData.usageTypes;
-
-    console.log(updatedCategory);
-    
+    updatedCategory.usageTypes = formData.usageTypes;    
     return this.https.put<ApiResponse<AdminCategory>>(`${this.apiURL}/update-category/${id}`, updatedCategory, {withCredentials: true}).pipe(
       tap((response) => {
         const updatedCategories = [...categories]
