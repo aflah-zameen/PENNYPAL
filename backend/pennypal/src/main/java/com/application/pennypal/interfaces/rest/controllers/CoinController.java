@@ -36,7 +36,12 @@ public class CoinController {
     public ResponseEntity<ApiResponse<CoinBalanceOutputModel>> getBalance(HttpServletRequest servletRequest){
         UserDomainDTO user = getUserFromRequest(servletRequest,"accessToken");
         UserCoinAccount coinAccount = userCoinAccountRepositoryPort.findByUserId(user.userId())
-                .orElseThrow(() -> new InfrastructureException("Coin account not found","NOT_FOUND"));
+                .orElse(null);
+        if(coinAccount == null){
+            // If no coin account exists, return zero balance
+            CoinBalanceOutputModel outputModel = new CoinBalanceOutputModel(BigDecimal.ZERO, BigDecimal.ZERO);
+            return ResponseEntity.ok(new ApiResponse<>(true, outputModel,"Balance fetched successfully"));
+        }
         CoinBalanceOutputModel outputModel = new CoinBalanceOutputModel(
                 coinAccount.getBalance(),
                 coinAccount.getTotalEarned()
