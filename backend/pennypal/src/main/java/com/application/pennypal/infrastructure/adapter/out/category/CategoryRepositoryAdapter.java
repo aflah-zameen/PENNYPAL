@@ -79,6 +79,7 @@ public class CategoryRepositoryAdapter implements CategoryManagementRepositoryPo
     }
 
     @Override
+    @Transactional
     public void deleteByCategoryId(String categoryId) {
         categoryRepository.deleteByCategoryId(categoryId);
     }

@@ -75,11 +75,11 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
         return categoryManagementRepositoryPort.update(category,categoryId);
     }
 
-    @Override
-    @Transactional
-    public void delete(String categoryId) {
-        this.categoryManagementRepositoryPort.deleteByCategoryId(categoryId);
-    }
+        @Override
+        @Transactional
+        public void delete(String categoryId) {
+            this.categoryManagementRepositoryPort.deleteByCategoryId(categoryId);
+        }
 
     @Override
     public List<CategoryUserOutput> get() {
