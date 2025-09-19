@@ -52,13 +52,11 @@ export class ExpenseManagementComponent {
     this.recurringExpenses$ = this.transactionService.getRecurringTransactions('EXPENSE');
     this.allPendingExpenseSummary$ = this.transactionService.getPendingTransactionSummary('EXPENSE');
     this.paymentMethods$ = this.cardService.getCardsSummary().pipe(
-            tap(cards => console.log('Payment Methods:', cards)),
       map(cards => cards.map(card => ({
         id: card.id,
         name: card.name,
         cardNumber: card.number
-      } as PaymentMethod))),
-      tap(cards => console.log('Payment Methods:', cards)),
+      } as PaymentMethod)))
     );  
     
     this.reloadSubscription = this.transactionService.reload$.subscribe({

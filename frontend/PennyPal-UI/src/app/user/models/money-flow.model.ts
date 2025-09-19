@@ -47,5 +47,5 @@ export interface UserBalance {
 
 export interface TransferStep {
   step: "amount" | "pin" | "processing" | "success" | "failed"
-  data?: any
+  data?: unknown
 }

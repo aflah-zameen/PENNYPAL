@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+interface FilterChange {
+  category: string
+  progress: string
+  sort: string
+}
 @Component({
   selector: 'app-section-header',
   imports: [CommonModule,FormsModule],
@@ -17,7 +21,7 @@ export class SectionHeaderComponent {
 
   @Output() seeAll = new EventEmitter<void>()
   @Output() search = new EventEmitter<string>()
-  @Output() filterChange = new EventEmitter<any>()
+  @Output() filterChange = new EventEmitter<FilterChange>()
   @Output() viewModeChange = new EventEmitter<string>()
 
   searchQuery = ""

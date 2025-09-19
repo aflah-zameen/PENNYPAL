@@ -13,6 +13,5 @@ export class SubscriptionPlansHeaderComponent {
 
   onBillingChange(billing: "monthly" | "annual"): void {
     // Emit event if needed for parent component
-    console.log("Billing changed to:", billing)
   }
 }

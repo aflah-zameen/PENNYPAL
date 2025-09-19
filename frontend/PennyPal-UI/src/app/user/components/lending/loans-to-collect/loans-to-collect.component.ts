@@ -29,7 +29,6 @@ export class LoansToCollectComponent {
     this.lendingService.sendReminder(loanId).subscribe({
       next: (success) => {
         if (success) {
-          console.log("Reminder sent successfully")
         }
       },
       error: (error) => {
@@ -42,11 +41,9 @@ export class LoansToCollectComponent {
     this.lendingService.fileCase(register).subscribe({
       next: (success) => {
         if (success) {
-          console.log("Case filed successfully")
         }
       },
       error: (error) => {
-        console.error("Error filing case:", error)
       },
     })
   }

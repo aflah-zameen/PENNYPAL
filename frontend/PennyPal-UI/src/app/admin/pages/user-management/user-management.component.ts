@@ -35,7 +35,7 @@ export class UserManagementComponent implements OnInit {
     private userManagementService: UserManagementService,
     private toastr: ToastrService
   ) {
-    this.filteredUsers$ = new BehaviorSubject<any[]>([]);
+    this.filteredUsers$ = new BehaviorSubject<User[]>([]);
     this.filters$ = new BehaviorSubject<FiltersDTO | null>(null);
     this.pagination$ = new BehaviorSubject<{page : number ; size : number}>({page : 0 , size : 2 });
     this.searchKeyword$ = new BehaviorSubject<string>("");

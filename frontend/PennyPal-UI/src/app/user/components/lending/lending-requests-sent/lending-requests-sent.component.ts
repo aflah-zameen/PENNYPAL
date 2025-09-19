@@ -25,7 +25,6 @@ export class LendingRequestsSentComponent {
     this.lendingService.cancelRequest(requestId).subscribe({
       next: (success) => {
         if (success) {
-          console.log("Request cancelled successfully")
         }
       },
       error: (error) => {

@@ -6,6 +6,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalOverlayComponent } from "../modal-overlay/modal-overlay.component";
 import { RecurringTransactionRequest } from '../../models/transaction.model';
+type RecurringExpenseFormErrors = {
+  amount?: string;
+  category?: string;
+  title?: string;
+  frequency?: string;
+  startDate?: string;
+  endDate?: string;
+  endDateBeforeStart?: string;
+};
 
 @Component({
   selector: 'app-add-recurring-expense-modal',
@@ -31,7 +40,7 @@ export class AddRecurringExpenseModalComponent {
       cardId : null
     };
   
-    errors: any = {};
+    errors: RecurringExpenseFormErrors = {};
     isSubmitting: boolean = false;
   
     ngOnInit() {

@@ -46,9 +46,7 @@ export class CategoryFormComponent implements OnInit , OnChanges  {
   }
 
   onSubmit(): void {
-    if (this.formData.name.trim() && this.formData.usageTypes.length > 0) {
-      console.log('Form submitted:', this.formData);
-      
+    if (this.formData.name.trim() && this.formData.usageTypes.length > 0) {      
       this.save.emit({ ...this.formData });
       this.resetForm();
     }

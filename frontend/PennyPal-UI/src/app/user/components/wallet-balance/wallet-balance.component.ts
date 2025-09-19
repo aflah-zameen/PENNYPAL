@@ -27,7 +27,6 @@ export class WalletBalanceComponent {
   }
 
   onAddMoney() {
-    console.log("heyy");
     
     this.addMoneyClicked.emit()
   }

@@ -141,12 +141,7 @@ export class AdminCategoryService {
 
     // Filter by usage type
     if (filter.usageTypes !== "all") {
-      console.log(filter);
-       console.log(categories);
-
-      categories = categories.filter(cat => cat.usageTypes.includes(filter.usageTypes.toUpperCase() as CategoryUsageType))
- 
-      
+      categories = categories.filter(cat => cat.usageTypes.includes(filter.usageTypes.toUpperCase() as CategoryUsageType))  
     }
 
     // Filter by status
@@ -199,18 +194,6 @@ export class AdminCategoryService {
   }
 
   
-
-  private isValidCategory(category: any): category is AdminCategory {
-    return (
-      typeof category.id === "number" &&
-      typeof category.name === "string" &&
-      typeof category.icon === "string" &&
-      typeof category.color === "string" &&
-      Array.isArray(category.usageTypes) &&
-      typeof category.isActive === "boolean" &&
-      typeof category.sortOrder === "number"
-    )
-  }
 
   //handle error
   private handleError(error: HttpErrorResponse): Observable<never> {

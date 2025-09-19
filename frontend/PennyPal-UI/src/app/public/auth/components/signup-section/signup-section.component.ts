@@ -93,7 +93,6 @@ onProfileSelected(file: File) {
       this.toastr.success('Registration completed', 'Success');
       if (response?.expiry != null){
         this.authService.otpTimerSubject.next(new Date(response.expiry));
-        console.log('OTP expiry set to:', new Date(response.expiry));
       }
       this.router.navigate(['/otp-section'], {
         queryParams: { email: signupRequest.email, context: 'register' }

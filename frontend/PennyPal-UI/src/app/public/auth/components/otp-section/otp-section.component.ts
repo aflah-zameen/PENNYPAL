@@ -81,7 +81,6 @@ export class OtpSectionComponent implements OnInit{
   }
 
   goBack() {
-    console.log('Going back');
   }
 
   submitOtp() {
@@ -94,14 +93,14 @@ export class OtpSectionComponent implements OnInit{
 
     this.authService.verifyOtp(this.email,this.otpValue
     ).subscribe({
-      next: (response: any) => {
+      next: (response) => {
         this.spinner.hide();
         this.otpValue = '';
         this.isOtpComplete.next(false);
         this.resendDisableFlag.next(true);
         this.otpInputComponent.clearOtp();
         this.authService.otpTimerSubject.next(null);
-        this.toastr.success(response.message || 'OTP verified successfully', 'Success');
+        this.toastr.success('OTP verified successfully', 'Success');
         if(this.context === 'register'){
           this.router.navigate(['/login']);
         }

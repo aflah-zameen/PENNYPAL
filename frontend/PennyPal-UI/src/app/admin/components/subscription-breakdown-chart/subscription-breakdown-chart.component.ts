@@ -63,7 +63,12 @@ export class SubscriptionBreakdownChartComponent {
     })
   }
 
-  showTooltip(segment: any, event: MouseEvent) {
+  showTooltip(segment: {
+    color: string
+    dashArray: string
+    dashOffset: number
+    data: SubscriptionBreakdown
+  }, event: MouseEvent) {
     const rect = (event.target as Element).getBoundingClientRect()
     const container = (event.target as Element).closest(".relative")?.getBoundingClientRect()
 

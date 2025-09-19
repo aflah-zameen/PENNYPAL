@@ -6,6 +6,16 @@ import { ChatMessage } from '../../../models/contact.model';
 import { WebsocketService } from '../../../../external-service/websocket.service';
 import { ChatMessageDto } from '../../../models/chat.model';
 import { ContactManagementService } from '../../../services/contact-management.service';
+export interface OutgoingChatMessage {
+  receiverId: string | number;
+  content: string | null;
+  replyToMessageId: string | null;
+  file?: {
+    filename: string;
+    mediaType: string;
+    base64: string;
+  };
+}
 
 @Component({
   selector: 'app-chat-drawer',
@@ -76,7 +86,7 @@ export class ChatDrawerComponent implements OnInit, OnChanges, AfterViewChecked 
   async sendMessage(): Promise<void> {
     if ((!this.newMessage.trim() && !this.selectedFile) || !this.selectedContact) return;
 
-    const payload: any = {
+    const payload: OutgoingChatMessage = {
       receiverId: this.selectedContact.id,
       content: this.newMessage || null,
       replyToMessageId: this.replyingTo ? this.replyingTo.chatId : null,

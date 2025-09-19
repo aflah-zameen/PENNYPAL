@@ -17,7 +17,11 @@ import { SentLentRequest } from '../../models/lend.model';
 import { LendingService } from '../../services/lending-management.serive';
 import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-
+interface TransferData {
+  amount: number;
+  note: string;
+  pin?: string;
+}
 @Component({
   selector: 'app-contact-management',
   imports: [RecentContactsComponent, ContactCardComponent, ChatDrawerComponent, SearchBarComponent, CommonModule, SendMoneyModalComponent, PinConfirmationModalComponent, TransactionStatusModalComponent, TransactionReceiptComponent],
@@ -61,7 +65,7 @@ export class ContactManagementComponent implements OnInit {
   // Money Transfer Flow Properties
   userBalance: UserBalance = { available: 25000, currency: "INR" }
   currentStep: TransferStep = { step: "amount" }
-  transferData: any = {}
+  transferData: TransferData = {amount : 0, note : ""}
   currentTransaction: Transaction | null = null
   selectedPaymentMethod: PaymentMethod | null = null
   failureReason = ""
@@ -111,7 +115,7 @@ export class ContactManagementComponent implements OnInit {
     this.isMoneyFlowOpen = true;
     this.selectedContact = contact
     this.currentStep = { step: "amount" }
-    this.transferData = {}
+    this.transferData = {amount : 0, note : ""}
     this.selectedPaymentMethod = null
   }
 
@@ -125,6 +129,12 @@ export class ContactManagementComponent implements OnInit {
   onPinConfirmed(pin: string) {
     this.transferData.pin = pin
     this.isPinConfirmationOpen = false;
+     if (!this.selectedContact || !this.selectedPaymentMethod || !this.transferData.amount || !this.transferData.note || !this.transferData.pin) {
+    this.failureReason = "Missing transfer details.";
+    this.currentStep = { step: "failed" };
+    this.isTransactionStatusOpen = true;
+    return;
+    }
     this.contactManagementService.transferMoney(
       this.selectedContact!.id,
       this.transferData.amount,
@@ -179,7 +189,7 @@ export class ContactManagementComponent implements OnInit {
     this.isTransactionReceiptOpen = false
     this.isTransactionStatusOpen = false;
     this.selectedContact = null
-    this.transferData = {}
+    this.transferData = {amount : 0, note : ""}
     this.currentTransaction = null
     this.selectedPaymentMethod = null
     this.failureReason = ""

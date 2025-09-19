@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Transaction } from '../../../models/transaction-management.model';
+import { PaginationInfo, Transaction } from '../../../models/transaction-management.model';
 import { Observable } from 'rxjs';
 import { TransactionService } from '../../../services/transaction-management.service';
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,7 @@ export class TransactionListComponent {
   @Output() transactionSelected = new EventEmitter<Transaction>()
 
   filteredTransactions$!: Observable<Transaction[]>
-  pagination$!: Observable<any>
+  pagination$!: Observable<PaginationInfo>
 
   constructor(public transactionService: TransactionService) {}
 

@@ -47,18 +47,11 @@ export class GoalDashboardService {
   constructor(private http: HttpClient) {
     // Trigger initial data fetch when filters or pagination change
     this.listenForDataChanges().subscribe();
-    this.fetchWithdrawalRequests().subscribe(); // Initial fetch for withdrawal requests
+    this.fetchWithdrawalRequests().subscribe(); 
   }
 
-  /**
-   * Listens to changes in filters and pagination to refetch data automatically.
-   */
   private listenForDataChanges(): Observable<Goal[]> {
     return combineLatest([this.filters$, this.pagination$]).pipe(
-      tap(([filters, pagination]) => {
-      console.log('listenForDataChanges triggered:', { filters, pagination });
-    }),
-      // Use switchMap to cancel previous requests and switch to a new one
       switchMap(([filters, pagination]) => {
         this.isLoadingSubject.next(true);
         const params = this.buildHttpParams(filters, pagination);
@@ -70,7 +63,6 @@ export class GoalDashboardService {
             this.goalsSubject.next(response.data);
              const current = this.paginationSubject.value;
               const next = response.pagination;
-              // Compare relevant fields
               if (
                 current.page !== next.page ||
                 current.pageSize !== next.pageSize ||
@@ -85,7 +77,6 @@ export class GoalDashboardService {
           catchError((error) => {
             console.error('Failed to fetch goals:', error);
             this.isLoadingSubject.next(false);
-            // Return empty state on error
             this.goalsSubject.next([]);
             return of([]);
           })
@@ -94,21 +85,12 @@ export class GoalDashboardService {
     );
   }
 
-  // --- 
 
-  // --- Data Computation and Transformation Observables ---
-
-  /**
-   * Calculates high-level statistics based on the current set of goals.
-   */
   getGoalStats(): Observable<GoalStats> {
-    // This can be a separate API call or computed client-side
-    // For this example, we assume a dedicated API endpoint for efficiency
     return this.http.get<ApiResponse<GoalStats>>(`${this.apiUrl}/stats`,{withCredentials:true}).pipe(
       map((response) => response.data),
       catchError((error) => {
         console.error('Failed to fetch goal stats:', error);
-        // Return a zeroed-out stats object on error
         return of({
           totalGoals: 0,
           activeGoals: 0,
@@ -121,9 +103,7 @@ export class GoalDashboardService {
     );
   }
 
-  /**
- * Fetches withdrawal requests from the backend and updates the observable.
- */
+
 fetchWithdrawalRequests(): Observable<WithdrawalRequest[]> {
   return this.http.get<ApiResponse<WithdrawalRequest[]>>(`${this.apiUrl}/withdrawals`, { withCredentials: true }).pipe(
     map((response) => response.data),
@@ -138,18 +118,7 @@ fetchWithdrawalRequests(): Observable<WithdrawalRequest[]> {
   );
 }
 
-  // --- Action Methods (Interacting with the Backend) ---
 
-  /**
-   * Fetches alerts from the backend.
-   */
-
-
-  /**
-   * Approves a withdrawal request.
-   * @param withdrawalId The ID of the withdrawal request.
-   * @param adminNotes Optional notes from the administrator.
-   */
   approveWithdrawal(withdrawalId: string, adminNotes?: string): Observable<boolean> {
     return this.http.post<void>(`${this.apiUrl}/withdrawals/${withdrawalId}/approve`, {},{withCredentials:true}).pipe(
       tap(() => this.refreshData()), // Refresh data on success
@@ -161,11 +130,7 @@ fetchWithdrawalRequests(): Observable<WithdrawalRequest[]> {
     );
   }
 
-  /**
-   * Rejects a withdrawal request.
-   * @param withdrawalId The ID of the withdrawal request.
-   * @param adminNotes Optional notes explaining the rejection.
-   */
+
   rejectWithdrawal(withdrawalId: string, adminNotes?: string): Observable<boolean> {
     return this.http.post<void>(`${this.apiUrl}/withdrawals/${withdrawalId}/reject`, {},{withCredentials:true}).pipe(
       tap(() => {
@@ -184,39 +149,25 @@ fetchWithdrawalRequests(): Observable<WithdrawalRequest[]> {
 
 
 
-  /**
-   * Manually triggers a refresh of the goal data by re-applying current filters.
-   */
+
   public refreshData(): void {
     this.filtersSubject.next(this.filtersSubject.value);
     
   }
 
-  // --- Filter and Pagination Management ---
 
-  /**
-   * Updates the filter state, which automatically triggers a data refetch.
-   * @param filters A partial object of the filters to update.
-   */
   updateFilters(filters: Partial<GoalFilters>): void {
     const currentFilters = this.filtersSubject.value;
     this.filtersSubject.next({ ...currentFilters, ...filters });
   }
 
-  /**
-   * Updates the pagination state (e.g., when the user changes page).
-   * @param page The new page number.
-   */
+
   goToPage(page: number): void {
     const currentPagination = this.paginationSubject.value;
     this.paginationSubject.next({ ...currentPagination, page });
   }
 
-  // --- Helper Methods ---
 
-  /**
-   * Constructs HttpParams from filter and pagination states for the API request.
-   */
   private buildHttpParams(filters: GoalFilters, pagination: PaginationInfo): HttpParams {
     let params = new HttpParams()
       .set('page', pagination.page.toString())
@@ -247,11 +198,7 @@ fetchWithdrawalRequests(): Observable<WithdrawalRequest[]> {
     return params;
   }
 
-  // --- Client-side Utility Functions ---
 
-  /**
-   * Formats a number into a currency string (e.g., USD).
-   */
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -259,9 +206,7 @@ fetchWithdrawalRequests(): Observable<WithdrawalRequest[]> {
     }).format(amount);
   }
 
-  /**
-   * Formats a date string into a readable format.
-   */
+
   formatDateTime(dateString: string): string {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
@@ -272,9 +217,7 @@ fetchWithdrawalRequests(): Observable<WithdrawalRequest[]> {
     }).format(new Date(dateString));
   }
 
-  /**
-   * Calculates the progress percentage of a goal.
-   */
+ 
   calculateProgress(contributed: number, target: number): number {
     if (target === 0) return 0;
     return Math.round((contributed / target) * 100);

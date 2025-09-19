@@ -8,6 +8,6 @@ import { LucideAngularModule } from 'lucide-angular'
   styleUrl: './feature-button.component.css'
 })
 export class FeatureButtonComponent {
-  @Input() icon: any;
+  @Input() icon: unknown;
   @Input() buttonText : string='';
 }

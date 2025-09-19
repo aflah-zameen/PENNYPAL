@@ -57,16 +57,6 @@ export class UserRowComponent {
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }
-  // getRoleBadgeClass(role: Set<Roles>): string {
-  //   switch (role) {
-  //     case Roles.SUPER_ADMIN:
-  //       return 'bg-purple-100 text-purple-800 border-purple-200';
-  //     case 'ADMIN':
-  //       return 'bg-blue-100 text-blue-800 border-blue-200';
-  //     default:
-  //       return 'bg-gray-100 text-gray-800 border-gray-200';
-  //   }
-  // }
 
   getRolesLabel(): string {
   const rolesArray = [...this.userData.roles];
@@ -79,7 +69,8 @@ export class UserRowComponent {
       'bg-green-100 text-green-800 border-green-200' : 
       'bg-red-100 text-red-800 border-red-200';
   }
-  onImgError(event: any): void {
-    event.target.src = 'images/default/user-placeholder.jpg'; 
+  onImgError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = 'images/default/user-placeholder.jpg';
   }
 }

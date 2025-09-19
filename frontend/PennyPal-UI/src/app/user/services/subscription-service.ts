@@ -19,8 +19,8 @@ export class SubscriptionService {
     );
   }
 
-  purchasePlan(planId: string,sessionId : string): Observable<any> {
-    return this.http.post<any>(`${this.apiURL}/purchase`,{
+  purchasePlan(planId: string,sessionId : string){
+    return this.http.post<unknown>(`${this.apiURL}/purchase`,{
       planId : planId,
       sessionId : sessionId
     },{withCredentials :true})

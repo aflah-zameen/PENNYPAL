@@ -149,24 +149,6 @@ export class SideNavbarComponent {
     this.router.navigate(["/admin/settings/system"])
   }
 
-  // showLogoutConfirmation(): void {
-  //   this.isLogoutModalOpen = true
-  // }
-
-  // confirmLogout(): void {
-  //   // Clear user session/tokens
-  //   localStorage.removeItem("admin_token")
-  //   sessionStorage.clear()
-
-  //   this.isLogoutModalOpen = false
-  //   this.router.navigate(["/admin/login"])
-
-  //   console.log("Admin logged out successfully")
-  // }
-
-  // cancelLogout(): void {
-  //   this.isLogoutModalOpen = false
-  // }
 
   userLogout(): void {
     this.dialog.open(ConfirmDialogComponent, {

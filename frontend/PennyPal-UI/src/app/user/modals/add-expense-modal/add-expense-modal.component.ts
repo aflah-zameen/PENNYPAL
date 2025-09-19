@@ -5,6 +5,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalOverlayComponent } from "../modal-overlay/modal-overlay.component";
 import { PaymentMethod, TransactionRequest } from '../../models/transaction.model';
+type ExpenseFormErrors = {
+  amount?: string;
+  sourceDetail?: string;
+  expense_date?: string;
+  category?: string;
+  paymentMethod?: string;
+  general ?: string;
+};
 
 @Component({
   selector: 'app-add-expense-modal',
@@ -34,7 +42,7 @@ export class AddExpenseModalComponent {
     cardId : null
   };
 
-  errors: any = {};
+  errors: ExpenseFormErrors = {};
   isSubmitting: boolean = false;
 
   ngOnInit() {

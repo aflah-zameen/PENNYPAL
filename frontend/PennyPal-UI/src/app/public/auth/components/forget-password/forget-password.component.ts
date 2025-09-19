@@ -36,7 +36,6 @@ private spinner : NgxSpinnerService) {
       return;
     }
     this.email = this.forgetPasswordForm.value.email;
-    console.log(this.email);
     this.spinner.show();
     this.authService.sentOtp(this.email).subscribe({
       next: (expires) => {

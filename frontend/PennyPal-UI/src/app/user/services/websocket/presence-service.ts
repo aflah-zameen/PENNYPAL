@@ -12,21 +12,17 @@ export class PresenceService {
     this.presenceSocket = new WebSocket(`ws://localhost:8080/ws/presence?userId=${userId}`);
 
     this.presenceSocket.onmessage = (event) => {
-      console.log(event.data);
       const data = JSON.parse(event.data);
       this.presenceSubject.next(data); // { userId, online }
     };
     this.presenceSocket.onopen = () => {
-      console.log("✅ Connected to presence WebSocket");
-      // you can emit an event or call a handler here
     };
 
     this.presenceSocket.onclose = () => {
-      console.log("🔌 Disconnected from WebSocket");
+      // WebSocket is closed
     };
 
     this.presenceSocket.onerror = (err) => {
-      console.error("🚨 WebSocket error:", err);
     };
   }
 

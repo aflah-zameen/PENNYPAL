@@ -16,9 +16,9 @@ let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<boolean | null>(null);
 
 export const authInterceptor: HttpInterceptorFn = (
-  req: HttpRequest<any>,
+  req: HttpRequest<unknown>,
   next: HttpHandlerFn
-): Observable<HttpEvent<any>> => {
+): Observable<HttpEvent<unknown>> => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const toastr = inject(ToastrService);
@@ -73,12 +73,12 @@ export const authInterceptor: HttpInterceptorFn = (
 };
 
 function handle401Error(
-  req: HttpRequest<any>,
+  req: HttpRequest<unknown>,
   next: HttpHandlerFn,
   authService: AuthService,
   router: Router,
   toastr: ToastrService
-): Observable<HttpEvent<any>> {
+): Observable<HttpEvent<unknown>> {
   if (!isRefreshing) {
     isRefreshing = true;
     refreshTokenSubject.next(null);

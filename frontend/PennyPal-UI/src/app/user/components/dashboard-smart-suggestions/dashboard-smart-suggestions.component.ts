@@ -143,7 +143,5 @@ export class DashboardSmartSuggestionsComponent {
   }
 
   onActionClick(suggestion: Suggestion) {
-    console.log('Action clicked for suggestion:', suggestion.id);
-    // Handle action click - navigate to relevant page or open modal
   }
 }

@@ -6,6 +6,16 @@ import { FormsModule } from '@angular/forms';
 import { IncomeRequestModel} from '../../models/income.model';
 import { RecurringFrequency } from '../../enums/income-frequency.enum';
 import { RecurringTransactionRequest, TransactionRequest } from '../../models/transaction.model';
+type RecurringFormErrors = {
+  amount?: string;
+  title?: string;
+  category?: string;
+  frequency?: string;
+  startDate?: string;
+  endDate?: string;
+  endDateBeforeStart?: string;
+  source?: string;
+};
 
 @Component({
   selector: 'app-add-recurring-income',
@@ -31,7 +41,7 @@ export class AddRecurringIncomeComponent {
   cardId : null 
  };
   
-    errors: any = {};
+    errors: RecurringFormErrors = {};
     isSubmitting: boolean = false;
   
     ngOnInit() {

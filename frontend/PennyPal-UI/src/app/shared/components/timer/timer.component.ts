@@ -20,7 +20,6 @@ export class TimerComponent implements OnInit, OnDestroy{
   ngOnInit() {
     this.fomrattedTime$ = this.expiresAt$.pipe(
       switchMap((expiresAt) => {
-        console.log(expiresAt+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         
         if(!expiresAt) return of('--:--');
         return interval(1000).pipe(
@@ -42,7 +41,6 @@ export class TimerComponent implements OnInit, OnDestroy{
     );
 
     this.fomrattedTime$.subscribe(formatted => {
-      console.log('Formatted time:', formatted);
     });
 
   }

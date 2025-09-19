@@ -63,11 +63,11 @@ export class AdminLoginComponent {
 
     const loginData : LoginRequest = this.loginForm.value;
     this.authService.login(loginData).subscribe({
-      next: (response: any) => {
-        this.toastr.success(response.message || 'Login successful', 'Success');
+      next: (response) => {
+        this.toastr.success('Login successful', 'Success');
         this.router.navigate(['/admin/user-management']);
       },
-      error: (err:any) => {
+      error: (err) => {
         this.toastr.error(err.message || 'Login failed. Please try again.', 'Error');
       },
     });

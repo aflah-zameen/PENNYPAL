@@ -11,7 +11,7 @@ RUN npm install -g @angular/cli
 COPY . .
 RUN npm run build --configuration=production
 
-# Stage 2: Serve with Nginx
+# Stage 2: Serve with Nginx(Web Server)
 FROM nginx:alpine
 COPY --from=build /app/dist/penny-pal-ui/browser/. /usr/share/nginx/html
 

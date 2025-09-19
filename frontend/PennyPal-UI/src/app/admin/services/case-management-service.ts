@@ -92,7 +92,7 @@ export class CaseService {
     )
   }
 
-  sendReminder(loanId: string) :Observable<any>{
+  sendReminder(loanId: string){
     return this.http.post<void>(`${this.apiUrl}/${loanId}/remind}`,{},{withCredentials:true});
   }
 

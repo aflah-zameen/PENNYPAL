@@ -31,7 +31,7 @@ export class WalletService {
   constructor(private http : HttpClient) {
   }
   addMoney(request: AddMoneyRequest): Observable<boolean> {
-    return this.http.post<any>(`${this.apiURL}/wallet/add`,request,{withCredentials:true}).pipe(
+    return this.http.post<unknown>(`${this.apiURL}/wallet/add`,request,{withCredentials:true}).pipe(
       map(res => true),
       tap(()=>{
         this.getWallet().subscribe();

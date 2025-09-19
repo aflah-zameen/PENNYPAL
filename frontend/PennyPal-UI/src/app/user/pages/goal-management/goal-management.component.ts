@@ -168,9 +168,7 @@ stats: GoalStats = {
   if (!goal?.createdAt) return false;
 
   const createdAt = new Date(goal.createdAt).getTime();
-  const now = Date.now();
-  console.log(createdAt+" "+now);
-  
+  const now = Date.now();  
   const diffInMinutes = (now - createdAt) / (1000 * 60);
 
   if (diffInMinutes > this.goalEditTimeInMin) {
@@ -219,7 +217,6 @@ stats: GoalStats = {
           // this.toastr.info("You cannot edit the goal now.")
       },
       error:(err)=>{
-        console.log(err);
         this.spinner.hide();
         this.toastr.error("Failed during editing the goal");
       }
@@ -268,17 +265,13 @@ stats: GoalStats = {
   }
 
   onSeeAllSavingPlans(): void {
-    console.log('See all saving plans');
   }
 
   onSeeAllDeadlines(): void {
-    console.log('See all deadlines');
   }
 
   //filters and serach
-  onViewModeChange(mode: string): void {
-    console.log(mode);
-    
+  onViewModeChange(mode: string): void {    
     this.viewMode = mode
   }
 

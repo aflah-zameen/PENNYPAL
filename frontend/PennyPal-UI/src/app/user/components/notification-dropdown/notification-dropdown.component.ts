@@ -52,7 +52,6 @@ export class NotificationDropdownComponent {
   }
 
   formatTimestamp(timestamp: string): string {
-    console.log(timestamp);
     
     if (!timestamp) return '';
   // Keep only first 3 digits of fractional seconds

@@ -29,12 +29,10 @@ export class TransactionReceiptComponent {
 
   onDownloadReceipt() {
     // Implement download functionality
-    console.log("Downloading receipt...")
   }
 
   onShareReceipt() {
     // Implement share functionality
-    console.log("Sharing receipt...")
   }
 
   getPaymentMethodBackground(): string {

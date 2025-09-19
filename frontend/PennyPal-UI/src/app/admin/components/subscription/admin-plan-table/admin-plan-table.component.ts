@@ -82,7 +82,7 @@ export class AdminPlanTableComponent {
     this.filteredPlans = filtered
   }
 
-  private getValueForSort(plan: AdminSubscriptionPlan, key: string): any {
+  private getValueForSort(plan: AdminSubscriptionPlan, key: string): string | number{
     switch (key) {
       case "name":
         return plan.name.toLowerCase()

@@ -28,8 +28,6 @@ export class GoalManagementComponent {
   }
 
   onWithdrawalReview(goal: Goal) {
-    // Handle withdrawal review
-    console.log("Review withdrawals for goal:", goal.id)
     this.selectedGoal = goal
   }
 

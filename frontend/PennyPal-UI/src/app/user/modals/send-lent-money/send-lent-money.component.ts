@@ -42,7 +42,6 @@ export class SendLentMoneyComponent {
   }
 
   onAddPaymentMethod(): void {
-    console.log('Add new payment method');
     // Implement your logic here
   }
 
@@ -73,7 +72,6 @@ export class SendLentMoneyComponent {
   }
 
   onClose(): void {
-    console.log('Closing transfer request modal');
     this.close.emit();
   }
 

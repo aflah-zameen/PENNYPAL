@@ -77,7 +77,6 @@ export class GoalAlertComponent implements OnInit {
   }
 
   viewGoalDetails(withdrawalId: string) {
-    console.log("View goal details:", withdrawalId)
   }
 
 

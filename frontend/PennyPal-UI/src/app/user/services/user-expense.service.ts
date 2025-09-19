@@ -40,7 +40,6 @@ export class UserExpenseService{
     getExpenseCategories():Observable<ExpenseResponseModel[]>{
         return this.https.get<ApiResponse<ExpenseResponseModel[]>>(this.apiURL+"/fetch-expenses",{withCredentials: true})
         .pipe(
-            tap(res => console.log(res)),
             map(response => response.data),
         );
     }

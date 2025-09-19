@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Goal } from '../../../models/goal-management.model';
+import { Goal, PaginationInfo } from '../../../models/goal-management.model';
 import { Observable } from 'rxjs';
 import { GoalDashboardService } from '../../../services/goal-management.service';
 import { CommonModule } from '@angular/common';
@@ -15,7 +15,7 @@ export class GoalTableComponent {
   @Output() withdrawalReview = new EventEmitter<Goal>()
 
   filteredGoals$!: Observable<Goal[]>
-  pagination$!: Observable<any>
+  pagination$!: Observable<PaginationInfo>
 
   activeDropdown: string | null = null
   isRefreshing = false
@@ -53,30 +53,13 @@ export class GoalTableComponent {
     this.withdrawalReview.emit(goal)
   }
 
-  // hasPendingWithdrawals(goal: Goal): boolean {
-  //   return goal.withdrawalRequests.some((wr) => wr.status === "Pending")
-  // }
-
-  // resetWallet(goal: Goal) {
-  //   this.showConfirmation(
-  //     "Reset Goal Wallet",
-  //     `Are you sure you want to reset the wallet for "${goal.goalName}"? This will set the contributed amount to $0 and cannot be undone.`,
-  //     () => {
-  //       this.goalDashboardService.resetGoalWallet(goal.id).subscribe(() => {
-  //         console.log("Wallet reset successfully")
-  //       })
-  //     },
-  //   )
-  // }
 
   pauseGoal(goal: Goal) {
     // Implementation for pausing goal
-    console.log("Pause goal:", goal.id)
   }
 
   activateGoal(goal: Goal) {
     // Implementation for activating goal
-    console.log("Activate goal:", goal.id)
   }
 
   refreshData() {

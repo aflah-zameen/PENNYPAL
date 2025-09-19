@@ -29,8 +29,7 @@ export class SalesChartComponent implements OnInit {
 
    ngOnChanges(changes: SimpleChanges): void {
     if (changes['salesData']) {
-      console.log('Sales data received:', this.salesData);
-      this.preparePlans(); // ✅ see below
+      this.preparePlans(); 
       this.updateChart();
     }
   }

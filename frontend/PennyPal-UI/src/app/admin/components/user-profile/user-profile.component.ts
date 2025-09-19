@@ -33,8 +33,6 @@ export class UserProfileComponent {
   }
 
   onHelpClick(): void {
-    // Navigate to help page or open help modal
-    console.log("Help clicked")
     this.isDropdownOpen = false
   }
 

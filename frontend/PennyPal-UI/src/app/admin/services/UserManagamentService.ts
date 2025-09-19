@@ -43,9 +43,9 @@ export class UserManagementService{
       );
     }
 
-    public toggleUserActive(email: string, active: boolean): Observable<any> {
+    public toggleUserActive(email: string, active: boolean){
     return this.http
-      .patch<any>(
+      .patch<User>(
         `${this.apiURL}/admin/users/${email}/toggle-active`,
         { active },
         { withCredentials: true }

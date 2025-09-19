@@ -6,7 +6,11 @@ import { PinConfirmationModalComponent } from "../pin-confirmation-modal/pin-con
 import { TransactionStatusModalComponent } from "../transaction-status-modal/transaction-status-modal.component";
 import { TransactionReceiptComponent } from "../transaction-receipt/transaction-receipt.component";
 import { DecimalPipe } from '@angular/common';
-
+export interface TransferData {
+  amount?: number;
+  note?: string;
+  pin?: string;
+}
 @Component({
   selector: 'app-money-transfer-flow',
   imports: [ContactCardComponent, SendMoneyModalComponent, PinConfirmationModalComponent, TransactionStatusModalComponent, TransactionReceiptComponent,DecimalPipe],
@@ -18,7 +22,7 @@ export class MoneyTransferFlowComponent {
   selectedContact: Contact | null = null
 
   currentStep: TransferStep = { step: "amount" }
-  transferData: any = {}
+  transferData: TransferData = {}
   currentTransaction: Transaction | null = null
   failureReason = ""
   showReceipt = false
@@ -36,8 +40,7 @@ export class MoneyTransferFlowComponent {
   }
 
   onMessage(contact: Contact) {
-    console.log("Message:", contact.name)
-    // Implement messaging functionality
+    
   }
 
   onAmountConfirmed(data: { amount: number; note: string; paymentMethod: PaymentMethod }) {
@@ -49,45 +52,9 @@ export class MoneyTransferFlowComponent {
   onPinConfirmed(pin: string) {
     this.transferData.pin = pin
     this.currentStep = { step: "processing" }
-
-    // Simulate transaction processing
-    // setTimeout(() => {
-    //   this.processTransaction()
-    // }, 2000)
   }
 
-  // processTransaction() {
-  //   // Simulate PIN validation (90% success rate for demo)
-  //   const isValidPin = Math.random() > 0.1
-
-  //   if (isValidPin && this.selectedPaymentMethod) {
-  //     // Create successful transaction
-  //     this.currentTransaction = {
-  //       id: "TXN" + Date.now(),
-  //       senderId: "current-user",
-  //       recipientId: this.selectedContact!.id,
-  //       amount: this.transferData.amount,
-  //       note: this.transferData.note,
-  //       timestamp: new Date(),
-  //       status: "completed",
-  //     }
-
-  //     // Update selected payment method balance
-  //     this.selectedPaymentMethod.balance = (this.selectedPaymentMethod.balance || 0) - this.transferData.amount
-
-  //     // Update the payment method in the array
-  //     const methodIndex = this.paymentMethods.findIndex((m) => m.id === this.selectedPaymentMethod!.id)
-  //     if (methodIndex !== -1) {
-  //       this.paymentMethods[methodIndex] = { ...this.selectedPaymentMethod }
-  //     }
-
-  //     this.currentStep = { step: "success" }
-  //   } else {
-  //     // Transaction failed
-  //     this.failureReason = "Invalid PIN entered. Please try again."
-  //     this.currentStep = { step: "failed" }
-  //   }
-  // }
+ 
 
   onRetryTransfer() {
     this.currentStep = { step: "pin" }

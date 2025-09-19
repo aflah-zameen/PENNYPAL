@@ -5,6 +5,14 @@ import { ModalOverlayComponent } from "../modal-overlay/modal-overlay.component"
 import { UserCategoryResponse } from '../../models/user-category.model';
 import { IncomeRequestModel } from '../../models/income.model';
 import { PaymentMethod, TransactionRequest } from '../../models/transaction.model';
+type IncomeFormErrors = {
+  amount?: string;
+  sourceDetail?: string;
+  income_date?: string;
+  category?: string;
+  paymentMethod?: string;
+  general ?: string;
+};
 
 @Component({
   selector: 'app-add-income',
@@ -34,7 +42,7 @@ export class AddIncomeComponent {
     cardId:null
   };
 
-  errors: any = {};
+  errors: IncomeFormErrors = {};
   isSubmitting: boolean = false;
 
   ngOnInit() {

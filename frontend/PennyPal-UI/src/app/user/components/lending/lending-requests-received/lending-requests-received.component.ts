@@ -93,7 +93,6 @@ export class LendingRequestsReceivedComponent {
     this.lendingService.rejectRequest(requestId).subscribe({
       next: (success) => {
         if (success) {
-          console.log("Request rejected successfully")
         }
       },
       error: (error) => {

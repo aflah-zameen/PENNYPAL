@@ -21,9 +21,9 @@ import { FormsModule } from '@angular/forms';
 export class DateFilterComponent {
    @Output() filterChange = new EventEmitter<Partial<FiltersDTO>>();
 
-  onChange(key: string, event: any) {
-    const rawValue = event.target.value;
-    const dateValue = new Date(rawValue);    
+  onChange(key: string, event: Event) {
+    const rawValue = (event.target as HTMLInputElement).value;
+    const dateValue = new Date(rawValue);
     this.filterChange.emit({
       [key]: dateValue
     });

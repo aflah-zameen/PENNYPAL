@@ -93,7 +93,7 @@ export class LendingService {
     );
   }
   
-  refreshAllLendingData(): Observable<any> {
+  refreshAllLendingData() {
     this.loadingSubject.next(true);
     return forkJoin([
       this.fetchLendingSummary(),
@@ -108,9 +108,9 @@ export class LendingService {
 
   // --- ACTION/MUTATION METHODS ---
 
-  approveRequest(form: RequestApproveForm,requestId  : string): Observable<any> {
+  approveRequest(form: RequestApproveForm,requestId  : string) {
     this.loadingSubject.next(true);
-    return this.http.post<any>(`${this.apiURL}/requests/${requestId}/approve`, form, { withCredentials: true }).pipe(
+    return this.http.post<unknown>(`${this.apiURL}/requests/${requestId}/approve`, form, { withCredentials: true }).pipe(
       tap(() => {
         this.fetchLendingRequestsReceived().subscribe();
         this.fetchLoansToPay().subscribe();
@@ -120,9 +120,9 @@ export class LendingService {
     );
   }
 
-  rejectRequest(requestId: string): Observable<any> {
+  rejectRequest(requestId: string) {
     this.loadingSubject.next(true);
-    return this.http.post<any>(`${this.apiURL}/requests/${requestId}/reject`, {}, { withCredentials: true }).pipe(
+    return this.http.post<unknown>(`${this.apiURL}/requests/${requestId}/reject`, {}, { withCredentials: true }).pipe(
       tap(() => {
         this.fetchLendingRequestsReceived().subscribe();
         this.fetchLendingSummary().subscribe();
@@ -131,9 +131,9 @@ export class LendingService {
     );
   }
 
-  cancelRequest(requestId: string): Observable<any> {
+  cancelRequest(requestId: string){
     this.loadingSubject.next(true);
-    return this.http.post<any>(`${this.apiURL}/requests/${requestId}/cancel`, {}, { withCredentials: true }).pipe(
+    return this.http.post<unknown>(`${this.apiURL}/requests/${requestId}/cancel`, {}, { withCredentials: true }).pipe(
       tap(() => {
         this.fetchLendingRequestsSent().subscribe();
         this.fetchLendingSummary().subscribe();
@@ -142,7 +142,7 @@ export class LendingService {
     );
   }
 
-  makePayment(form : TransferRequest ,loanId : string):Observable<any>{
+  makePayment(form : TransferRequest ,loanId : string){
       return this.http.post<ApiResponse<RepayTransactionResponse>>(`${this.apiURL}/loan/${loanId}/repayment`,form,{withCredentials:true}).pipe(
         map(res => res.data),
         map(data => data.coins),
@@ -154,18 +154,7 @@ export class LendingService {
       );
   }
 
-  // markAsPaid(loanId: string, amount: number): Observable<any> {
-  //   this.loadingSubject.next(true);
-  //   return this.http.post<any>(`${this.apiURL}/loans/${loanId}/pay`, { amount }, { withCredentials: true }).pipe(
-  //     tap(() => {
-  //       this.fetchLoansToCollect().subscribe();
-  //       this.fetchLendingSummary().subscribe();
-  //     }),
-  //     finalize(() => this.loadingSubject.next(false))
-  //   );
-  // }
-
-  sendReminder(loanId: string): Observable<any> {
+  sendReminder(loanId: string){
     this.loadingSubject.next(true);
     return this.http.post<ApiResponse<Loan>>(`${this.apiURL}/loans/${loanId}/remind`, {}, { withCredentials: true }).pipe(
       map(res => res.data),
@@ -180,7 +169,7 @@ export class LendingService {
     );
   }
 
-  fileCase(register: RegisterCase): Observable<any> {
+  fileCase(register: RegisterCase){
     this.loadingSubject.next(true);
     return this.http.post<ApiResponse<Loan>>(`${this.apiURL}/loans/file-case`, register, { withCredentials: true }).pipe(
       map(res => res.data),

@@ -39,8 +39,7 @@ export class SendMoneyModalComponent {
   }
 
   onAddPaymentMethod() {
-    console.log("Add new payment method")
-    // Implement add payment method functionality
+
   }
 
   isFormValid(): boolean {
@@ -79,9 +78,7 @@ export class SendMoneyModalComponent {
   }
 
 
-  onClose() {
-    console.log("Closing send money modal");
-    
+  onClose() {    
     this.close.emit()
   }
 

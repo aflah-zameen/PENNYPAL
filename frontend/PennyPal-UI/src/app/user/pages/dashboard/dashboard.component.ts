@@ -331,7 +331,6 @@ latestMessage: Message = {
 };
 
   handleQuickAction(action: string) {
-    console.log('Quick action clicked:', action);
     // Handle different quick actions
     switch(action) {
       case 'add-income':

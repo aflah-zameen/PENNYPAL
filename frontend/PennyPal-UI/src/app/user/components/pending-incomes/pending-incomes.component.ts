@@ -17,7 +17,6 @@ export class PendingIncomesComponent {
   constructor(private currencyPipe : CurrencyPipe){}
 
   ngOnInit() {
-    console.log("pending incomes :"+ this.pendingIncomes);
     
   }
 

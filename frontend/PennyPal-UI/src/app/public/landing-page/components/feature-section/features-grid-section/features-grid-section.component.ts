@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './features-grid-section.component.css'
 })
 export class FeaturesGridSectionComponent {
-  features: any[] = [
+  features: { imageUrl: string; title: string; description: string; }[] = [
     {
       imageUrl: 'https://cdn.builder.io/api/v1/image/assets/TEMP/3b05d50dd00fe347ecc6804186050151bc6c88a8',
       title: 'Expense Tracking',

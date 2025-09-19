@@ -7,6 +7,7 @@ import { AuthService } from '../public/auth/services/auth.service';
 import { User } from '../models/User';
 import { Roles } from '../models/Roles';
 import { ChatMessageDto } from '../user/models/chat.model';
+import { OutgoingChatMessage } from '../user/components/contacts/chat-drawer/chat-drawer.component';
 
 @Injectable({
   providedIn: 'root'
@@ -35,32 +36,27 @@ private user: User | null = null;
   const url = 'wss://api.sneakerheadaz.shop/ws';
   this.stompClient = new Client({
     brokerURL: url,
-    reconnectDelay: 5000,
-    debug: (str) => console.log(str),
+    reconnectDelay: 5000
   });
 
     this.stompClient.onConnect = () => {
-      console.log('✅ WebSocket connected');
       this.connected = true;
 
       // 🔔 Subscribe to notifications
       if (this.user?.roles.has(Roles.ADMIN)) {
         this.stompClient.subscribe('/topic/admin/notifications', (msg: IMessage) => {
           const notification: NotificationMessageDto = JSON.parse(msg.body);
-          console.log('📩 Admin Notification:', notification);
           this.notificationsSubject.next(notification);
         });
       } else {
         this.stompClient.subscribe(`/user/queue/notifications`, (msg: IMessage) => {
           const notification: NotificationMessageDto = JSON.parse(msg.body);
-          console.log('📩 User Notification:', notification);
           this.notificationsSubject.next(notification);
         });
 
         this.stompClient.subscribe(`/user/queue/messages`,(msg : IMessage)=>{
           const message: ChatMessageDto = JSON.parse(msg.body);
           this.chatMessageSubject.next(message);
-          console.log('📩 User Notification:', message);
         })
       }
     };
@@ -70,7 +66,7 @@ private user: User | null = null;
 }
 
 
-  send(destination: string, body: any): void {
+  send(destination: string, body: unknown): void {
     if (this.connected && this.stompClient) {
       this.stompClient.publish({
         destination: destination,
@@ -79,14 +75,12 @@ private user: User | null = null;
     }
   }
 
-   sendChatMessage(payload: any): void {  
+   sendChatMessage(payload: OutgoingChatMessage): void {
     if (this.stompClient?.active) {
-      console.log(payload);
       this.stompClient.publish({
         destination: '/app/chat.send',
         body: JSON.stringify(payload),
       });
-      console.log('📤 Sent chat over STOMP', payload);
     } else {
       console.warn('⚠️ STOMP client not active. Message not sent.');
     }
@@ -98,9 +92,7 @@ sendDeleteMessage(messageId: string, forEveryone = false): void {
         destination: '/app/chat.delete',
         body: JSON.stringify({ messageId, forEveryone }),
       });
-      console.log('📤 Sent delete command', messageId, forEveryone);
     } else {
-      console.warn('⚠️ STOMP client not active. Delete not sent.');
     }
   }
 
