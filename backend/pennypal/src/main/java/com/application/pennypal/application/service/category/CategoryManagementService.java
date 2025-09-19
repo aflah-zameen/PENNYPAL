@@ -12,6 +12,7 @@ import com.application.pennypal.interfaces.rest.dtos.catgeory.CategoryRequestDTO
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -54,7 +55,7 @@ public class CategoryManagementService implements CreateCategory,GetCategories, 
         oldCategory.setActive(category.active());
         oldCategory.setUpdatedAt(LocalDateTime.now());
         oldCategory.setDescription(category.description());
-        oldCategory.setUsageTypes(category.usageTypes().stream().map(CategoryType::valueOf).toList());
+        oldCategory.setUsageTypes(new ArrayList<>(category.usageTypes().stream().map(CategoryType::valueOf).toList()));
         oldCategory.setDefault(category.isDefault());
         oldCategory.setSortOrder(category.sortOrder());
         oldCategory.setUsageCount(category.usageCount());

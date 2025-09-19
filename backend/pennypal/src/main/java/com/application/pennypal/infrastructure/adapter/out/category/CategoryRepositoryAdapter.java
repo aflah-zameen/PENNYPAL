@@ -10,6 +10,7 @@ import com.application.pennypal.infrastructure.persistence.jpa.mapper.CategoryJp
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class CategoryRepositoryAdapter implements CategoryManagementRepositoryPo
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
 
         categoryEntity.setName(category.getName());
-        categoryEntity.setUsageTypes(category.getUsageTypes());
+        categoryEntity.setUsageTypes(new ArrayList<>(category.getUsageTypes()));
         categoryEntity.setActive(category.isActive());
         categoryEntity.setDefault(category.isDefault());
         categoryEntity.setColor(category.getColor());
