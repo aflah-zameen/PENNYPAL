@@ -61,11 +61,6 @@ public class CategoryRepositoryAdapter implements CategoryManagementRepositoryPo
     }
 
     @Override
-    public void deleteById(Long categoryId) {
-        categoryRepository.deleteById(categoryId);
-    }
-
-    @Override
     public List<CategoryUserOutput> getUserCategories() {
         List<CategoryEntity> categories = categoryRepository.findAllByIsActiveTrue();
         return categories.stream().map(categoryEntity -> new CategoryUserOutput(categoryEntity.getCategoryId(),categoryEntity.getName(),categoryEntity.getUsageTypes(),

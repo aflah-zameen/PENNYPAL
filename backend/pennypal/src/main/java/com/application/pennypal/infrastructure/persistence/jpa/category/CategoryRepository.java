@@ -15,8 +15,6 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity,Long>{
     List<CategoryEntity> findAllByIsActiveTrue();
     Optional<CategoryEntity> findByCategoryId(String categoryId);
 
-    void deleteByCategoryId(String categoryId);
-
     @Query("SELECT c FROM CategoryEntity c WHERE c.deleted = false")
     List<CategoryEntity> findAllNonDeleted();
 }
