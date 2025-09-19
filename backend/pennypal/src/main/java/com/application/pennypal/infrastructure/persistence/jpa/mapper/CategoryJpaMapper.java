@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.ArrayList;
+
 public class CategoryJpaMapper {
     public static Category toDomain(CategoryEntity categoryEntity) {
         if (categoryEntity == null) {
@@ -38,7 +40,7 @@ public class CategoryJpaMapper {
         categoryEntity.setCategoryId(category.getCategoryId());
         categoryEntity.setCreatedBy(category.getCreatedBy());
         categoryEntity.setName(category.getName());
-        categoryEntity.setUsageTypes(category.getUsageTypes());
+        categoryEntity.setUsageTypes(new ArrayList<>(category.getUsageTypes()));
         categoryEntity.setCreatedAt(category.getCreatedAt());
         categoryEntity.setUpdatedAt(category.getUpdatedAt());
         categoryEntity.setSortOrder(category.getSortOrder());

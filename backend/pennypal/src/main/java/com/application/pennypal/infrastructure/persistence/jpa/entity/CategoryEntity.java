@@ -27,7 +27,7 @@ public class CategoryEntity {
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "category_usage_types", joinColumns = @JoinColumn(name = "category_id"))
     @Column(name = "usage_type")
-    private List<CategoryType> usageTypes;
+    private List<CategoryType> usageTypes = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int sortOrder;
