@@ -16,7 +16,7 @@ public record CategoryAdminResponse(
          int sortOrder,
          String description,
          String color,
-         boolean isActive,
+         boolean active,
          @JsonProperty("isDefault")
          boolean isDefault,
          String icon,
