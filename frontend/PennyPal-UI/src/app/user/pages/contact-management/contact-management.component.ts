@@ -129,11 +129,21 @@ export class ContactManagementComponent implements OnInit {
   onPinConfirmed(pin: string) {
     this.transferData.pin = pin
     this.isPinConfirmationOpen = false;
-     if (!this.selectedContact || !this.selectedPaymentMethod || !this.transferData.amount || !this.transferData.note || !this.transferData.pin) {
-    this.failureReason = "Missing transfer details.";
-    this.currentStep = { step: "failed" };
-    this.isTransactionStatusOpen = true;
-    return;
+console.log(
+  "Contact:", this.selectedContact,
+  "Payment Method:", this.selectedPaymentMethod,
+  "Amount:", this.transferData.amount,
+  "Note:", this.transferData.note,
+  "PIN:", this.transferData.pin,
+  "Full Transfer Data:", this.transferData
+);
+    
+    if(!this.selectedContact || !this.selectedPaymentMethod || !this.transferData.amount || this.transferData.note == null || !this.transferData.pin) {
+      this.failureReason = "Missing transfer details.";
+      this.currentStep = { step: "failed" };
+      this.isTransactionStatusOpen = true;
+      
+      return;
     }
     this.contactManagementService.transferMoney(
       this.selectedContact!.id,
