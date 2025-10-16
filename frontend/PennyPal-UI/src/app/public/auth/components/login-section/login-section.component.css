@@ -1,3 +1,192 @@
-:host {
-      display: contents;
-    }
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Glassmorphic card with gradient border and backdrop blur */
+.login-card {
+  position: relative;
+  width: 100%;
+  padding: 2.5rem;
+  background: rgba(61, 87, 148, 0);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gradient text for heading */
+.login-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+/* Subtitle styling */
+.login-subtitle {
+  font-size: 0.875rem;
+  color: rgba(148, 163, 184, 0.8);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+/* Form styling with proper spacing */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Enhanced button styling with gradient and hover effects */
+.sign-in-button {
+  margin-top: 0.5rem;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sign-in-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.sign-in-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+}
+
+.sign-in-button:hover::before {
+  left: 100%;
+}
+
+/* Forgot password link styling */
+.forgot-password-link {
+  text-align: right;
+  margin-top: 0.5rem;
+}
+
+.forgot-password-link a {
+  font-size: 0.875rem;
+  color: rgba(148, 163, 184, 0.8);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.forgot-password-link a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #7c3aed, #06b6d4);
+  transition: width 0.3s ease;
+}
+
+.forgot-password-link a:hover {
+  color: #06b6d4;
+}
+
+.forgot-password-link a:hover::after {
+  width: 100%;
+}
+
+/* Enhanced signup section with better styling */
+.signup-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.signup-text {
+  font-size: 0.875rem;
+  color: rgba(148, 163, 184, 0.8);
+  font-weight: 500;
+}
+
+.signup-button {
+  background: none;
+  border: none;
+  color: #7c3aed;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0;
+}
+
+.signup-button::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #7c3aed, #06b6d4);
+  transition: width 0.3s ease;
+}
+
+.signup-button:hover {
+  color: #06b6d4;
+}
+
+.signup-button:hover::after {
+  width: 100%;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 640px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+
+  .signup-section {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}

@@ -67,9 +67,6 @@ export class AdminLoginComponent {
         this.toastr.success('Login successful', 'Success');
         this.router.navigate(['/admin/user-management']);
       },
-      error: (err) => {
-        this.toastr.error(err.message || 'Login failed. Please try again.', 'Error');
-      },
     });
   }
 

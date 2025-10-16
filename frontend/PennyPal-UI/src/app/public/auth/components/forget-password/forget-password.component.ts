@@ -42,7 +42,7 @@ private spinner : NgxSpinnerService) {
         this.spinner.hide();
         this.authService.otpTimerSubject.next(expires);
         this.toastr.success('OTP sent successfully', 'Success');
-        this.router.navigate(['/otp-section'],{queryParams : {context : 'forget-password',email : this.email}});
+        this.router.navigate(['/auth/otp-section'],{queryParams : {context : 'forget-password',email : this.email}});
       },
       error: (err) => {
         this.spinner.hide();

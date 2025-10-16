@@ -94,7 +94,7 @@ onProfileSelected(file: File) {
       if (response?.expiry != null){
         this.authService.otpTimerSubject.next(new Date(response.expiry));
       }
-      this.router.navigate(['/otp-section'], {
+      this.router.navigate(['/auth/otp-section'], {
         queryParams: { email: signupRequest.email, context: 'register' }
       });
     },
@@ -102,7 +102,7 @@ onProfileSelected(file: File) {
       this.spinner.hide();
       this.toastr.error(err.message || 'Signup failed. Please try again.');
     }
-  });
+  }); 
 }
 
 

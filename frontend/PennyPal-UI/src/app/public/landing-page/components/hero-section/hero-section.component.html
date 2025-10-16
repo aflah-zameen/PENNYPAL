@@ -1,24 +1,63 @@
-<section class="flex items-center justify-center px-20 pt-10 min-h-[calc(100vh-60px)] max-md:flex-col max-md:gap-10 max-md:px-5">
-  <!-- Left: Text Section -->
-  <div class="w-1/2 max-w-full flex flex-col justify-center max-md:w-full px-10">
-    <h2 class="mb-12 text-5xl font-semibold tracking-wider text-indigo-700 max-md:text-4xl max-sm:text-3xl">
-      Track your spending, reach your saving goals.
-    </h2>
-    <p class="mb-10 text-base tracking-normal max-w-[453px]">
-      PEPPYLY analyzes your spending habits and helps you manage your money to achieve your financial goals.
-      It not only tracks your daily expenses but also keeps an eye on the money you lend to friends or family,
-      so you never lose track of your finances. Stay in control, save smarter, and make every penny count with PEPPYLY.
-    </p>
-    <button class="text-base font-bold tracking-wide text-white bg-indigo-700 rounded-lg border border-blue-700 shadow-sm h-[40px] w-[133px]">
-      Try it now
-    </button>
+<section class="relative min-h-[100vh] grid place-items-center overflow-hidden">
+  
+  <!-- Updated gradient background with modern color palette: deep purple, cyan, and emerald -->
+  <div class="absolute inset-0 -z-10 bg-gradient-to-br from-[#0F172A] via-[#7C3AED] to-[#06B6D4] 
+              transform scale-[1.5] origin-top-left 
+              animate-moving-gradient">
   </div>
 
-  <!-- Right: Image Section -->
-  <div class="w-1/2 max-w-full flex justify-center max-md:w-full">
-    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ed300a2c3f113c58a6407e3606e5c4bd7ff5d41f?placeholderIfAbsent=true"
-         alt="Financial tracking illustration"
-         class="w-full h-auto max-w-[500px]" />
+  <!-- Added decorative animated orbs for visual depth -->
+  <div class="absolute top-20 left-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-float-slow"></div>
+  <div class="absolute bottom-20 right-10 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl animate-float-slower"></div>
+  
+  <div class="container mx-auto grid gap-10 md:grid-cols-2 items-center px-4 py-16 z-10">
+    
+    <div class="hero-copy text-pretty animate-fade-in-up">
+      <h1 class="text-5xl md:text-6xl font-bold leading-tight text-white text-balance bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+        Track your spending, reach your saving goals.
+      </h1>
+      <p class="mt-6 text-lg text-gray-300 max-w-prose leading-relaxed">
+        PEPPYLY analyzes your spending habits and helps you manage your money to achieve your financial goals. Stay in control, save smarter, and make every penny count.
+      </p>
+
+      <div class="mt-10 flex items-center gap-4">
+        <div class="relative">
+          <button type="button"
+                  (click)="showDropdown = !showDropdown"
+                  class="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-cyan-500 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 backdrop-blur">
+            Demo Login
+          </button>
+          <div *ngIf="showDropdown"
+               class="absolute mt-3 w-48 rounded-lg border border-purple-500/30 bg-slate-900/95 shadow-2xl overflow-hidden z-20 right-0 md:right-auto backdrop-blur-md">
+            <button (click)="triggerDemo('user')"
+                    class="w-full text-left px-4 py-3 hover:bg-purple-500/20 text-gray-100 transition-colors duration-200">User Demo</button>
+            <button (click)="triggerDemo('admin')"
+                    class="w-full text-left px-4 py-3 hover:bg-purple-500/20 text-gray-100 transition-colors duration-200 border-t border-purple-500/10">Admin Demo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-art animate-zoom-in">
+      <div class="p-3 md:p-5 rounded-2xl border border-purple-500/30 bg-slate-900/60 shadow-2xl relative overflow-hidden 
+                  transform hover:scale-[1.02] transition-transform duration-500 ease-out backdrop-blur-sm">
+          
+          <div class="h-5 w-full bg-gradient-to-r from-slate-800 to-slate-700 rounded-t-lg mb-2 flex items-center justify-start px-3 space-x-2">
+              <span class="w-2 h-2 rounded-full bg-red-500 shadow-lg shadow-red-500/50"></span>
+              <span class="w-2 h-2 rounded-full bg-yellow-500 shadow-lg shadow-yellow-500/50"></span>
+              <span class="w-2 h-2 rounded-full bg-green-500 shadow-lg shadow-green-500/50"></span>
+          </div>
+          
+          <img
+              class="rounded-lg w-full h-[280px] object-cover border border-purple-500/20"
+              src="https://res.cloudinary.com/dkbj8um2a/image/upload/v1760560542/4062223_etaq2c.jpg" 
+              alt="Dashboard preview"
+          />
+          
+          <!-- Enhanced shimmer effect with glow -->
+          <div class="absolute inset-0 z-10 animate-shimmer pointer-events-none rounded-2xl"></div>
+          <div class="absolute inset-0 z-5 rounded-2xl bg-gradient-to-t from-purple-500/10 to-transparent pointer-events-none"></div>
+      </div>
+    </div>
   </div>
 </section>
-

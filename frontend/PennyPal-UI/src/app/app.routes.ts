@@ -1,9 +1,13 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { AuthLayoutComponent } from './public/auth/auth-layout/auth-layout.component';
 
 export const routes: Routes = [{
     path : '',
     loadChildren : () => import('./public/public.routes').then( m=> m.publicRoutes)
+},{
+    path : 'auth',
+    component : AuthLayoutComponent
 },{
     path : 'user',
     loadChildren : () => import('./user/user-routes').then(m=>m.userRoutes),

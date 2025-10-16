@@ -9,7 +9,6 @@ import { ForgetPasswordComponent } from "./auth/components/forget-password/forge
 import { OtpSectionComponent } from "./auth/components/otp-section/otp-section.component";
 import { SetNewPasswordComponent } from "./auth/components/set-new-password/set-new-password.component";
 import { AdminLoginComponent } from "./auth/components/admin-login/admin-login.component";
-import { AuthGuard } from "../guards/auth.guard";
 
 export const publicRoutes : Routes= [{
     path : '',
@@ -18,30 +17,36 @@ export const publicRoutes : Routes= [{
         {
             path : '', 
             component : LandingPageComponent,
-        },{
-            path : 'features',
-            component : FeatureSectionComponent
-        },{
-            path : 'contact',
-            component : ContactSectionComponent
-        },{
-            path : "login",
-            component : LoginSectionComponent,
-        },{
-            path : "signup",
-            component : SignupSectionComponent
-        },{
-            path : "forget-password",
-            component : ForgetPasswordComponent
-        },{
-            path : "otp-section",
-            component : OtpSectionComponent
-        },{
-            path : "set-new-password",
-            component : SetNewPasswordComponent
-        },{
-            path:"admin-login",
-            component : AdminLoginComponent
+        }]
+},
+
+{
+    path : 'auth',
+    loadComponent : () => import('./auth/auth-layout/auth-layout.component').then(m => m.AuthLayoutComponent),
+    children : [
+        {
+            path : 'login',
+            loadComponent : () => import('./auth/components/login-section/login-section.component').then(m => m.LoginSectionComponent)
+        },
+        {
+            path : 'signup',
+            loadComponent : () => import('./auth/components/signup-section/signup-section.component').then(m => m.SignupSectionComponent)
+        },
+        {
+            path : 'forget-password',
+            loadComponent : () => import('./auth/components/forget-password/forget-password.component').then(m => m.ForgetPasswordComponent)
+        },
+        {
+            path : 'otp-section',
+            loadComponent : () => import('./auth/components/otp-section/otp-section.component').then(m => m.OtpSectionComponent)
+        },
+        {
+            path : 'set-new-password',
+            loadComponent : () => import('./auth/components/set-new-password/set-new-password.component').then(m => m.SetNewPasswordComponent)
+        },
+        {
+            path : 'admin-login',
+            loadComponent : () => import('./auth/components/admin-login/admin-login.component').then(m => m.AdminLoginComponent)
         }
     ]
 }]
