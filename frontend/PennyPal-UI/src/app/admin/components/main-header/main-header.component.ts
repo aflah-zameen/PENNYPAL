@@ -42,7 +42,7 @@ export class MainHeaderComponent {
           next : ()=>{
                 this.spinner.hide();
                 this.toastr.success("Logout successfully","SUCCESS",{timeOut:2000});
-                this.router.navigate(['/admin-login'])
+                this.router.navigate(['/auth/admin-login'])
               }
             });
         }
