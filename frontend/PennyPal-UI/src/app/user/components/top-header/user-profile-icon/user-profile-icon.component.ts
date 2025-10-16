@@ -65,7 +65,7 @@ export class UserProfileIconComponent {
             next : () =>{
               this.toastr.success("Logout successfully","LOG_OUT",{timeOut:2000});
               this.authService.clearUser();
-              this.router.navigate(['/auth  /login']);
+              this.router.navigate(['/auth/login']);
             },
             error : (err)=>{
               this.toastr.error(err.message);
