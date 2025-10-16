@@ -44,7 +44,7 @@ public class UpdateUserAdapter implements UpdateUserPort {
                 if(user.phone() != null && !user.phone().isEmpty()){
                     updatedUser = updatedUser.changePhone(user.phone());
                 }
-                return userRepositoryPort.save(updatedUser);
+                return userRepositoryPort.update(updatedUser);
             }
             else{
                 throw new InfrastructureException("Email is null","NULL_EXCEPTION");
